@@ -659,22 +659,22 @@ export default function OverviewTab({ realtimeData, historicalData: _historicalD
       </div>
 
       {/* ── Trend + Stats ────────────────────────────────────────────────────── */}
-      <div className="grid gap-4 lg:grid-cols-3">
+      <div className="grid gap-4 w-full overflow-hidden lg:grid-cols-3">
 
         {/* Trend chart */}
-        <div className="rounded-xl border border-border bg-card p-5 shadow-sm lg:col-span-2">
-          <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+        <div className="rounded-xl border border-border bg-card p-4 sm:p-5 shadow-sm lg:col-span-2 overflow-hidden">
+          <div className="mb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
               <h3 className="text-sm font-semibold text-foreground">Trend Data</h3>
               <p className="mt-0.5 text-xs text-muted-foreground">Konsentrasi PM2.5 & PM10</p>
             </div>
-            <div className="flex items-center gap-1 rounded-lg border border-border bg-muted/40 p-1">
+            <div className="flex flex-wrap items-center gap-1 rounded-lg border border-border bg-muted/40 p-1 w-fit">
               {periodOptions.map((opt) => (
                 <button
                   key={opt.value}
                   onClick={() => setTimePeriod(opt.value)}
                   className={cn(
-                    "rounded-md px-3 py-1 text-xs font-medium transition-all",
+                    "rounded-md px-2 sm:px-3 py-1 text-[10px] sm:text-xs font-medium transition-all",
                     timePeriod === opt.value
                       ? "bg-white text-foreground shadow-sm"
                       : "text-muted-foreground hover:text-foreground"
@@ -688,7 +688,7 @@ export default function OverviewTab({ realtimeData, historicalData: _historicalD
           {chartLoading ? (
             <ChartSkeleton />
           ) : (
-            <div className="w-full overflow-x-auto pb-2">
+            <div className="w-full overflow-x-auto pb-2 -mx-5 px-5 sm:mx-0 sm:px-0">
               <div className="min-w-[600px]">
                 <ResponsiveContainer width="100%" height={220}>
                   <LineChart data={chartData} margin={{ top: 4, right: 16, left: -10, bottom: 0 }}>
@@ -722,10 +722,10 @@ export default function OverviewTab({ realtimeData, historicalData: _historicalD
         </div>
 
         {/* Stats table */}
-        <div className="rounded-xl border border-border bg-card p-5 shadow-sm">
+        <div className="rounded-xl border border-border bg-card p-4 sm:p-5 shadow-sm max-w-full overflow-hidden">
           <h3 className="mb-4 text-sm font-semibold text-foreground">Ringkasan Statistik</h3>
-          <div className="w-full overflow-hidden rounded-lg border border-border">
-            <table className="w-full text-xs">
+          <div className="w-full overflow-x-auto rounded-lg border border-border">
+            <table className="w-full text-xs min-w-[300px]">
               <thead>
                 <tr className="border-b border-border bg-muted/50">
                   <th className="px-3 py-2.5 text-left font-medium text-muted-foreground">Metrik</th>
