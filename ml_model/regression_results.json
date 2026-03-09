@@ -1,0 +1,3847 @@
+{
+  "evaluated_at": "2026-03-09T14:46:51.388193",
+  "total_data": 994,
+  "train_size": 795,
+  "test_size": 199,
+  "target": "PM2.5 (\u00b5g/m\u00b3)",
+  "features": [
+    "temperature",
+    "humidity",
+    "pm10_corrected_ugm3",
+    "no2_ugm3",
+    "co_corrected_ugm3"
+  ],
+  "best_model": "Linear Regression",
+  "best_r2": 99.04,
+  "results": [
+    {
+      "name": "Linear Regression",
+      "type": "regression",
+      "MAE": 0.9655,
+      "RMSE": 1.4838,
+      "R2": 99.04,
+      "MAPE": 9.93,
+      "CV_R2": 92.89
+    },
+    {
+      "name": "Random Forest",
+      "type": "regression",
+      "MAE": 0.8603,
+      "RMSE": 2.2495,
+      "R2": 97.79,
+      "MAPE": 5.26,
+      "CV_R2": 95.05
+    },
+    {
+      "name": "XGBoost",
+      "type": "regression",
+      "MAE": 0.9661,
+      "RMSE": 2.788,
+      "R2": 96.61,
+      "MAPE": 6.21,
+      "CV_R2": 91.98
+    },
+    {
+      "name": "Gradient Boosting",
+      "type": "regression",
+      "MAE": 0.9731,
+      "RMSE": 3.3196,
+      "R2": 95.19,
+      "MAPE": 6.03,
+      "CV_R2": 92.58
+    },
+    {
+      "name": "LightGBM",
+      "type": "regression",
+      "MAE": 3.8836,
+      "RMSE": 11.3639,
+      "R2": 43.6,
+      "MAPE": 27.24,
+      "CV_R2": 60.14
+    }
+  ],
+  "feature_importance": [],
+  "scatterData": [
+    {
+      "actual": 5.2,
+      "predicted": 4.9,
+      "time": "22:10",
+      "isTrain": true
+    },
+    {
+      "actual": 5.37,
+      "predicted": 5.2,
+      "time": "00:36",
+      "isTrain": true
+    },
+    {
+      "actual": 20.7,
+      "predicted": 21.02,
+      "time": "02:24",
+      "isTrain": true
+    },
+    {
+      "actual": 20.0,
+      "predicted": 19.37,
+      "time": "06:38",
+      "isTrain": true
+    },
+    {
+      "actual": 5.02,
+      "predicted": 6.05,
+      "time": "04:21",
+      "isTrain": true
+    },
+    {
+      "actual": 5.72,
+      "predicted": 6.69,
+      "time": "04:29",
+      "isTrain": true
+    },
+    {
+      "actual": 6.61,
+      "predicted": 7.09,
+      "time": "03:35",
+      "isTrain": true
+    },
+    {
+      "actual": 18.94,
+      "predicted": 19.45,
+      "time": "06:56",
+      "isTrain": true
+    },
+    {
+      "actual": 15.06,
+      "predicted": 16.84,
+      "time": "01:33",
+      "isTrain": true
+    },
+    {
+      "actual": 7.31,
+      "predicted": 6.38,
+      "time": "00:33",
+      "isTrain": true
+    },
+    {
+      "actual": 23.17,
+      "predicted": 23.98,
+      "time": "05:37",
+      "isTrain": true
+    },
+    {
+      "actual": 24.41,
+      "predicted": 23.48,
+      "time": "06:02",
+      "isTrain": true
+    },
+    {
+      "actual": 4.31,
+      "predicted": 5.51,
+      "time": "04:23",
+      "isTrain": true
+    },
+    {
+      "actual": 6.78,
+      "predicted": 5.93,
+      "time": "00:30",
+      "isTrain": true
+    },
+    {
+      "actual": 6.78,
+      "predicted": 6.22,
+      "time": "01:03",
+      "isTrain": true
+    },
+    {
+      "actual": 7.66,
+      "predicted": 7.84,
+      "time": "05:13",
+      "isTrain": true
+    },
+    {
+      "actual": 18.41,
+      "predicted": 18.7,
+      "time": "03:57",
+      "isTrain": true
+    },
+    {
+      "actual": 19.12,
+      "predicted": 18.68,
+      "time": "06:33",
+      "isTrain": true
+    },
+    {
+      "actual": 5.2,
+      "predicted": 4.93,
+      "time": "22:54",
+      "isTrain": true
+    },
+    {
+      "actual": 18.94,
+      "predicted": 19.36,
+      "time": "05:49",
+      "isTrain": true
+    },
+    {
+      "actual": 3.61,
+      "predicted": 3.85,
+      "time": "22:24",
+      "isTrain": true
+    },
+    {
+      "actual": 4.14,
+      "predicted": 4.25,
+      "time": "22:32",
+      "isTrain": true
+    },
+    {
+      "actual": 19.82,
+      "predicted": 20.3,
+      "time": "05:28",
+      "isTrain": true
+    },
+    {
+      "actual": 25.11,
+      "predicted": 24.97,
+      "time": "01:50",
+      "isTrain": true
+    },
+    {
+      "actual": 3.61,
+      "predicted": 3.71,
+      "time": "21:48",
+      "isTrain": true
+    },
+    {
+      "actual": 4.31,
+      "predicted": 5.27,
+      "time": "05:36",
+      "isTrain": true
+    },
+    {
+      "actual": 5.2,
+      "predicted": 6.38,
+      "time": "05:04",
+      "isTrain": true
+    },
+    {
+      "actual": 60.71,
+      "predicted": 51.72,
+      "time": "03:49",
+      "isTrain": true
+    },
+    {
+      "actual": 5.2,
+      "predicted": 5.05,
+      "time": "23:09",
+      "isTrain": true
+    },
+    {
+      "actual": 3.79,
+      "predicted": 5.43,
+      "time": "04:56",
+      "isTrain": true
+    },
+    {
+      "actual": 6.08,
+      "predicted": 5.67,
+      "time": "23:29",
+      "isTrain": true
+    },
+    {
+      "actual": 20.0,
+      "predicted": 22.05,
+      "time": "07:39",
+      "isTrain": true
+    },
+    {
+      "actual": 5.9,
+      "predicted": 6.65,
+      "time": "04:42",
+      "isTrain": true
+    },
+    {
+      "actual": 5.72,
+      "predicted": 5.46,
+      "time": "00:27",
+      "isTrain": true
+    },
+    {
+      "actual": 5.37,
+      "predicted": 6.37,
+      "time": "00:07",
+      "isTrain": true
+    },
+    {
+      "actual": 11.72,
+      "predicted": 10.62,
+      "time": "04:36",
+      "isTrain": true
+    },
+    {
+      "actual": 3.61,
+      "predicted": 3.76,
+      "time": "06:04",
+      "isTrain": true
+    },
+    {
+      "actual": 20.18,
+      "predicted": 19.2,
+      "time": "01:39",
+      "isTrain": true
+    },
+    {
+      "actual": 25.99,
+      "predicted": 26.99,
+      "time": "06:07",
+      "isTrain": true
+    },
+    {
+      "actual": 27.75,
+      "predicted": 23.08,
+      "time": "01:55",
+      "isTrain": true
+    },
+    {
+      "actual": 9.25,
+      "predicted": 8.36,
+      "time": "01:35",
+      "isTrain": true
+    },
+    {
+      "actual": 19.47,
+      "predicted": 18.63,
+      "time": "05:13",
+      "isTrain": true
+    },
+    {
+      "actual": 12.07,
+      "predicted": 12.02,
+      "time": "03:19",
+      "isTrain": true
+    },
+    {
+      "actual": 24.76,
+      "predicted": 24.51,
+      "time": "02:07",
+      "isTrain": true
+    },
+    {
+      "actual": 4.14,
+      "predicted": 5.18,
+      "time": "05:38",
+      "isTrain": true
+    },
+    {
+      "actual": 4.67,
+      "predicted": 5.31,
+      "time": "02:45",
+      "isTrain": true
+    },
+    {
+      "actual": 6.25,
+      "predicted": 7.85,
+      "time": "23:52",
+      "isTrain": true
+    },
+    {
+      "actual": 22.82,
+      "predicted": 21.59,
+      "time": "05:56",
+      "isTrain": true
+    },
+    {
+      "actual": 24.41,
+      "predicted": 23.98,
+      "time": "02:50",
+      "isTrain": true
+    },
+    {
+      "actual": 22.82,
+      "predicted": 21.47,
+      "time": "02:33",
+      "isTrain": true
+    },
+    {
+      "actual": 5.2,
+      "predicted": 4.93,
+      "time": "22:29",
+      "isTrain": true
+    },
+    {
+      "actual": 7.66,
+      "predicted": 7.46,
+      "time": "01:48",
+      "isTrain": true
+    },
+    {
+      "actual": 25.11,
+      "predicted": 28.41,
+      "time": "03:52",
+      "isTrain": true
+    },
+    {
+      "actual": 6.78,
+      "predicted": 7.11,
+      "time": "04:03",
+      "isTrain": true
+    },
+    {
+      "actual": 8.02,
+      "predicted": 7.53,
+      "time": "02:48",
+      "isTrain": true
+    },
+    {
+      "actual": 18.24,
+      "predicted": 19.86,
+      "time": "05:06",
+      "isTrain": true
+    },
+    {
+      "actual": 4.84,
+      "predicted": 5.05,
+      "time": "23:48",
+      "isTrain": true
+    },
+    {
+      "actual": 8.54,
+      "predicted": 7.6,
+      "time": "02:03",
+      "isTrain": true
+    },
+    {
+      "actual": 18.59,
+      "predicted": 17.43,
+      "time": "05:01",
+      "isTrain": true
+    },
+    {
+      "actual": 18.94,
+      "predicted": 19.06,
+      "time": "03:45",
+      "isTrain": true
+    },
+    {
+      "actual": 20.18,
+      "predicted": 20.37,
+      "time": "05:14",
+      "isTrain": true
+    },
+    {
+      "actual": 21.76,
+      "predicted": 19.39,
+      "time": "04:20",
+      "isTrain": true
+    },
+    {
+      "actual": 23.88,
+      "predicted": 22.32,
+      "time": "05:38",
+      "isTrain": true
+    },
+    {
+      "actual": 4.84,
+      "predicted": 4.49,
+      "time": "21:10",
+      "isTrain": true
+    },
+    {
+      "actual": 4.14,
+      "predicted": 4.32,
+      "time": "23:05",
+      "isTrain": true
+    },
+    {
+      "actual": 5.55,
+      "predicted": 6.99,
+      "time": "04:35",
+      "isTrain": true
+    },
+    {
+      "actual": 3.26,
+      "predicted": 3.69,
+      "time": "21:58",
+      "isTrain": true
+    },
+    {
+      "actual": 3.61,
+      "predicted": 3.79,
+      "time": "20:46",
+      "isTrain": true
+    },
+    {
+      "actual": 12.95,
+      "predicted": 10.91,
+      "time": "02:53",
+      "isTrain": true
+    },
+    {
+      "actual": 10.48,
+      "predicted": 9.01,
+      "time": "01:36",
+      "isTrain": true
+    },
+    {
+      "actual": 10.13,
+      "predicted": 17.01,
+      "time": "02:56",
+      "isTrain": true
+    },
+    {
+      "actual": 9.95,
+      "predicted": 8.87,
+      "time": "01:30",
+      "isTrain": true
+    },
+    {
+      "actual": 3.79,
+      "predicted": 3.95,
+      "time": "06:20",
+      "isTrain": true
+    },
+    {
+      "actual": 18.94,
+      "predicted": 19.08,
+      "time": "06:26",
+      "isTrain": true
+    },
+    {
+      "actual": 20.0,
+      "predicted": 20.0,
+      "time": "02:39",
+      "isTrain": true
+    },
+    {
+      "actual": 2.2,
+      "predicted": 3.14,
+      "time": "05:56",
+      "isTrain": true
+    },
+    {
+      "actual": 19.29,
+      "predicted": 19.54,
+      "time": "04:23",
+      "isTrain": true
+    },
+    {
+      "actual": 14.01,
+      "predicted": 11.86,
+      "time": "03:11",
+      "isTrain": true
+    },
+    {
+      "actual": 9.78,
+      "predicted": 8.78,
+      "time": "01:47",
+      "isTrain": true
+    },
+    {
+      "actual": 7.31,
+      "predicted": 6.97,
+      "time": "02:29",
+      "isTrain": true
+    },
+    {
+      "actual": 5.2,
+      "predicted": 4.85,
+      "time": "21:05",
+      "isTrain": true
+    },
+    {
+      "actual": 13.48,
+      "predicted": 12.4,
+      "time": "03:09",
+      "isTrain": true
+    },
+    {
+      "actual": 21.23,
+      "predicted": 21.62,
+      "time": "03:16",
+      "isTrain": true
+    },
+    {
+      "actual": 5.55,
+      "predicted": 5.9,
+      "time": "02:16",
+      "isTrain": true
+    },
+    {
+      "actual": 25.11,
+      "predicted": 23.16,
+      "time": "06:12",
+      "isTrain": true
+    },
+    {
+      "actual": 9.78,
+      "predicted": 9.12,
+      "time": "04:05",
+      "isTrain": true
+    },
+    {
+      "actual": 21.06,
+      "predicted": 22.27,
+      "time": "05:32",
+      "isTrain": true
+    },
+    {
+      "actual": 4.14,
+      "predicted": 4.66,
+      "time": "05:46",
+      "isTrain": true
+    },
+    {
+      "actual": 3.79,
+      "predicted": 4.12,
+      "time": "22:06",
+      "isTrain": true
+    },
+    {
+      "actual": 4.14,
+      "predicted": 4.24,
+      "time": "20:56",
+      "isTrain": true
+    },
+    {
+      "actual": 16.3,
+      "predicted": 13.83,
+      "time": "03:20",
+      "isTrain": true
+    },
+    {
+      "actual": 19.12,
+      "predicted": 19.53,
+      "time": "05:52",
+      "isTrain": true
+    },
+    {
+      "actual": 6.96,
+      "predicted": 7.21,
+      "time": "04:33",
+      "isTrain": true
+    },
+    {
+      "actual": 22.82,
+      "predicted": 22.86,
+      "time": "01:54",
+      "isTrain": true
+    },
+    {
+      "actual": 7.31,
+      "predicted": 6.25,
+      "time": "22:49",
+      "isTrain": true
+    },
+    {
+      "actual": 20.35,
+      "predicted": 20.02,
+      "time": "05:46",
+      "isTrain": true
+    },
+    {
+      "actual": 1.14,
+      "predicted": 2.08,
+      "time": "05:59",
+      "isTrain": true
+    },
+    {
+      "actual": 5.2,
+      "predicted": 4.91,
+      "time": "22:43",
+      "isTrain": true
+    },
+    {
+      "actual": 21.76,
+      "predicted": 28.9,
+      "time": "12:09",
+      "isTrain": true
+    },
+    {
+      "actual": 5.2,
+      "predicted": 4.61,
+      "time": "21:24",
+      "isTrain": true
+    },
+    {
+      "actual": 5.02,
+      "predicted": 4.53,
+      "time": "21:28",
+      "isTrain": true
+    },
+    {
+      "actual": 6.78,
+      "predicted": 7.36,
+      "time": "04:27",
+      "isTrain": true
+    },
+    {
+      "actual": 21.76,
+      "predicted": 24.2,
+      "time": "07:31",
+      "isTrain": true
+    },
+    {
+      "actual": 23.17,
+      "predicted": 22.83,
+      "time": "01:59",
+      "isTrain": true
+    },
+    {
+      "actual": 5.72,
+      "predicted": 6.55,
+      "time": "04:20",
+      "isTrain": true
+    },
+    {
+      "actual": 19.82,
+      "predicted": 20.61,
+      "time": "04:26",
+      "isTrain": true
+    },
+    {
+      "actual": 24.58,
+      "predicted": 27.59,
+      "time": "03:44",
+      "isTrain": true
+    },
+    {
+      "actual": 19.29,
+      "predicted": 21.17,
+      "time": "01:43",
+      "isTrain": true
+    },
+    {
+      "actual": 5.72,
+      "predicted": 5.32,
+      "time": "23:32",
+      "isTrain": true
+    },
+    {
+      "actual": 17.71,
+      "predicted": 20.51,
+      "time": "05:53",
+      "isTrain": true
+    },
+    {
+      "actual": 11.19,
+      "predicted": 12.54,
+      "time": "03:04",
+      "isTrain": true
+    },
+    {
+      "actual": 2.2,
+      "predicted": 2.75,
+      "time": "06:10",
+      "isTrain": true
+    },
+    {
+      "actual": 5.55,
+      "predicted": 5.17,
+      "time": "23:24",
+      "isTrain": true
+    },
+    {
+      "actual": 25.99,
+      "predicted": 24.5,
+      "time": "02:53",
+      "isTrain": true
+    },
+    {
+      "actual": 18.77,
+      "predicted": 18.45,
+      "time": "05:29",
+      "isTrain": true
+    },
+    {
+      "actual": 6.61,
+      "predicted": 5.99,
+      "time": "00:57",
+      "isTrain": true
+    },
+    {
+      "actual": 19.82,
+      "predicted": 18.19,
+      "time": "05:30",
+      "isTrain": true
+    },
+    {
+      "actual": 20.53,
+      "predicted": 18.63,
+      "time": "06:30",
+      "isTrain": true
+    },
+    {
+      "actual": 11.01,
+      "predicted": 13.51,
+      "time": "03:31",
+      "isTrain": true
+    },
+    {
+      "actual": 15.59,
+      "predicted": 19.42,
+      "time": "01:34",
+      "isTrain": true
+    },
+    {
+      "actual": 7.31,
+      "predicted": 6.37,
+      "time": "23:31",
+      "isTrain": true
+    },
+    {
+      "actual": 3.08,
+      "predicted": 3.5,
+      "time": "06:00",
+      "isTrain": true
+    },
+    {
+      "actual": 21.41,
+      "predicted": 19.62,
+      "time": "01:42",
+      "isTrain": true
+    },
+    {
+      "actual": 21.23,
+      "predicted": 19.17,
+      "time": "05:22",
+      "isTrain": true
+    },
+    {
+      "actual": 37.8,
+      "predicted": 37.13,
+      "time": "03:47",
+      "isTrain": true
+    },
+    {
+      "actual": 4.67,
+      "predicted": 5.64,
+      "time": "05:33",
+      "isTrain": true
+    },
+    {
+      "actual": 25.11,
+      "predicted": 24.52,
+      "time": "02:03",
+      "isTrain": true
+    },
+    {
+      "actual": 5.55,
+      "predicted": 5.39,
+      "time": "00:15",
+      "isTrain": true
+    },
+    {
+      "actual": 4.84,
+      "predicted": 6.05,
+      "time": "04:25",
+      "isTrain": true
+    },
+    {
+      "actual": 18.59,
+      "predicted": 18.25,
+      "time": "04:30",
+      "isTrain": true
+    },
+    {
+      "actual": 7.31,
+      "predicted": 6.51,
+      "time": "00:38",
+      "isTrain": true
+    },
+    {
+      "actual": 21.76,
+      "predicted": 19.6,
+      "time": "04:51",
+      "isTrain": true
+    },
+    {
+      "actual": 7.31,
+      "predicted": 7.51,
+      "time": "03:53",
+      "isTrain": true
+    },
+    {
+      "actual": 20.7,
+      "predicted": 20.04,
+      "time": "05:19",
+      "isTrain": true
+    },
+    {
+      "actual": 8.37,
+      "predicted": 7.98,
+      "time": "02:28",
+      "isTrain": true
+    },
+    {
+      "actual": 20.53,
+      "predicted": 20.28,
+      "time": "05:31",
+      "isTrain": true
+    },
+    {
+      "actual": 23.0,
+      "predicted": 22.14,
+      "time": "02:22",
+      "isTrain": true
+    },
+    {
+      "actual": 6.25,
+      "predicted": 6.68,
+      "time": "01:22",
+      "isTrain": true
+    },
+    {
+      "actual": 4.49,
+      "predicted": 5.81,
+      "time": "04:46",
+      "isTrain": true
+    },
+    {
+      "actual": 5.02,
+      "predicted": 4.76,
+      "time": "22:16",
+      "isTrain": true
+    },
+    {
+      "actual": 19.47,
+      "predicted": 18.81,
+      "time": "04:34",
+      "isTrain": true
+    },
+    {
+      "actual": 19.82,
+      "predicted": 18.61,
+      "time": "06:39",
+      "isTrain": true
+    },
+    {
+      "actual": 6.78,
+      "predicted": 7.3,
+      "time": "04:48",
+      "isTrain": true
+    },
+    {
+      "actual": 24.76,
+      "predicted": 23.16,
+      "time": "02:41",
+      "isTrain": true
+    },
+    {
+      "actual": 20.35,
+      "predicted": 20.15,
+      "time": "03:39",
+      "isTrain": true
+    },
+    {
+      "actual": 3.43,
+      "predicted": 3.62,
+      "time": "06:07",
+      "isTrain": true
+    },
+    {
+      "actual": 20.88,
+      "predicted": 18.79,
+      "time": "03:35",
+      "isTrain": true
+    },
+    {
+      "actual": 11.54,
+      "predicted": 13.66,
+      "time": "03:26",
+      "isTrain": true
+    },
+    {
+      "actual": 4.31,
+      "predicted": 4.48,
+      "time": "23:15",
+      "isTrain": true
+    },
+    {
+      "actual": 18.94,
+      "predicted": 22.6,
+      "time": "04:11",
+      "isTrain": true
+    },
+    {
+      "actual": 5.55,
+      "predicted": 6.51,
+      "time": "05:00",
+      "isTrain": true
+    },
+    {
+      "actual": 5.9,
+      "predicted": 6.8,
+      "time": "03:43",
+      "isTrain": true
+    },
+    {
+      "actual": 11.89,
+      "predicted": 10.04,
+      "time": "01:44",
+      "isTrain": true
+    },
+    {
+      "actual": 7.66,
+      "predicted": 9.07,
+      "time": "01:46",
+      "isTrain": true
+    },
+    {
+      "actual": 19.29,
+      "predicted": 19.44,
+      "time": "03:38",
+      "isTrain": true
+    },
+    {
+      "actual": 2.38,
+      "predicted": 3.04,
+      "time": "06:23",
+      "isTrain": true
+    },
+    {
+      "actual": 6.78,
+      "predicted": 7.26,
+      "time": "03:36",
+      "isTrain": true
+    },
+    {
+      "actual": 19.65,
+      "predicted": 19.51,
+      "time": "06:34",
+      "isTrain": true
+    },
+    {
+      "actual": 4.14,
+      "predicted": 4.12,
+      "time": "21:39",
+      "isTrain": true
+    },
+    {
+      "actual": 5.72,
+      "predicted": 5.32,
+      "time": "23:22",
+      "isTrain": true
+    },
+    {
+      "actual": 5.37,
+      "predicted": 5.51,
+      "time": "23:59",
+      "isTrain": true
+    },
+    {
+      "actual": 9.42,
+      "predicted": 8.5,
+      "time": "02:30",
+      "isTrain": true
+    },
+    {
+      "actual": 4.84,
+      "predicted": 5.53,
+      "time": "00:59",
+      "isTrain": true
+    },
+    {
+      "actual": 8.54,
+      "predicted": 7.79,
+      "time": "01:37",
+      "isTrain": true
+    },
+    {
+      "actual": 13.65,
+      "predicted": 15.19,
+      "time": "03:12",
+      "isTrain": true
+    },
+    {
+      "actual": 22.11,
+      "predicted": 21.47,
+      "time": "04:56",
+      "isTrain": true
+    },
+    {
+      "actual": 6.43,
+      "predicted": 5.85,
+      "time": "22:36",
+      "isTrain": true
+    },
+    {
+      "actual": 7.84,
+      "predicted": 7.6,
+      "time": "05:15",
+      "isTrain": true
+    },
+    {
+      "actual": 5.55,
+      "predicted": 5.86,
+      "time": "01:25",
+      "isTrain": true
+    },
+    {
+      "actual": 8.72,
+      "predicted": 8.55,
+      "time": "02:22",
+      "isTrain": true
+    },
+    {
+      "actual": 26.34,
+      "predicted": 24.31,
+      "time": "01:58",
+      "isTrain": true
+    },
+    {
+      "actual": 6.25,
+      "predicted": 5.78,
+      "time": "23:12",
+      "isTrain": true
+    },
+    {
+      "actual": 3.79,
+      "predicted": 3.69,
+      "time": "21:26",
+      "isTrain": true
+    },
+    {
+      "actual": 21.94,
+      "predicted": 22.67,
+      "time": "02:45",
+      "isTrain": true
+    },
+    {
+      "actual": 18.41,
+      "predicted": 18.98,
+      "time": "05:24",
+      "isTrain": true
+    },
+    {
+      "actual": 3.43,
+      "predicted": 3.63,
+      "time": "06:05",
+      "isTrain": true
+    },
+    {
+      "actual": 4.67,
+      "predicted": 4.54,
+      "time": "22:14",
+      "isTrain": true
+    },
+    {
+      "actual": 3.96,
+      "predicted": 4.11,
+      "time": "22:37",
+      "isTrain": true
+    },
+    {
+      "actual": 8.37,
+      "predicted": 7.57,
+      "time": "02:44",
+      "isTrain": true
+    },
+    {
+      "actual": 5.02,
+      "predicted": 4.86,
+      "time": "00:35",
+      "isTrain": true
+    },
+    {
+      "actual": 19.29,
+      "predicted": 19.13,
+      "time": "03:46",
+      "isTrain": true
+    },
+    {
+      "actual": 2.9,
+      "predicted": 3.02,
+      "time": "21:21",
+      "isTrain": true
+    },
+    {
+      "actual": 6.25,
+      "predicted": 9.1,
+      "time": "02:57",
+      "isTrain": true
+    },
+    {
+      "actual": 33.92,
+      "predicted": 33.09,
+      "time": "12:35",
+      "isTrain": true
+    },
+    {
+      "actual": 23.35,
+      "predicted": 23.38,
+      "time": "02:57",
+      "isTrain": true
+    },
+    {
+      "actual": 4.67,
+      "predicted": 5.93,
+      "time": "05:07",
+      "isTrain": true
+    },
+    {
+      "actual": 18.24,
+      "predicted": 19.38,
+      "time": "03:32",
+      "isTrain": true
+    },
+    {
+      "actual": 8.72,
+      "predicted": 8.27,
+      "time": "02:10",
+      "isTrain": true
+    },
+    {
+      "actual": 6.08,
+      "predicted": 5.53,
+      "time": "23:23",
+      "isTrain": true
+    },
+    {
+      "actual": 6.43,
+      "predicted": 7.2,
+      "time": "02:05",
+      "isTrain": true
+    },
+    {
+      "actual": 21.76,
+      "predicted": 20.57,
+      "time": "02:17",
+      "isTrain": true
+    },
+    {
+      "actual": 25.64,
+      "predicted": 23.98,
+      "time": "03:42",
+      "isTrain": true
+    },
+    {
+      "actual": 9.95,
+      "predicted": 9.09,
+      "time": "02:54",
+      "isTrain": true
+    },
+    {
+      "actual": 140.2,
+      "predicted": 153.76,
+      "time": "12:50",
+      "isTrain": true
+    },
+    {
+      "actual": 3.26,
+      "predicted": 3.44,
+      "time": "21:31",
+      "isTrain": true
+    },
+    {
+      "actual": 15.06,
+      "predicted": 15.46,
+      "time": "01:36",
+      "isTrain": true
+    },
+    {
+      "actual": 3.26,
+      "predicted": 3.64,
+      "time": "20:57",
+      "isTrain": true
+    },
+    {
+      "actual": 10.13,
+      "predicted": 9.41,
+      "time": "03:03",
+      "isTrain": true
+    },
+    {
+      "actual": 4.31,
+      "predicted": 4.27,
+      "time": "21:44",
+      "isTrain": true
+    },
+    {
+      "actual": 6.25,
+      "predicted": 7.28,
+      "time": "03:45",
+      "isTrain": true
+    },
+    {
+      "actual": 21.76,
+      "predicted": 19.77,
+      "time": "03:22",
+      "isTrain": true
+    },
+    {
+      "actual": 6.08,
+      "predicted": 6.99,
+      "time": "04:39",
+      "isTrain": true
+    },
+    {
+      "actual": 18.59,
+      "predicted": 19.21,
+      "time": "04:35",
+      "isTrain": true
+    },
+    {
+      "actual": 4.49,
+      "predicted": 4.67,
+      "time": "23:08",
+      "isTrain": true
+    },
+    {
+      "actual": 5.2,
+      "predicted": 6.54,
+      "time": "01:07",
+      "isTrain": true
+    },
+    {
+      "actual": 17.53,
+      "predicted": 24.98,
+      "time": "03:24",
+      "isTrain": true
+    },
+    {
+      "actual": 3.61,
+      "predicted": 4.47,
+      "time": "01:51",
+      "isTrain": true
+    },
+    {
+      "actual": 5.2,
+      "predicted": 4.86,
+      "time": "22:47",
+      "isTrain": true
+    },
+    {
+      "actual": 5.2,
+      "predicted": 5.19,
+      "time": "00:06",
+      "isTrain": true
+    },
+    {
+      "actual": 5.9,
+      "predicted": 5.36,
+      "time": "23:17",
+      "isTrain": true
+    },
+    {
+      "actual": 6.43,
+      "predicted": 6.61,
+      "time": "00:32",
+      "isTrain": true
+    },
+    {
+      "actual": 14.18,
+      "predicted": 13.12,
+      "time": "03:10",
+      "isTrain": true
+    },
+    {
+      "actual": 7.84,
+      "predicted": 7.28,
+      "time": "01:15",
+      "isTrain": true
+    },
+    {
+      "actual": 6.08,
+      "predicted": 6.01,
+      "time": "23:56",
+      "isTrain": true
+    },
+    {
+      "actual": 32.69,
+      "predicted": 40.32,
+      "time": "02:25",
+      "isTrain": true
+    },
+    {
+      "actual": 19.47,
+      "predicted": 19.37,
+      "time": "06:55",
+      "isTrain": true
+    },
+    {
+      "actual": 17.71,
+      "predicted": 17.62,
+      "time": "04:05",
+      "isTrain": true
+    },
+    {
+      "actual": 7.13,
+      "predicted": 6.16,
+      "time": "22:45",
+      "isTrain": true
+    },
+    {
+      "actual": 6.43,
+      "predicted": 5.87,
+      "time": "00:28",
+      "isTrain": true
+    },
+    {
+      "actual": 3.26,
+      "predicted": 3.73,
+      "time": "06:26",
+      "isTrain": true
+    },
+    {
+      "actual": 8.54,
+      "predicted": 8.19,
+      "time": "03:30",
+      "isTrain": true
+    },
+    {
+      "actual": 20.0,
+      "predicted": 19.22,
+      "time": "06:25",
+      "isTrain": true
+    },
+    {
+      "actual": 21.23,
+      "predicted": 21.14,
+      "time": "05:18",
+      "isTrain": true
+    },
+    {
+      "actual": 5.37,
+      "predicted": 5.05,
+      "time": "23:21",
+      "isTrain": true
+    },
+    {
+      "actual": 6.61,
+      "predicted": 6.1,
+      "time": "23:47",
+      "isTrain": true
+    },
+    {
+      "actual": 25.29,
+      "predicted": 21.77,
+      "time": "06:47",
+      "isTrain": true
+    },
+    {
+      "actual": 20.7,
+      "predicted": 20.36,
+      "time": "04:18",
+      "isTrain": true
+    },
+    {
+      "actual": 6.96,
+      "predicted": 6.37,
+      "time": "00:09",
+      "isTrain": true
+    },
+    {
+      "actual": 17.71,
+      "predicted": 18.38,
+      "time": "01:46",
+      "isTrain": true
+    },
+    {
+      "actual": 7.31,
+      "predicted": 6.9,
+      "time": "01:16",
+      "isTrain": true
+    },
+    {
+      "actual": 22.11,
+      "predicted": 23.08,
+      "time": "03:13",
+      "isTrain": true
+    },
+    {
+      "actual": 4.67,
+      "predicted": 5.02,
+      "time": "05:48",
+      "isTrain": true
+    },
+    {
+      "actual": 4.31,
+      "predicted": 4.38,
+      "time": "22:57",
+      "isTrain": true
+    },
+    {
+      "actual": 19.82,
+      "predicted": 19.63,
+      "time": "04:44",
+      "isTrain": true
+    },
+    {
+      "actual": 414.08,
+      "predicted": 330.6,
+      "time": "03:02",
+      "isTrain": true
+    },
+    {
+      "actual": 6.43,
+      "predicted": 5.97,
+      "time": "23:38",
+      "isTrain": true
+    },
+    {
+      "actual": 5.55,
+      "predicted": 6.39,
+      "time": "03:57",
+      "isTrain": true
+    },
+    {
+      "actual": 4.49,
+      "predicted": 4.37,
+      "time": "21:47",
+      "isTrain": true
+    },
+    {
+      "actual": 25.29,
+      "predicted": 24.46,
+      "time": "06:06",
+      "isTrain": true
+    },
+    {
+      "actual": 12.07,
+      "predicted": 9.53,
+      "time": "00:25",
+      "isTrain": true
+    },
+    {
+      "actual": 3.08,
+      "predicted": 4.0,
+      "time": "05:49",
+      "isTrain": true
+    },
+    {
+      "actual": 21.59,
+      "predicted": 20.95,
+      "time": "01:44",
+      "isTrain": true
+    },
+    {
+      "actual": 17.88,
+      "predicted": 18.15,
+      "time": "01:38",
+      "isTrain": true
+    },
+    {
+      "actual": 19.65,
+      "predicted": 20.23,
+      "time": "07:33",
+      "isTrain": true
+    },
+    {
+      "actual": 29.52,
+      "predicted": 28.33,
+      "time": "12:34",
+      "isTrain": true
+    },
+    {
+      "actual": 6.08,
+      "predicted": 5.52,
+      "time": "23:19",
+      "isTrain": true
+    },
+    {
+      "actual": 6.96,
+      "predicted": 6.3,
+      "time": "23:41",
+      "isTrain": true
+    },
+    {
+      "actual": 6.78,
+      "predicted": 7.31,
+      "time": "04:59",
+      "isTrain": true
+    },
+    {
+      "actual": 7.49,
+      "predicted": 7.68,
+      "time": "03:56",
+      "isTrain": true
+    },
+    {
+      "actual": 5.9,
+      "predicted": 6.06,
+      "time": "01:55",
+      "isTrain": true
+    },
+    {
+      "actual": 6.08,
+      "predicted": 7.31,
+      "time": "01:42",
+      "isTrain": true
+    },
+    {
+      "actual": 5.37,
+      "predicted": 6.11,
+      "time": "04:53",
+      "isTrain": true
+    },
+    {
+      "actual": 7.13,
+      "predicted": 7.83,
+      "time": "04:02",
+      "isTrain": true
+    },
+    {
+      "actual": 20.53,
+      "predicted": 22.07,
+      "time": "03:12",
+      "isTrain": true
+    },
+    {
+      "actual": 5.02,
+      "predicted": 5.57,
+      "time": "05:44",
+      "isTrain": true
+    },
+    {
+      "actual": 3.79,
+      "predicted": 3.74,
+      "time": "21:23",
+      "isTrain": true
+    },
+    {
+      "actual": 5.37,
+      "predicted": 5.47,
+      "time": "23:54",
+      "isTrain": true
+    },
+    {
+      "actual": 18.06,
+      "predicted": 18.46,
+      "time": "01:40",
+      "isTrain": true
+    },
+    {
+      "actual": 6.61,
+      "predicted": 6.55,
+      "time": "02:20",
+      "isTrain": true
+    },
+    {
+      "actual": 2.9,
+      "predicted": 4.4,
+      "time": "22:48",
+      "isTrain": true
+    },
+    {
+      "actual": 21.94,
+      "predicted": 22.52,
+      "time": "05:59",
+      "isTrain": true
+    },
+    {
+      "actual": 17.18,
+      "predicted": 18.41,
+      "time": "03:51",
+      "isTrain": true
+    },
+    {
+      "actual": 12.42,
+      "predicted": 11.0,
+      "time": "03:08",
+      "isTrain": true
+    },
+    {
+      "actual": 24.41,
+      "predicted": 21.35,
+      "time": "06:16",
+      "isTrain": true
+    },
+    {
+      "actual": 4.49,
+      "predicted": 4.42,
+      "time": "22:59",
+      "isTrain": true
+    },
+    {
+      "actual": 3.61,
+      "predicted": 3.97,
+      "time": "21:59",
+      "isTrain": false
+    },
+    {
+      "actual": 8.19,
+      "predicted": 8.32,
+      "time": "04:38",
+      "isTrain": false
+    },
+    {
+      "actual": 6.43,
+      "predicted": 7.01,
+      "time": "03:55",
+      "isTrain": false
+    },
+    {
+      "actual": 9.07,
+      "predicted": 8.46,
+      "time": "02:25",
+      "isTrain": false
+    },
+    {
+      "actual": 4.67,
+      "predicted": 4.57,
+      "time": "21:52",
+      "isTrain": false
+    },
+    {
+      "actual": 2.73,
+      "predicted": 3.13,
+      "time": "06:15",
+      "isTrain": false
+    },
+    {
+      "actual": 4.31,
+      "predicted": 4.23,
+      "time": "22:50",
+      "isTrain": false
+    },
+    {
+      "actual": 4.84,
+      "predicted": 5.52,
+      "time": "01:29",
+      "isTrain": false
+    },
+    {
+      "actual": 19.12,
+      "predicted": 18.87,
+      "time": "04:31",
+      "isTrain": false
+    },
+    {
+      "actual": 13.48,
+      "predicted": 12.88,
+      "time": "03:18",
+      "isTrain": false
+    },
+    {
+      "actual": 4.31,
+      "predicted": 4.28,
+      "time": "22:53",
+      "isTrain": false
+    },
+    {
+      "actual": 2.9,
+      "predicted": 3.66,
+      "time": "05:54",
+      "isTrain": false
+    },
+    {
+      "actual": 5.37,
+      "predicted": 5.57,
+      "time": "00:22",
+      "isTrain": false
+    },
+    {
+      "actual": 6.96,
+      "predicted": 7.78,
+      "time": "03:42",
+      "isTrain": false
+    },
+    {
+      "actual": 28.64,
+      "predicted": 26.34,
+      "time": "06:10",
+      "isTrain": false
+    },
+    {
+      "actual": 11.54,
+      "predicted": 13.3,
+      "time": "03:29",
+      "isTrain": false
+    },
+    {
+      "actual": 4.49,
+      "predicted": 4.46,
+      "time": "22:34",
+      "isTrain": false
+    },
+    {
+      "actual": 21.23,
+      "predicted": 21.05,
+      "time": "05:10",
+      "isTrain": false
+    },
+    {
+      "actual": 20.88,
+      "predicted": 18.96,
+      "time": "04:47",
+      "isTrain": false
+    },
+    {
+      "actual": 21.06,
+      "predicted": 22.03,
+      "time": "02:34",
+      "isTrain": false
+    },
+    {
+      "actual": 8.9,
+      "predicted": 8.05,
+      "time": "02:08",
+      "isTrain": false
+    },
+    {
+      "actual": 22.47,
+      "predicted": 22.72,
+      "time": "02:02",
+      "isTrain": false
+    },
+    {
+      "actual": 5.72,
+      "predicted": 6.51,
+      "time": "00:42",
+      "isTrain": false
+    },
+    {
+      "actual": 22.64,
+      "predicted": 22.63,
+      "time": "06:17",
+      "isTrain": false
+    },
+    {
+      "actual": 29.87,
+      "predicted": 29.9,
+      "time": "03:45",
+      "isTrain": false
+    },
+    {
+      "actual": 23.35,
+      "predicted": 24.28,
+      "time": "03:41",
+      "isTrain": false
+    },
+    {
+      "actual": 20.35,
+      "predicted": 21.09,
+      "time": "05:39",
+      "isTrain": false
+    },
+    {
+      "actual": 20.35,
+      "predicted": 21.87,
+      "time": "02:59",
+      "isTrain": false
+    },
+    {
+      "actual": 5.72,
+      "predicted": 5.41,
+      "time": "23:33",
+      "isTrain": false
+    },
+    {
+      "actual": 20.88,
+      "predicted": 21.03,
+      "time": "05:07",
+      "isTrain": false
+    },
+    {
+      "actual": 20.0,
+      "predicted": 20.24,
+      "time": "04:21",
+      "isTrain": false
+    },
+    {
+      "actual": 5.2,
+      "predicted": 5.75,
+      "time": "01:33",
+      "isTrain": false
+    },
+    {
+      "actual": 8.9,
+      "predicted": 10.01,
+      "time": "03:00",
+      "isTrain": false
+    },
+    {
+      "actual": 7.31,
+      "predicted": 6.13,
+      "time": "21:36",
+      "isTrain": false
+    },
+    {
+      "actual": 24.41,
+      "predicted": 24.47,
+      "time": "02:18",
+      "isTrain": false
+    },
+    {
+      "actual": 7.31,
+      "predicted": 6.65,
+      "time": "23:49",
+      "isTrain": false
+    },
+    {
+      "actual": 23.52,
+      "predicted": 23.61,
+      "time": "02:17",
+      "isTrain": false
+    },
+    {
+      "actual": 5.9,
+      "predicted": 5.51,
+      "time": "23:30",
+      "isTrain": false
+    },
+    {
+      "actual": 4.84,
+      "predicted": 5.0,
+      "time": "22:55",
+      "isTrain": false
+    },
+    {
+      "actual": 27.93,
+      "predicted": 28.09,
+      "time": "02:00",
+      "isTrain": false
+    },
+    {
+      "actual": 21.76,
+      "predicted": 20.5,
+      "time": "06:28",
+      "isTrain": false
+    },
+    {
+      "actual": 21.94,
+      "predicted": 22.59,
+      "time": "02:25",
+      "isTrain": false
+    },
+    {
+      "actual": 4.14,
+      "predicted": 5.24,
+      "time": "02:13",
+      "isTrain": false
+    },
+    {
+      "actual": 10.13,
+      "predicted": 9.59,
+      "time": "03:05",
+      "isTrain": false
+    },
+    {
+      "actual": 10.13,
+      "predicted": 12.63,
+      "time": "03:30",
+      "isTrain": false
+    },
+    {
+      "actual": 19.65,
+      "predicted": 18.25,
+      "time": "07:04",
+      "isTrain": false
+    },
+    {
+      "actual": 19.29,
+      "predicted": 20.68,
+      "time": "06:57",
+      "isTrain": false
+    },
+    {
+      "actual": 6.61,
+      "predicted": 6.08,
+      "time": "23:42",
+      "isTrain": false
+    },
+    {
+      "actual": 19.65,
+      "predicted": 21.21,
+      "time": "07:36",
+      "isTrain": false
+    },
+    {
+      "actual": 4.49,
+      "predicted": 5.76,
+      "time": "04:49",
+      "isTrain": false
+    },
+    {
+      "actual": 6.61,
+      "predicted": 6.2,
+      "time": "01:04",
+      "isTrain": false
+    },
+    {
+      "actual": 11.01,
+      "predicted": 11.58,
+      "time": "03:24",
+      "isTrain": false
+    },
+    {
+      "actual": 5.9,
+      "predicted": 6.31,
+      "time": "23:50",
+      "isTrain": false
+    },
+    {
+      "actual": 5.37,
+      "predicted": 7.45,
+      "time": "04:11",
+      "isTrain": false
+    },
+    {
+      "actual": 8.19,
+      "predicted": 7.12,
+      "time": "00:10",
+      "isTrain": false
+    },
+    {
+      "actual": 23.17,
+      "predicted": 22.14,
+      "time": "01:49",
+      "isTrain": false
+    },
+    {
+      "actual": 20.53,
+      "predicted": 21.06,
+      "time": "03:27",
+      "isTrain": false
+    },
+    {
+      "actual": 8.9,
+      "predicted": 9.15,
+      "time": "03:31",
+      "isTrain": false
+    },
+    {
+      "actual": 17.0,
+      "predicted": 17.63,
+      "time": "04:07",
+      "isTrain": false
+    },
+    {
+      "actual": 2.2,
+      "predicted": 2.74,
+      "time": "06:14",
+      "isTrain": false
+    },
+    {
+      "actual": 17.88,
+      "predicted": 18.94,
+      "time": "03:37",
+      "isTrain": false
+    },
+    {
+      "actual": 5.37,
+      "predicted": 6.47,
+      "time": "04:31",
+      "isTrain": false
+    },
+    {
+      "actual": 160.11,
+      "predicted": 169.77,
+      "time": "02:58",
+      "isTrain": false
+    },
+    {
+      "actual": 18.94,
+      "predicted": 19.71,
+      "time": "05:50",
+      "isTrain": false
+    },
+    {
+      "actual": 8.19,
+      "predicted": 12.68,
+      "time": "03:39",
+      "isTrain": false
+    },
+    {
+      "actual": 5.55,
+      "predicted": 6.8,
+      "time": "01:18",
+      "isTrain": false
+    },
+    {
+      "actual": 4.31,
+      "predicted": 4.16,
+      "time": "21:37",
+      "isTrain": false
+    },
+    {
+      "actual": 20.53,
+      "predicted": 19.14,
+      "time": "03:29",
+      "isTrain": false
+    },
+    {
+      "actual": 25.11,
+      "predicted": 24.72,
+      "time": "02:11",
+      "isTrain": false
+    },
+    {
+      "actual": 7.31,
+      "predicted": 7.16,
+      "time": "02:09",
+      "isTrain": false
+    },
+    {
+      "actual": 7.31,
+      "predicted": 6.68,
+      "time": "00:08",
+      "isTrain": false
+    },
+    {
+      "actual": 18.94,
+      "predicted": 20.04,
+      "time": "06:48",
+      "isTrain": false
+    },
+    {
+      "actual": 16.65,
+      "predicted": 16.34,
+      "time": "03:52",
+      "isTrain": false
+    },
+    {
+      "actual": 5.72,
+      "predicted": 6.45,
+      "time": "05:21",
+      "isTrain": false
+    },
+    {
+      "actual": 2.73,
+      "predicted": 3.12,
+      "time": "21:46",
+      "isTrain": false
+    },
+    {
+      "actual": 21.76,
+      "predicted": 20.27,
+      "time": "06:21",
+      "isTrain": false
+    },
+    {
+      "actual": 2.73,
+      "predicted": 3.44,
+      "time": "22:23",
+      "isTrain": false
+    },
+    {
+      "actual": 22.64,
+      "predicted": 21.36,
+      "time": "06:20",
+      "isTrain": false
+    },
+    {
+      "actual": 6.61,
+      "predicted": 5.76,
+      "time": "22:42",
+      "isTrain": false
+    },
+    {
+      "actual": 4.14,
+      "predicted": 6.14,
+      "time": "05:18",
+      "isTrain": false
+    },
+    {
+      "actual": 18.06,
+      "predicted": 18.41,
+      "time": "04:37",
+      "isTrain": false
+    },
+    {
+      "actual": 25.99,
+      "predicted": 28.28,
+      "time": "02:05",
+      "isTrain": false
+    },
+    {
+      "actual": 3.43,
+      "predicted": 3.53,
+      "time": "21:32",
+      "isTrain": false
+    },
+    {
+      "actual": 18.24,
+      "predicted": 17.65,
+      "time": "03:38",
+      "isTrain": false
+    },
+    {
+      "actual": 10.31,
+      "predicted": 9.48,
+      "time": "03:41",
+      "isTrain": false
+    },
+    {
+      "actual": 18.59,
+      "predicted": 17.44,
+      "time": "03:50",
+      "isTrain": false
+    },
+    {
+      "actual": 3.08,
+      "predicted": 3.29,
+      "time": "21:11",
+      "isTrain": false
+    },
+    {
+      "actual": 21.23,
+      "predicted": 22.74,
+      "time": "02:29",
+      "isTrain": false
+    },
+    {
+      "actual": 23.0,
+      "predicted": 22.79,
+      "time": "05:58",
+      "isTrain": false
+    },
+    {
+      "actual": 21.41,
+      "predicted": 19.38,
+      "time": "06:24",
+      "isTrain": false
+    },
+    {
+      "actual": 5.2,
+      "predicted": 5.14,
+      "time": "23:39",
+      "isTrain": false
+    },
+    {
+      "actual": 4.49,
+      "predicted": 5.05,
+      "time": "23:13",
+      "isTrain": false
+    },
+    {
+      "actual": 10.31,
+      "predicted": 9.35,
+      "time": "03:25",
+      "isTrain": false
+    },
+    {
+      "actual": 5.72,
+      "predicted": 6.21,
+      "time": "23:45",
+      "isTrain": false
+    },
+    {
+      "actual": 21.94,
+      "predicted": 19.77,
+      "time": "03:55",
+      "isTrain": false
+    },
+    {
+      "actual": 7.66,
+      "predicted": 7.06,
+      "time": "01:59",
+      "isTrain": false
+    },
+    {
+      "actual": 6.61,
+      "predicted": 6.11,
+      "time": "23:43",
+      "isTrain": false
+    },
+    {
+      "actual": 5.55,
+      "predicted": 4.76,
+      "time": "21:25",
+      "isTrain": false
+    },
+    {
+      "actual": 18.77,
+      "predicted": 19.05,
+      "time": "03:56",
+      "isTrain": false
+    },
+    {
+      "actual": 5.2,
+      "predicted": 4.84,
+      "time": "22:46",
+      "isTrain": false
+    },
+    {
+      "actual": 5.02,
+      "predicted": 6.86,
+      "time": "01:56",
+      "isTrain": false
+    },
+    {
+      "actual": 2.9,
+      "predicted": 3.51,
+      "time": "20:59",
+      "isTrain": false
+    },
+    {
+      "actual": 24.41,
+      "predicted": 23.23,
+      "time": "02:16",
+      "isTrain": false
+    },
+    {
+      "actual": 26.34,
+      "predicted": 24.15,
+      "time": "06:00",
+      "isTrain": false
+    },
+    {
+      "actual": 8.19,
+      "predicted": 7.6,
+      "time": "02:17",
+      "isTrain": false
+    },
+    {
+      "actual": 5.2,
+      "predicted": 6.44,
+      "time": "04:44",
+      "isTrain": false
+    },
+    {
+      "actual": 2.2,
+      "predicted": 2.98,
+      "time": "21:49",
+      "isTrain": false
+    },
+    {
+      "actual": 10.13,
+      "predicted": 8.78,
+      "time": "02:15",
+      "isTrain": false
+    },
+    {
+      "actual": 5.55,
+      "predicted": 6.42,
+      "time": "03:54",
+      "isTrain": false
+    },
+    {
+      "actual": 6.43,
+      "predicted": 6.93,
+      "time": "04:45",
+      "isTrain": false
+    },
+    {
+      "actual": 7.13,
+      "predicted": 7.42,
+      "time": "04:08",
+      "isTrain": false
+    },
+    {
+      "actual": 2.9,
+      "predicted": 3.46,
+      "time": "22:00",
+      "isTrain": false
+    },
+    {
+      "actual": 21.76,
+      "predicted": 19.83,
+      "time": "03:10",
+      "isTrain": false
+    },
+    {
+      "actual": 17.88,
+      "predicted": 19.04,
+      "time": "03:43",
+      "isTrain": false
+    },
+    {
+      "actual": 5.37,
+      "predicted": 5.03,
+      "time": "23:00",
+      "isTrain": false
+    },
+    {
+      "actual": 4.84,
+      "predicted": 4.72,
+      "time": "22:58",
+      "isTrain": false
+    },
+    {
+      "actual": 2.9,
+      "predicted": 3.12,
+      "time": "06:08",
+      "isTrain": false
+    },
+    {
+      "actual": 6.08,
+      "predicted": 5.91,
+      "time": "01:08",
+      "isTrain": false
+    },
+    {
+      "actual": 5.72,
+      "predicted": 6.65,
+      "time": "05:02",
+      "isTrain": false
+    },
+    {
+      "actual": 10.13,
+      "predicted": 8.99,
+      "time": "01:24",
+      "isTrain": false
+    },
+    {
+      "actual": 5.37,
+      "predicted": 5.05,
+      "time": "23:16",
+      "isTrain": false
+    },
+    {
+      "actual": 23.0,
+      "predicted": 20.7,
+      "time": "03:05",
+      "isTrain": false
+    },
+    {
+      "actual": 3.43,
+      "predicted": 3.73,
+      "time": "20:48",
+      "isTrain": false
+    },
+    {
+      "actual": 6.96,
+      "predicted": 7.55,
+      "time": "04:37",
+      "isTrain": false
+    },
+    {
+      "actual": 17.88,
+      "predicted": 18.82,
+      "time": "06:32",
+      "isTrain": false
+    },
+    {
+      "actual": 17.18,
+      "predicted": 13.78,
+      "time": "03:21",
+      "isTrain": false
+    },
+    {
+      "actual": 6.61,
+      "predicted": 7.37,
+      "time": "04:32",
+      "isTrain": false
+    },
+    {
+      "actual": 20.88,
+      "predicted": 20.71,
+      "time": "05:26",
+      "isTrain": false
+    },
+    {
+      "actual": 3.43,
+      "predicted": 3.51,
+      "time": "21:30",
+      "isTrain": false
+    },
+    {
+      "actual": 16.3,
+      "predicted": 18.32,
+      "time": "07:02",
+      "isTrain": false
+    },
+    {
+      "actual": 28.64,
+      "predicted": 23.46,
+      "time": "06:15",
+      "isTrain": false
+    },
+    {
+      "actual": 20.53,
+      "predicted": 19.24,
+      "time": "06:43",
+      "isTrain": false
+    },
+    {
+      "actual": 21.06,
+      "predicted": 19.6,
+      "time": "03:33",
+      "isTrain": false
+    },
+    {
+      "actual": 27.75,
+      "predicted": 30.55,
+      "time": "03:48",
+      "isTrain": false
+    },
+    {
+      "actual": 22.64,
+      "predicted": 21.6,
+      "time": "02:49",
+      "isTrain": false
+    },
+    {
+      "actual": 22.11,
+      "predicted": 21.59,
+      "time": "02:35",
+      "isTrain": false
+    },
+    {
+      "actual": 6.08,
+      "predicted": 5.59,
+      "time": "23:02",
+      "isTrain": false
+    },
+    {
+      "actual": 7.13,
+      "predicted": 6.8,
+      "time": "02:14",
+      "isTrain": false
+    },
+    {
+      "actual": 24.58,
+      "predicted": 23.94,
+      "time": "02:13",
+      "isTrain": false
+    },
+    {
+      "actual": 6.08,
+      "predicted": 6.68,
+      "time": "04:13",
+      "isTrain": false
+    },
+    {
+      "actual": 5.2,
+      "predicted": 5.85,
+      "time": "02:37",
+      "isTrain": false
+    },
+    {
+      "actual": 6.25,
+      "predicted": 6.83,
+      "time": "05:25",
+      "isTrain": false
+    },
+    {
+      "actual": 18.94,
+      "predicted": 23.23,
+      "time": "03:47",
+      "isTrain": false
+    },
+    {
+      "actual": 20.18,
+      "predicted": 22.72,
+      "time": "02:58",
+      "isTrain": false
+    },
+    {
+      "actual": 2.38,
+      "predicted": 2.96,
+      "time": "21:43",
+      "isTrain": false
+    },
+    {
+      "actual": 21.94,
+      "predicted": 21.82,
+      "time": "02:38",
+      "isTrain": false
+    },
+    {
+      "actual": 16.83,
+      "predicted": 18.03,
+      "time": "01:37",
+      "isTrain": false
+    },
+    {
+      "actual": 18.24,
+      "predicted": 20.3,
+      "time": "06:27",
+      "isTrain": false
+    },
+    {
+      "actual": 4.67,
+      "predicted": 6.73,
+      "time": "05:41",
+      "isTrain": false
+    },
+    {
+      "actual": 2.73,
+      "predicted": 3.18,
+      "time": "20:45",
+      "isTrain": false
+    },
+    {
+      "actual": 5.37,
+      "predicted": 6.23,
+      "time": "04:17",
+      "isTrain": false
+    },
+    {
+      "actual": 116.93,
+      "predicted": 122.65,
+      "time": "12:49",
+      "isTrain": false
+    },
+    {
+      "actual": 10.13,
+      "predicted": 10.9,
+      "time": "03:33",
+      "isTrain": false
+    },
+    {
+      "actual": 15.77,
+      "predicted": 16.84,
+      "time": "03:35",
+      "isTrain": false
+    },
+    {
+      "actual": 24.23,
+      "predicted": 22.2,
+      "time": "02:32",
+      "isTrain": false
+    },
+    {
+      "actual": 3.61,
+      "predicted": 5.53,
+      "time": "01:49",
+      "isTrain": false
+    },
+    {
+      "actual": 2.02,
+      "predicted": 2.81,
+      "time": "06:19",
+      "isTrain": false
+    },
+    {
+      "actual": 7.66,
+      "predicted": 7.7,
+      "time": "04:40",
+      "isTrain": false
+    },
+    {
+      "actual": 4.31,
+      "predicted": 4.73,
+      "time": "05:50",
+      "isTrain": false
+    },
+    {
+      "actual": 17.71,
+      "predicted": 17.09,
+      "time": "04:06",
+      "isTrain": false
+    },
+    {
+      "actual": 25.46,
+      "predicted": 25.02,
+      "time": "05:36",
+      "isTrain": false
+    },
+    {
+      "actual": 2.55,
+      "predicted": 2.98,
+      "time": "21:41",
+      "isTrain": false
+    },
+    {
+      "actual": 8.19,
+      "predicted": 8.03,
+      "time": "05:26",
+      "isTrain": false
+    },
+    {
+      "actual": 23.88,
+      "predicted": 23.98,
+      "time": "01:52",
+      "isTrain": false
+    },
+    {
+      "actual": 23.0,
+      "predicted": 22.8,
+      "time": "03:03",
+      "isTrain": false
+    },
+    {
+      "actual": 20.7,
+      "predicted": 20.51,
+      "time": "03:15",
+      "isTrain": false
+    },
+    {
+      "actual": 2.9,
+      "predicted": 3.36,
+      "time": "05:58",
+      "isTrain": false
+    },
+    {
+      "actual": 22.82,
+      "predicted": 28.39,
+      "time": "12:10",
+      "isTrain": false
+    },
+    {
+      "actual": 3.08,
+      "predicted": 3.56,
+      "time": "20:58",
+      "isTrain": false
+    },
+    {
+      "actual": 10.31,
+      "predicted": 11.93,
+      "time": "03:02",
+      "isTrain": false
+    },
+    {
+      "actual": 6.78,
+      "predicted": 6.17,
+      "time": "23:40",
+      "isTrain": false
+    },
+    {
+      "actual": 2.9,
+      "predicted": 3.5,
+      "time": "22:01",
+      "isTrain": false
+    },
+    {
+      "actual": 22.29,
+      "predicted": 20.71,
+      "time": "05:09",
+      "isTrain": false
+    },
+    {
+      "actual": 6.61,
+      "predicted": 6.09,
+      "time": "00:16",
+      "isTrain": false
+    },
+    {
+      "actual": 22.29,
+      "predicted": 25.54,
+      "time": "03:43",
+      "isTrain": false
+    },
+    {
+      "actual": 3.96,
+      "predicted": 4.72,
+      "time": "02:50",
+      "isTrain": false
+    },
+    {
+      "actual": 5.9,
+      "predicted": 5.48,
+      "time": "00:26",
+      "isTrain": false
+    },
+    {
+      "actual": 18.94,
+      "predicted": 19.11,
+      "time": "03:39",
+      "isTrain": false
+    },
+    {
+      "actual": 6.08,
+      "predicted": 6.72,
+      "time": "04:10",
+      "isTrain": false
+    },
+    {
+      "actual": 3.08,
+      "predicted": 3.77,
+      "time": "05:53",
+      "isTrain": false
+    },
+    {
+      "actual": 9.07,
+      "predicted": 9.22,
+      "time": "03:29",
+      "isTrain": false
+    },
+    {
+      "actual": 5.55,
+      "predicted": 5.09,
+      "time": "22:15",
+      "isTrain": false
+    },
+    {
+      "actual": 5.2,
+      "predicted": 6.03,
+      "time": "03:47",
+      "isTrain": false
+    },
+    {
+      "actual": 3.43,
+      "predicted": 3.63,
+      "time": "21:42",
+      "isTrain": false
+    },
+    {
+      "actual": 3.96,
+      "predicted": 4.06,
+      "time": "22:52",
+      "isTrain": false
+    },
+    {
+      "actual": 27.75,
+      "predicted": 25.57,
+      "time": "06:08",
+      "isTrain": false
+    },
+    {
+      "actual": 19.47,
+      "predicted": 19.49,
+      "time": "06:58",
+      "isTrain": false
+    },
+    {
+      "actual": 3.08,
+      "predicted": 3.44,
+      "time": "06:24",
+      "isTrain": false
+    },
+    {
+      "actual": 6.25,
+      "predicted": 6.31,
+      "time": "01:38",
+      "isTrain": false
+    },
+    {
+      "actual": 20.88,
+      "predicted": 19.96,
+      "time": "03:17",
+      "isTrain": false
+    },
+    {
+      "actual": 4.84,
+      "predicted": 5.87,
+      "time": "02:43",
+      "isTrain": false
+    },
+    {
+      "actual": 21.76,
+      "predicted": 22.56,
+      "time": "02:43",
+      "isTrain": false
+    },
+    {
+      "actual": 17.88,
+      "predicted": 19.95,
+      "time": "04:40",
+      "isTrain": false
+    },
+    {
+      "actual": 5.55,
+      "predicted": 6.39,
+      "time": "04:04",
+      "isTrain": false
+    },
+    {
+      "actual": 6.25,
+      "predicted": 6.7,
+      "time": "05:17",
+      "isTrain": false
+    },
+    {
+      "actual": 3.43,
+      "predicted": 4.06,
+      "time": "05:52",
+      "isTrain": false
+    },
+    {
+      "actual": 22.82,
+      "predicted": 21.54,
+      "time": "06:22",
+      "isTrain": false
+    },
+    {
+      "actual": 20.7,
+      "predicted": 20.86,
+      "time": "05:05",
+      "isTrain": false
+    },
+    {
+      "actual": 6.78,
+      "predicted": 6.65,
+      "time": "01:57",
+      "isTrain": false
+    }
+  ],
+  "timeSeriesData": [
+    {
+      "time": "21:59",
+      "actual": 3.61,
+      "predicted": 3.97
+    },
+    {
+      "time": "04:38",
+      "actual": 8.19,
+      "predicted": 8.32
+    },
+    {
+      "time": "03:55",
+      "actual": 6.43,
+      "predicted": 7.01
+    },
+    {
+      "time": "02:25",
+      "actual": 9.07,
+      "predicted": 8.46
+    },
+    {
+      "time": "21:52",
+      "actual": 4.67,
+      "predicted": 4.57
+    },
+    {
+      "time": "06:15",
+      "actual": 2.73,
+      "predicted": 3.13
+    },
+    {
+      "time": "22:50",
+      "actual": 4.31,
+      "predicted": 4.23
+    },
+    {
+      "time": "01:29",
+      "actual": 4.84,
+      "predicted": 5.52
+    },
+    {
+      "time": "04:31",
+      "actual": 19.12,
+      "predicted": 18.87
+    },
+    {
+      "time": "03:18",
+      "actual": 13.48,
+      "predicted": 12.88
+    },
+    {
+      "time": "22:53",
+      "actual": 4.31,
+      "predicted": 4.28
+    },
+    {
+      "time": "05:54",
+      "actual": 2.9,
+      "predicted": 3.66
+    },
+    {
+      "time": "00:22",
+      "actual": 5.37,
+      "predicted": 5.57
+    },
+    {
+      "time": "03:42",
+      "actual": 6.96,
+      "predicted": 7.78
+    },
+    {
+      "time": "06:10",
+      "actual": 28.64,
+      "predicted": 26.34
+    },
+    {
+      "time": "03:29",
+      "actual": 11.54,
+      "predicted": 13.3
+    },
+    {
+      "time": "22:34",
+      "actual": 4.49,
+      "predicted": 4.46
+    },
+    {
+      "time": "05:10",
+      "actual": 21.23,
+      "predicted": 21.05
+    },
+    {
+      "time": "04:47",
+      "actual": 20.88,
+      "predicted": 18.96
+    },
+    {
+      "time": "02:34",
+      "actual": 21.06,
+      "predicted": 22.03
+    },
+    {
+      "time": "02:08",
+      "actual": 8.9,
+      "predicted": 8.05
+    },
+    {
+      "time": "02:02",
+      "actual": 22.47,
+      "predicted": 22.72
+    },
+    {
+      "time": "00:42",
+      "actual": 5.72,
+      "predicted": 6.51
+    },
+    {
+      "time": "06:17",
+      "actual": 22.64,
+      "predicted": 22.63
+    },
+    {
+      "time": "03:45",
+      "actual": 29.87,
+      "predicted": 29.9
+    },
+    {
+      "time": "03:41",
+      "actual": 23.35,
+      "predicted": 24.28
+    },
+    {
+      "time": "05:39",
+      "actual": 20.35,
+      "predicted": 21.09
+    },
+    {
+      "time": "02:59",
+      "actual": 20.35,
+      "predicted": 21.87
+    },
+    {
+      "time": "23:33",
+      "actual": 5.72,
+      "predicted": 5.41
+    },
+    {
+      "time": "05:07",
+      "actual": 20.88,
+      "predicted": 21.03
+    },
+    {
+      "time": "04:21",
+      "actual": 20.0,
+      "predicted": 20.24
+    },
+    {
+      "time": "01:33",
+      "actual": 5.2,
+      "predicted": 5.75
+    },
+    {
+      "time": "03:00",
+      "actual": 8.9,
+      "predicted": 10.01
+    },
+    {
+      "time": "21:36",
+      "actual": 7.31,
+      "predicted": 6.13
+    },
+    {
+      "time": "02:18",
+      "actual": 24.41,
+      "predicted": 24.47
+    },
+    {
+      "time": "23:49",
+      "actual": 7.31,
+      "predicted": 6.65
+    },
+    {
+      "time": "02:17",
+      "actual": 23.52,
+      "predicted": 23.61
+    },
+    {
+      "time": "23:30",
+      "actual": 5.9,
+      "predicted": 5.51
+    },
+    {
+      "time": "22:55",
+      "actual": 4.84,
+      "predicted": 5.0
+    },
+    {
+      "time": "02:00",
+      "actual": 27.93,
+      "predicted": 28.09
+    },
+    {
+      "time": "06:28",
+      "actual": 21.76,
+      "predicted": 20.5
+    },
+    {
+      "time": "02:25",
+      "actual": 21.94,
+      "predicted": 22.59
+    },
+    {
+      "time": "02:13",
+      "actual": 4.14,
+      "predicted": 5.24
+    },
+    {
+      "time": "03:05",
+      "actual": 10.13,
+      "predicted": 9.59
+    },
+    {
+      "time": "03:30",
+      "actual": 10.13,
+      "predicted": 12.63
+    },
+    {
+      "time": "07:04",
+      "actual": 19.65,
+      "predicted": 18.25
+    },
+    {
+      "time": "06:57",
+      "actual": 19.29,
+      "predicted": 20.68
+    },
+    {
+      "time": "23:42",
+      "actual": 6.61,
+      "predicted": 6.08
+    },
+    {
+      "time": "07:36",
+      "actual": 19.65,
+      "predicted": 21.21
+    },
+    {
+      "time": "04:49",
+      "actual": 4.49,
+      "predicted": 5.76
+    },
+    {
+      "time": "01:04",
+      "actual": 6.61,
+      "predicted": 6.2
+    },
+    {
+      "time": "03:24",
+      "actual": 11.01,
+      "predicted": 11.58
+    },
+    {
+      "time": "23:50",
+      "actual": 5.9,
+      "predicted": 6.31
+    },
+    {
+      "time": "04:11",
+      "actual": 5.37,
+      "predicted": 7.45
+    },
+    {
+      "time": "00:10",
+      "actual": 8.19,
+      "predicted": 7.12
+    },
+    {
+      "time": "01:49",
+      "actual": 23.17,
+      "predicted": 22.14
+    },
+    {
+      "time": "03:27",
+      "actual": 20.53,
+      "predicted": 21.06
+    },
+    {
+      "time": "03:31",
+      "actual": 8.9,
+      "predicted": 9.15
+    },
+    {
+      "time": "04:07",
+      "actual": 17.0,
+      "predicted": 17.63
+    },
+    {
+      "time": "06:14",
+      "actual": 2.2,
+      "predicted": 2.74
+    },
+    {
+      "time": "03:37",
+      "actual": 17.88,
+      "predicted": 18.94
+    },
+    {
+      "time": "04:31",
+      "actual": 5.37,
+      "predicted": 6.47
+    },
+    {
+      "time": "02:58",
+      "actual": 160.11,
+      "predicted": 169.77
+    },
+    {
+      "time": "05:50",
+      "actual": 18.94,
+      "predicted": 19.71
+    },
+    {
+      "time": "03:39",
+      "actual": 8.19,
+      "predicted": 12.68
+    },
+    {
+      "time": "01:18",
+      "actual": 5.55,
+      "predicted": 6.8
+    },
+    {
+      "time": "21:37",
+      "actual": 4.31,
+      "predicted": 4.16
+    },
+    {
+      "time": "03:29",
+      "actual": 20.53,
+      "predicted": 19.14
+    },
+    {
+      "time": "02:11",
+      "actual": 25.11,
+      "predicted": 24.72
+    },
+    {
+      "time": "02:09",
+      "actual": 7.31,
+      "predicted": 7.16
+    },
+    {
+      "time": "00:08",
+      "actual": 7.31,
+      "predicted": 6.68
+    },
+    {
+      "time": "06:48",
+      "actual": 18.94,
+      "predicted": 20.04
+    },
+    {
+      "time": "03:52",
+      "actual": 16.65,
+      "predicted": 16.34
+    },
+    {
+      "time": "05:21",
+      "actual": 5.72,
+      "predicted": 6.45
+    },
+    {
+      "time": "21:46",
+      "actual": 2.73,
+      "predicted": 3.12
+    },
+    {
+      "time": "06:21",
+      "actual": 21.76,
+      "predicted": 20.27
+    },
+    {
+      "time": "22:23",
+      "actual": 2.73,
+      "predicted": 3.44
+    },
+    {
+      "time": "06:20",
+      "actual": 22.64,
+      "predicted": 21.36
+    },
+    {
+      "time": "22:42",
+      "actual": 6.61,
+      "predicted": 5.76
+    },
+    {
+      "time": "05:18",
+      "actual": 4.14,
+      "predicted": 6.14
+    },
+    {
+      "time": "04:37",
+      "actual": 18.06,
+      "predicted": 18.41
+    },
+    {
+      "time": "02:05",
+      "actual": 25.99,
+      "predicted": 28.28
+    },
+    {
+      "time": "21:32",
+      "actual": 3.43,
+      "predicted": 3.53
+    },
+    {
+      "time": "03:38",
+      "actual": 18.24,
+      "predicted": 17.65
+    },
+    {
+      "time": "03:41",
+      "actual": 10.31,
+      "predicted": 9.48
+    },
+    {
+      "time": "03:50",
+      "actual": 18.59,
+      "predicted": 17.44
+    },
+    {
+      "time": "21:11",
+      "actual": 3.08,
+      "predicted": 3.29
+    },
+    {
+      "time": "02:29",
+      "actual": 21.23,
+      "predicted": 22.74
+    },
+    {
+      "time": "05:58",
+      "actual": 23.0,
+      "predicted": 22.79
+    },
+    {
+      "time": "06:24",
+      "actual": 21.41,
+      "predicted": 19.38
+    },
+    {
+      "time": "23:39",
+      "actual": 5.2,
+      "predicted": 5.14
+    },
+    {
+      "time": "23:13",
+      "actual": 4.49,
+      "predicted": 5.05
+    },
+    {
+      "time": "03:25",
+      "actual": 10.31,
+      "predicted": 9.35
+    },
+    {
+      "time": "23:45",
+      "actual": 5.72,
+      "predicted": 6.21
+    },
+    {
+      "time": "03:55",
+      "actual": 21.94,
+      "predicted": 19.77
+    },
+    {
+      "time": "01:59",
+      "actual": 7.66,
+      "predicted": 7.06
+    },
+    {
+      "time": "23:43",
+      "actual": 6.61,
+      "predicted": 6.11
+    },
+    {
+      "time": "21:25",
+      "actual": 5.55,
+      "predicted": 4.76
+    },
+    {
+      "time": "03:56",
+      "actual": 18.77,
+      "predicted": 19.05
+    },
+    {
+      "time": "22:46",
+      "actual": 5.2,
+      "predicted": 4.84
+    },
+    {
+      "time": "01:56",
+      "actual": 5.02,
+      "predicted": 6.86
+    },
+    {
+      "time": "20:59",
+      "actual": 2.9,
+      "predicted": 3.51
+    },
+    {
+      "time": "02:16",
+      "actual": 24.41,
+      "predicted": 23.23
+    },
+    {
+      "time": "06:00",
+      "actual": 26.34,
+      "predicted": 24.15
+    },
+    {
+      "time": "02:17",
+      "actual": 8.19,
+      "predicted": 7.6
+    },
+    {
+      "time": "04:44",
+      "actual": 5.2,
+      "predicted": 6.44
+    },
+    {
+      "time": "21:49",
+      "actual": 2.2,
+      "predicted": 2.98
+    },
+    {
+      "time": "02:15",
+      "actual": 10.13,
+      "predicted": 8.78
+    },
+    {
+      "time": "03:54",
+      "actual": 5.55,
+      "predicted": 6.42
+    },
+    {
+      "time": "04:45",
+      "actual": 6.43,
+      "predicted": 6.93
+    },
+    {
+      "time": "04:08",
+      "actual": 7.13,
+      "predicted": 7.42
+    },
+    {
+      "time": "22:00",
+      "actual": 2.9,
+      "predicted": 3.46
+    },
+    {
+      "time": "03:10",
+      "actual": 21.76,
+      "predicted": 19.83
+    },
+    {
+      "time": "03:43",
+      "actual": 17.88,
+      "predicted": 19.04
+    },
+    {
+      "time": "23:00",
+      "actual": 5.37,
+      "predicted": 5.03
+    },
+    {
+      "time": "22:58",
+      "actual": 4.84,
+      "predicted": 4.72
+    },
+    {
+      "time": "06:08",
+      "actual": 2.9,
+      "predicted": 3.12
+    },
+    {
+      "time": "01:08",
+      "actual": 6.08,
+      "predicted": 5.91
+    },
+    {
+      "time": "05:02",
+      "actual": 5.72,
+      "predicted": 6.65
+    },
+    {
+      "time": "01:24",
+      "actual": 10.13,
+      "predicted": 8.99
+    },
+    {
+      "time": "23:16",
+      "actual": 5.37,
+      "predicted": 5.05
+    },
+    {
+      "time": "03:05",
+      "actual": 23.0,
+      "predicted": 20.7
+    },
+    {
+      "time": "20:48",
+      "actual": 3.43,
+      "predicted": 3.73
+    },
+    {
+      "time": "04:37",
+      "actual": 6.96,
+      "predicted": 7.55
+    },
+    {
+      "time": "06:32",
+      "actual": 17.88,
+      "predicted": 18.82
+    },
+    {
+      "time": "03:21",
+      "actual": 17.18,
+      "predicted": 13.78
+    },
+    {
+      "time": "04:32",
+      "actual": 6.61,
+      "predicted": 7.37
+    },
+    {
+      "time": "05:26",
+      "actual": 20.88,
+      "predicted": 20.71
+    },
+    {
+      "time": "21:30",
+      "actual": 3.43,
+      "predicted": 3.51
+    },
+    {
+      "time": "07:02",
+      "actual": 16.3,
+      "predicted": 18.32
+    },
+    {
+      "time": "06:15",
+      "actual": 28.64,
+      "predicted": 23.46
+    },
+    {
+      "time": "06:43",
+      "actual": 20.53,
+      "predicted": 19.24
+    },
+    {
+      "time": "03:33",
+      "actual": 21.06,
+      "predicted": 19.6
+    },
+    {
+      "time": "03:48",
+      "actual": 27.75,
+      "predicted": 30.55
+    },
+    {
+      "time": "02:49",
+      "actual": 22.64,
+      "predicted": 21.6
+    },
+    {
+      "time": "02:35",
+      "actual": 22.11,
+      "predicted": 21.59
+    },
+    {
+      "time": "23:02",
+      "actual": 6.08,
+      "predicted": 5.59
+    },
+    {
+      "time": "02:14",
+      "actual": 7.13,
+      "predicted": 6.8
+    },
+    {
+      "time": "02:13",
+      "actual": 24.58,
+      "predicted": 23.94
+    },
+    {
+      "time": "04:13",
+      "actual": 6.08,
+      "predicted": 6.68
+    },
+    {
+      "time": "02:37",
+      "actual": 5.2,
+      "predicted": 5.85
+    },
+    {
+      "time": "05:25",
+      "actual": 6.25,
+      "predicted": 6.83
+    },
+    {
+      "time": "03:47",
+      "actual": 18.94,
+      "predicted": 23.23
+    },
+    {
+      "time": "02:58",
+      "actual": 20.18,
+      "predicted": 22.72
+    },
+    {
+      "time": "21:43",
+      "actual": 2.38,
+      "predicted": 2.96
+    },
+    {
+      "time": "02:38",
+      "actual": 21.94,
+      "predicted": 21.82
+    },
+    {
+      "time": "01:37",
+      "actual": 16.83,
+      "predicted": 18.03
+    },
+    {
+      "time": "06:27",
+      "actual": 18.24,
+      "predicted": 20.3
+    },
+    {
+      "time": "05:41",
+      "actual": 4.67,
+      "predicted": 6.73
+    },
+    {
+      "time": "20:45",
+      "actual": 2.73,
+      "predicted": 3.18
+    },
+    {
+      "time": "04:17",
+      "actual": 5.37,
+      "predicted": 6.23
+    },
+    {
+      "time": "12:49",
+      "actual": 116.93,
+      "predicted": 122.65
+    },
+    {
+      "time": "03:33",
+      "actual": 10.13,
+      "predicted": 10.9
+    },
+    {
+      "time": "03:35",
+      "actual": 15.77,
+      "predicted": 16.84
+    },
+    {
+      "time": "02:32",
+      "actual": 24.23,
+      "predicted": 22.2
+    },
+    {
+      "time": "01:49",
+      "actual": 3.61,
+      "predicted": 5.53
+    },
+    {
+      "time": "06:19",
+      "actual": 2.02,
+      "predicted": 2.81
+    },
+    {
+      "time": "04:40",
+      "actual": 7.66,
+      "predicted": 7.7
+    },
+    {
+      "time": "05:50",
+      "actual": 4.31,
+      "predicted": 4.73
+    },
+    {
+      "time": "04:06",
+      "actual": 17.71,
+      "predicted": 17.09
+    },
+    {
+      "time": "05:36",
+      "actual": 25.46,
+      "predicted": 25.02
+    },
+    {
+      "time": "21:41",
+      "actual": 2.55,
+      "predicted": 2.98
+    },
+    {
+      "time": "05:26",
+      "actual": 8.19,
+      "predicted": 8.03
+    },
+    {
+      "time": "01:52",
+      "actual": 23.88,
+      "predicted": 23.98
+    },
+    {
+      "time": "03:03",
+      "actual": 23.0,
+      "predicted": 22.8
+    },
+    {
+      "time": "03:15",
+      "actual": 20.7,
+      "predicted": 20.51
+    },
+    {
+      "time": "05:58",
+      "actual": 2.9,
+      "predicted": 3.36
+    },
+    {
+      "time": "12:10",
+      "actual": 22.82,
+      "predicted": 28.39
+    },
+    {
+      "time": "20:58",
+      "actual": 3.08,
+      "predicted": 3.56
+    },
+    {
+      "time": "03:02",
+      "actual": 10.31,
+      "predicted": 11.93
+    },
+    {
+      "time": "23:40",
+      "actual": 6.78,
+      "predicted": 6.17
+    },
+    {
+      "time": "22:01",
+      "actual": 2.9,
+      "predicted": 3.5
+    },
+    {
+      "time": "05:09",
+      "actual": 22.29,
+      "predicted": 20.71
+    },
+    {
+      "time": "00:16",
+      "actual": 6.61,
+      "predicted": 6.09
+    },
+    {
+      "time": "03:43",
+      "actual": 22.29,
+      "predicted": 25.54
+    },
+    {
+      "time": "02:50",
+      "actual": 3.96,
+      "predicted": 4.72
+    },
+    {
+      "time": "00:26",
+      "actual": 5.9,
+      "predicted": 5.48
+    },
+    {
+      "time": "03:39",
+      "actual": 18.94,
+      "predicted": 19.11
+    },
+    {
+      "time": "04:10",
+      "actual": 6.08,
+      "predicted": 6.72
+    },
+    {
+      "time": "05:53",
+      "actual": 3.08,
+      "predicted": 3.77
+    },
+    {
+      "time": "03:29",
+      "actual": 9.07,
+      "predicted": 9.22
+    },
+    {
+      "time": "22:15",
+      "actual": 5.55,
+      "predicted": 5.09
+    },
+    {
+      "time": "03:47",
+      "actual": 5.2,
+      "predicted": 6.03
+    },
+    {
+      "time": "21:42",
+      "actual": 3.43,
+      "predicted": 3.63
+    },
+    {
+      "time": "22:52",
+      "actual": 3.96,
+      "predicted": 4.06
+    },
+    {
+      "time": "06:08",
+      "actual": 27.75,
+      "predicted": 25.57
+    },
+    {
+      "time": "06:58",
+      "actual": 19.47,
+      "predicted": 19.49
+    },
+    {
+      "time": "06:24",
+      "actual": 3.08,
+      "predicted": 3.44
+    },
+    {
+      "time": "01:38",
+      "actual": 6.25,
+      "predicted": 6.31
+    },
+    {
+      "time": "03:17",
+      "actual": 20.88,
+      "predicted": 19.96
+    },
+    {
+      "time": "02:43",
+      "actual": 4.84,
+      "predicted": 5.87
+    },
+    {
+      "time": "02:43",
+      "actual": 21.76,
+      "predicted": 22.56
+    },
+    {
+      "time": "04:40",
+      "actual": 17.88,
+      "predicted": 19.95
+    },
+    {
+      "time": "04:04",
+      "actual": 5.55,
+      "predicted": 6.39
+    },
+    {
+      "time": "05:17",
+      "actual": 6.25,
+      "predicted": 6.7
+    },
+    {
+      "time": "05:52",
+      "actual": 3.43,
+      "predicted": 4.06
+    },
+    {
+      "time": "06:22",
+      "actual": 22.82,
+      "predicted": 21.54
+    },
+    {
+      "time": "05:05",
+      "actual": 20.7,
+      "predicted": 20.86
+    },
+    {
+      "time": "01:57",
+      "actual": 6.78,
+      "predicted": 6.65
+    }
+  ]
+}

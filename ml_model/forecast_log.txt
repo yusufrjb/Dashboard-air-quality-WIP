@@ -1,0 +1,518 @@
+2026-03-09 10:42:18,144 [INFO] ============================================================
+2026-03-09 10:42:18,151 [INFO] Mulai pipeline prediksi PM2.5 dengan XGBoost
+2026-03-09 10:42:18,154 [INFO] ============================================================
+2026-03-09 10:42:20,517 [INFO] Model dimuat dari: D:\DashboardAQ_v3\ml_model\xgb_pm25.pkl
+2026-03-09 10:42:20,518 [ERROR] NEXT_PUBLIC_SUPABASE_URL atau NEXT_PUBLIC_SUPABASE_ANON_KEY tidak ditemukan.
+2026-03-09 10:43:14,955 [INFO] ============================================================
+2026-03-09 10:43:14,956 [INFO] Mulai pipeline prediksi PM2.5 dengan XGBoost
+2026-03-09 10:43:14,956 [INFO] ============================================================
+2026-03-09 10:43:15,837 [INFO] Model dimuat dari: D:\DashboardAQ_v3\ml_model\xgb_pm25.pkl
+2026-03-09 10:43:16,904 [INFO] HTTP Request: GET https://knpwncirbhcytssrxcqx.supabase.co/rest/v1/tb_konsentrasi_gas?select=pm25_ugm3%2Cpm10_corrected_ugm3%2Cno2_ugm3%2Cco_corrected_ugm3%2Ctemperature%2Chumidity%2Ccreated_at&created_at=gte.2026-03-09T02%3A13%3A16.221518&order=created_at.asc&offset=0&limit=1000 "HTTP/2 200 OK"
+2026-03-09 10:43:16,935 [INFO] Data diambil: 89 baris dari Supabase (sejak 2026-03-09T02:13:16.221518)
+2026-03-09 10:43:16,987 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:43:17,010 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:43:17,026 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:43:17,039 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:43:17,053 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:43:17,067 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:43:17,082 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:43:17,095 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:43:17,108 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:43:17,122 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:43:17,136 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:43:17,149 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:43:17,170 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:43:17,199 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:43:17,218 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:43:17,233 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:43:17,247 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:43:17,261 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:43:17,275 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:43:17,289 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:43:17,304 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:43:17,318 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:43:17,331 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:43:17,346 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:43:17,359 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:43:17,372 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:43:17,387 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:43:17,399 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:43:17,415 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:43:17,428 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:43:17,433 [INFO] Menghasilkan 30 prediksi rekursif
+2026-03-09 10:43:17,433 [INFO]   2026-03-09T03:43:58.404739 → PM2.5 = 18.06 µg/m³
+2026-03-09 10:43:17,436 [INFO]   2026-03-09T03:44:58.404739 → PM2.5 = 18.23 µg/m³
+2026-03-09 10:43:17,436 [INFO]   2026-03-09T03:45:58.404739 → PM2.5 = 18.58 µg/m³
+2026-03-09 10:43:17,437 [INFO]   2026-03-09T03:46:58.404739 → PM2.5 = 18.56 µg/m³
+2026-03-09 10:43:17,437 [INFO]   2026-03-09T03:47:58.404739 → PM2.5 = 18.57 µg/m³
+2026-03-09 10:43:17,594 [INFO] HTTP Request: POST https://knpwncirbhcytssrxcqx.supabase.co/rest/v1/tb_prediksi_pm25?columns=%22pm25_pred%22%2C%22target_at%22%2C%22forecast_at%22%2C%22is_historical%22 "HTTP/2 401 Unauthorized"
+2026-03-09 10:45:15,863 [INFO] ============================================================
+2026-03-09 10:45:15,863 [INFO] Mulai pipeline prediksi PM2.5 dengan XGBoost
+2026-03-09 10:45:15,863 [INFO] ============================================================
+2026-03-09 10:45:16,666 [INFO] Model dimuat dari: D:\DashboardAQ_v3\ml_model\xgb_pm25.pkl
+2026-03-09 10:45:17,501 [INFO] HTTP Request: GET https://knpwncirbhcytssrxcqx.supabase.co/rest/v1/tb_konsentrasi_gas?select=pm25_ugm3%2Cpm10_corrected_ugm3%2Cno2_ugm3%2Cco_corrected_ugm3%2Ctemperature%2Chumidity%2Ccreated_at&created_at=gte.2026-03-09T02%3A15%3A16.969511&order=created_at.asc&offset=0&limit=1000 "HTTP/2 200 OK"
+2026-03-09 10:45:17,514 [INFO] Data diambil: 89 baris dari Supabase (sejak 2026-03-09T02:15:16.969511)
+2026-03-09 10:45:17,524 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:45:17,542 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:45:17,556 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:45:17,569 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:45:17,584 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:45:17,598 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:45:17,612 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:45:17,627 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:45:17,642 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:45:17,655 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:45:17,669 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:45:17,682 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:45:17,696 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:45:17,711 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:45:17,724 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:45:17,744 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:45:17,779 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:45:17,804 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:45:17,827 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:45:17,843 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:45:17,857 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:45:17,871 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:45:17,884 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:45:17,898 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:45:17,912 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:45:17,926 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:45:17,940 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:45:17,954 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:45:17,967 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:45:17,983 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:45:17,987 [INFO] Menghasilkan 30 prediksi rekursif
+2026-03-09 10:45:17,987 [INFO]   2026-03-09T03:46:00.469115 → PM2.5 = 19.09 µg/m³
+2026-03-09 10:45:17,987 [INFO]   2026-03-09T03:47:00.469115 → PM2.5 = 19.1 µg/m³
+2026-03-09 10:45:17,987 [INFO]   2026-03-09T03:48:00.469115 → PM2.5 = 19.1 µg/m³
+2026-03-09 10:45:17,987 [INFO]   2026-03-09T03:49:00.469115 → PM2.5 = 19.11 µg/m³
+2026-03-09 10:45:17,987 [INFO]   2026-03-09T03:50:00.469115 → PM2.5 = 19.08 µg/m³
+2026-03-09 10:45:18,100 [INFO] HTTP Request: POST https://knpwncirbhcytssrxcqx.supabase.co/rest/v1/tb_prediksi_pm25?columns=%22is_historical%22%2C%22forecast_at%22%2C%22target_at%22%2C%22pm25_pred%22 "HTTP/2 401 Unauthorized"
+2026-03-09 10:47:00,395 [INFO] ============================================================
+2026-03-09 10:47:00,396 [INFO] Mulai pipeline prediksi PM2.5 dengan XGBoost
+2026-03-09 10:47:00,396 [INFO] ============================================================
+2026-03-09 10:47:01,166 [INFO] Model dimuat dari: D:\DashboardAQ_v3\ml_model\xgb_pm25.pkl
+2026-03-09 10:47:01,952 [INFO] HTTP Request: GET https://knpwncirbhcytssrxcqx.supabase.co/rest/v1/tb_konsentrasi_gas?select=pm25_ugm3%2Cpm10_corrected_ugm3%2Cno2_ugm3%2Cco_corrected_ugm3%2Ctemperature%2Chumidity%2Ccreated_at&created_at=gte.2026-03-09T02%3A17%3A01.461863&order=created_at.asc&offset=0&limit=1000 "HTTP/2 200 OK"
+2026-03-09 10:47:01,963 [INFO] Data diambil: 88 baris dari Supabase (sejak 2026-03-09T02:17:01.461863)
+2026-03-09 10:47:01,976 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:47:01,994 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:47:02,010 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:47:02,023 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:47:02,038 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:47:02,051 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:47:02,065 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:47:02,080 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:47:02,093 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:47:02,107 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:47:02,121 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:47:02,134 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:47:02,148 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:47:02,163 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:47:02,177 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:47:02,191 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:47:02,209 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:47:02,223 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:47:02,237 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:47:02,262 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:47:02,275 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:47:02,289 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:47:02,303 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:47:02,317 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:47:02,332 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:47:02,347 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:47:02,361 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:47:02,397 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:47:02,416 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:47:02,438 [WARNING] Fitur berikut tidak tersedia: ['target']...
+2026-03-09 10:47:02,442 [INFO] Menghasilkan 30 prediksi rekursif
+2026-03-09 10:47:02,442 [INFO]   2026-03-09T03:47:01.412563 → PM2.5 = 19.09 µg/m³
+2026-03-09 10:47:02,442 [INFO]   2026-03-09T03:48:01.412563 → PM2.5 = 19.08 µg/m³
+2026-03-09 10:47:02,443 [INFO]   2026-03-09T03:49:01.412563 → PM2.5 = 19.11 µg/m³
+2026-03-09 10:47:02,443 [INFO]   2026-03-09T03:50:01.412563 → PM2.5 = 19.07 µg/m³
+2026-03-09 10:47:02,443 [INFO]   2026-03-09T03:51:01.412563 → PM2.5 = 19.07 µg/m³
+2026-03-09 10:47:02,556 [INFO] HTTP Request: POST https://knpwncirbhcytssrxcqx.supabase.co/rest/v1/tb_prediksi_pm25?columns=%22is_historical%22%2C%22target_at%22%2C%22forecast_at%22%2C%22pm25_pred%22 "HTTP/2 201 Created"
+2026-03-09 10:47:02,558 [INFO] 30 prediksi berhasil disimpan ke tb_prediksi_pm25
+2026-03-09 10:47:02,559 [INFO] Selesai!
+2026-03-09 11:01:02,486 [INFO] ============================================================
+2026-03-09 11:01:02,486 [INFO] Mulai pipeline prediksi PM2.5 dengan ARIMAX
+2026-03-09 11:01:02,487 [INFO] ============================================================
+2026-03-09 11:01:03,515 [INFO] HTTP Request: GET https://knpwncirbhcytssrxcqx.supabase.co/rest/v1/tb_konsentrasi_gas?select=pm25_ugm3%2Ctemperature%2Chumidity%2Ccreated_at&created_at=gte.2026-03-09T01%3A01%3A02.934643&order=created_at.asc&offset=0&limit=1000 "HTTP/2 200 OK"
+2026-03-09 11:01:03,567 [INFO] Data diambil: 146 baris (sejak 2026-03-09T01:01:02.934643)
+2026-03-09 11:01:03,570 [INFO] Fitting ARIMAX(2, 1, 2) dengan 146 observasi...
+2026-03-09 11:01:03,847 [INFO] AIC: 525.82  |  BIC: 546.51
+2026-03-09 11:01:03,856 [INFO] Menghasilkan 30 prediksi ARIMAX
+2026-03-09 11:01:03,856 [INFO]   2026-03-09T04:01:13.429719 → PM2.5 = 18.18 µg/m³
+2026-03-09 11:01:03,857 [INFO]   2026-03-09T04:02:13.429719 → PM2.5 = 18.3 µg/m³
+2026-03-09 11:01:03,857 [INFO]   2026-03-09T04:03:13.429719 → PM2.5 = 18.33 µg/m³
+2026-03-09 11:01:03,857 [INFO]   2026-03-09T04:04:13.429719 → PM2.5 = 18.35 µg/m³
+2026-03-09 11:01:03,859 [INFO]   2026-03-09T04:05:13.429719 → PM2.5 = 18.37 µg/m³
+2026-03-09 11:01:03,968 [INFO] HTTP Request: POST https://knpwncirbhcytssrxcqx.supabase.co/rest/v1/tb_prediksi_pm25?columns=%22is_historical%22%2C%22forecast_at%22%2C%22target_at%22%2C%22pm25_pred%22 "HTTP/2 201 Created"
+2026-03-09 11:01:03,970 [INFO] 30 prediksi berhasil disimpan ke tb_prediksi_pm25
+2026-03-09 11:01:03,971 [INFO] Selesai!
+2026-03-09 11:27:48,684 [INFO] ============================================================
+2026-03-09 11:27:48,684 [INFO] Pipeline Prediksi PM2.5 — LightGBM (R²=64.44%)
+2026-03-09 11:27:48,684 [INFO] ============================================================
+2026-03-09 11:27:51,090 [INFO] HTTP Request: GET https://knpwncirbhcytssrxcqx.supabase.co/rest/v1/tb_konsentrasi_gas?select=pm25_ugm3%2Ctemperature%2Chumidity%2Ccreated_at&created_at=gte.2026-03-09T01%3A27%3A49.881740&order=created_at.asc&offset=0&limit=1000 "HTTP/2 200 OK"
+2026-03-09 11:27:51,212 [INFO] Data diambil: 173 baris (sejak 2026-03-09T01:27:49.881740)
+2026-03-09 11:27:51,285 [INFO] Training LightGBM pada 112 sampel dengan 51 fitur...
+2026-03-09 11:28:54,967 [INFO] ============================================================
+2026-03-09 11:28:54,969 [INFO] Pipeline Prediksi PM2.5 — LightGBM (R²=64.44%)
+2026-03-09 11:28:54,969 [INFO] ============================================================
+2026-03-09 11:28:55,815 [INFO] HTTP Request: GET https://knpwncirbhcytssrxcqx.supabase.co/rest/v1/tb_konsentrasi_gas?select=pm25_ugm3%2Ctemperature%2Chumidity%2Ccreated_at&created_at=gte.2026-03-09T01%3A28%3A55.325508&order=created_at.asc&offset=0&limit=1000 "HTTP/2 200 OK"
+2026-03-09 11:28:55,852 [INFO] Data diambil: 174 baris (sejak 2026-03-09T01:28:55.325508)
+2026-03-09 11:28:55,872 [INFO] Training LightGBM pada 113 sampel dengan 48 fitur...
+2026-03-09 11:28:58,531 [INFO] Menghasilkan 30 prediksi LightGBM
+2026-03-09 11:28:58,531 [INFO]   2026-03-09T04:29:37.269669 → PM2.5 = 19.12 µg/m³
+2026-03-09 11:28:58,533 [INFO]   2026-03-09T04:30:37.269669 → PM2.5 = 18.38 µg/m³
+2026-03-09 11:28:58,533 [INFO]   2026-03-09T04:31:37.269669 → PM2.5 = 20.25 µg/m³
+2026-03-09 11:28:58,533 [INFO]   2026-03-09T04:32:37.269669 → PM2.5 = 19.79 µg/m³
+2026-03-09 11:28:58,533 [INFO]   2026-03-09T04:33:37.269669 → PM2.5 = 18.8 µg/m³
+2026-03-09 11:28:58,636 [INFO] HTTP Request: POST https://knpwncirbhcytssrxcqx.supabase.co/rest/v1/tb_prediksi_pm25?columns=%22is_historical%22%2C%22target_at%22%2C%22pm25_pred%22%2C%22forecast_at%22 "HTTP/2 201 Created"
+2026-03-09 11:28:58,639 [INFO] 30 prediksi berhasil disimpan ke tb_prediksi_pm25
+2026-03-09 11:28:58,640 [INFO] Selesai!
+2026-03-09 13:16:01,705 [INFO] ============================================================
+2026-03-09 13:16:01,705 [INFO] Pipeline Prediksi PM2.5 — LightGBM (R²=64.44%)
+2026-03-09 13:16:01,705 [INFO] ============================================================
+2026-03-09 13:16:02,952 [INFO] HTTP Request: GET https://knpwncirbhcytssrxcqx.supabase.co/rest/v1/tb_konsentrasi_gas?select=pm25_ugm3%2Ctemperature%2Chumidity%2Ccreated_at&created_at=gte.2026-03-08T06%3A16%3A02.240680&order=created_at.asc&offset=0&limit=1000 "HTTP/2 200 OK"
+2026-03-09 13:16:03,008 [INFO] Data diambil: 279 baris (sejak 2026-03-08T06:16:02.240680)
+2026-03-09 13:16:03,042 [INFO] Training LightGBM pada 218 sampel dengan 48 fitur...
+2026-03-09 13:16:08,286 [INFO] Menghasilkan 30 prediksi LightGBM
+2026-03-09 13:16:08,286 [INFO]   2026-03-09T06:16:02.238891 → PM2.5 = 27.42 µg/m³
+2026-03-09 13:16:08,322 [INFO]   2026-03-09T06:17:02.238891 → PM2.5 = 27.0 µg/m³
+2026-03-09 13:16:08,324 [INFO]   2026-03-09T06:18:02.238891 → PM2.5 = 26.53 µg/m³
+2026-03-09 13:16:08,325 [INFO]   2026-03-09T06:19:02.238891 → PM2.5 = 26.11 µg/m³
+2026-03-09 13:16:08,325 [INFO]   2026-03-09T06:20:02.238891 → PM2.5 = 26.69 µg/m³
+2026-03-09 13:16:08,540 [INFO] HTTP Request: POST https://knpwncirbhcytssrxcqx.supabase.co/rest/v1/tb_prediksi_pm25?columns=%22is_historical%22%2C%22target_at%22%2C%22forecast_at%22%2C%22pm25_pred%22 "HTTP/2 201 Created"
+2026-03-09 13:16:08,542 [INFO] 30 prediksi berhasil disimpan ke tb_prediksi_pm25
+2026-03-09 13:16:08,542 [INFO] Selesai!
+2026-03-09 13:20:58,774 [INFO] ============================================================
+2026-03-09 13:20:58,775 [INFO] Pipeline Prediksi PM2.5 — LightGBM (R²=64.44%)
+2026-03-09 13:20:58,776 [INFO] ============================================================
+2026-03-09 13:21:01,239 [INFO] HTTP Request: GET https://knpwncirbhcytssrxcqx.supabase.co/rest/v1/tb_konsentrasi_gas?select=pm25_ugm3%2Ctemperature%2Chumidity%2Ccreated_at&created_at=gte.2026-03-08T06%3A20%3A59.770985&order=created_at.asc&offset=0&limit=1000 "HTTP/2 200 OK"
+2026-03-09 13:21:01,325 [INFO] Data diambil: 284 baris (sejak 2026-03-08T06:20:59.770985)
+2026-03-09 13:21:01,437 [INFO] Training LightGBM pada 223 sampel dengan 48 fitur...
+2026-03-09 13:21:05,484 [INFO] Menghasilkan 30 prediksi LightGBM
+2026-03-09 13:21:05,484 [INFO]   2026-03-09T06:21:06.014179 → PM2.5 = 24.47 µg/m³
+2026-03-09 13:21:05,492 [INFO]   2026-03-09T06:22:06.014179 → PM2.5 = 25.06 µg/m³
+2026-03-09 13:21:05,493 [INFO]   2026-03-09T06:23:06.014179 → PM2.5 = 25.24 µg/m³
+2026-03-09 13:21:05,494 [INFO]   2026-03-09T06:24:06.014179 → PM2.5 = 25.69 µg/m³
+2026-03-09 13:21:05,495 [INFO]   2026-03-09T06:25:06.014179 → PM2.5 = 25.83 µg/m³
+2026-03-09 13:21:05,621 [INFO] HTTP Request: POST https://knpwncirbhcytssrxcqx.supabase.co/rest/v1/tb_prediksi_pm25?columns=%22forecast_at%22%2C%22target_at%22%2C%22pm25_pred%22%2C%22is_historical%22 "HTTP/2 201 Created"
+2026-03-09 13:21:05,623 [INFO] 30 prediksi berhasil disimpan ke tb_prediksi_pm25
+2026-03-09 13:21:05,623 [INFO] Selesai!
+2026-03-09 13:25:56,590 [INFO] ============================================================
+2026-03-09 13:25:56,590 [INFO] Pipeline Prediksi PM2.5 — LightGBM (R²=64.44%)
+2026-03-09 13:25:56,592 [INFO] ============================================================
+2026-03-09 13:25:57,516 [INFO] HTTP Request: GET https://knpwncirbhcytssrxcqx.supabase.co/rest/v1/tb_konsentrasi_gas?select=pm25_ugm3%2Ctemperature%2Chumidity%2Ccreated_at&created_at=gte.2026-03-08T06%3A25%3A56.911508&order=created_at.asc&offset=0&limit=1000 "HTTP/2 200 OK"
+2026-03-09 13:25:57,547 [INFO] Data diambil: 289 baris (sejak 2026-03-08T06:25:56.911508)
+2026-03-09 13:25:57,611 [INFO] Training LightGBM pada 228 sampel dengan 48 fitur...
+2026-03-09 13:26:01,539 [INFO] Menghasilkan 30 prediksi LightGBM
+2026-03-09 13:26:01,539 [INFO]   2026-03-09T06:26:09.806511 → PM2.5 = 21.19 µg/m³
+2026-03-09 13:26:01,542 [INFO]   2026-03-09T06:27:09.806511 → PM2.5 = 20.49 µg/m³
+2026-03-09 13:26:01,544 [INFO]   2026-03-09T06:28:09.806511 → PM2.5 = 21.35 µg/m³
+2026-03-09 13:26:01,545 [INFO]   2026-03-09T06:29:09.806511 → PM2.5 = 20.98 µg/m³
+2026-03-09 13:26:01,546 [INFO]   2026-03-09T06:30:09.806511 → PM2.5 = 21.05 µg/m³
+2026-03-09 13:26:01,707 [INFO] HTTP Request: POST https://knpwncirbhcytssrxcqx.supabase.co/rest/v1/tb_prediksi_pm25?columns=%22target_at%22%2C%22pm25_pred%22%2C%22forecast_at%22%2C%22is_historical%22 "HTTP/2 201 Created"
+2026-03-09 13:26:01,711 [INFO] 30 prediksi berhasil disimpan ke tb_prediksi_pm25
+2026-03-09 13:26:01,712 [INFO] Selesai!
+2026-03-09 13:30:57,820 [INFO] ============================================================
+2026-03-09 13:30:57,820 [INFO] Pipeline Prediksi PM2.5 — LightGBM (R²=64.44%)
+2026-03-09 13:30:57,820 [INFO] ============================================================
+2026-03-09 13:30:59,962 [INFO] HTTP Request: GET https://knpwncirbhcytssrxcqx.supabase.co/rest/v1/tb_konsentrasi_gas?select=pm25_ugm3%2Ctemperature%2Chumidity%2Ccreated_at&created_at=gte.2026-03-08T06%3A30%3A58.831899&order=created_at.asc&offset=0&limit=1000 "HTTP/2 200 OK"
+2026-03-09 13:31:00,089 [INFO] Data diambil: 294 baris (sejak 2026-03-08T06:30:58.831899)
+2026-03-09 13:31:00,198 [INFO] Training LightGBM pada 233 sampel dengan 48 fitur...
+2026-03-09 13:31:05,376 [INFO] Menghasilkan 30 prediksi LightGBM
+2026-03-09 13:31:05,376 [INFO]   2026-03-09T06:31:13.845184 → PM2.5 = 19.99 µg/m³
+2026-03-09 13:31:05,383 [INFO]   2026-03-09T06:32:13.845184 → PM2.5 = 20.52 µg/m³
+2026-03-09 13:31:05,384 [INFO]   2026-03-09T06:33:13.845184 → PM2.5 = 20.07 µg/m³
+2026-03-09 13:31:05,386 [INFO]   2026-03-09T06:34:13.845184 → PM2.5 = 19.63 µg/m³
+2026-03-09 13:31:05,387 [INFO]   2026-03-09T06:35:13.845184 → PM2.5 = 20.0 µg/m³
+2026-03-09 13:31:05,637 [INFO] HTTP Request: POST https://knpwncirbhcytssrxcqx.supabase.co/rest/v1/tb_prediksi_pm25?columns=%22is_historical%22%2C%22forecast_at%22%2C%22target_at%22%2C%22pm25_pred%22 "HTTP/2 201 Created"
+2026-03-09 13:31:05,641 [INFO] 30 prediksi berhasil disimpan ke tb_prediksi_pm25
+2026-03-09 13:31:05,642 [INFO] Selesai!
+2026-03-09 13:35:57,680 [INFO] ============================================================
+2026-03-09 13:35:57,681 [INFO] Pipeline Prediksi PM2.5 — LightGBM (R²=64.44%)
+2026-03-09 13:35:57,681 [INFO] ============================================================
+2026-03-09 13:35:58,752 [INFO] HTTP Request: GET https://knpwncirbhcytssrxcqx.supabase.co/rest/v1/tb_konsentrasi_gas?select=pm25_ugm3%2Ctemperature%2Chumidity%2Ccreated_at&created_at=gte.2026-03-08T06%3A35%3A58.040718&order=created_at.asc&offset=0&limit=1000 "HTTP/2 200 OK"
+2026-03-09 13:35:58,789 [INFO] Data diambil: 299 baris (sejak 2026-03-08T06:35:58.040718)
+2026-03-09 13:35:58,809 [INFO] Training LightGBM pada 238 sampel dengan 48 fitur...
+2026-03-09 13:36:03,116 [INFO] Menghasilkan 30 prediksi LightGBM
+2026-03-09 13:36:03,116 [INFO]   2026-03-09T06:36:17.550276 → PM2.5 = 18.48 µg/m³
+2026-03-09 13:36:03,119 [INFO]   2026-03-09T06:37:17.550276 → PM2.5 = 18.15 µg/m³
+2026-03-09 13:36:03,121 [INFO]   2026-03-09T06:38:17.550276 → PM2.5 = 17.77 µg/m³
+2026-03-09 13:36:03,123 [INFO]   2026-03-09T06:39:17.550276 → PM2.5 = 17.86 µg/m³
+2026-03-09 13:36:03,124 [INFO]   2026-03-09T06:40:17.550276 → PM2.5 = 17.74 µg/m³
+2026-03-09 13:36:03,242 [INFO] HTTP Request: POST https://knpwncirbhcytssrxcqx.supabase.co/rest/v1/tb_prediksi_pm25?columns=%22is_historical%22%2C%22forecast_at%22%2C%22pm25_pred%22%2C%22target_at%22 "HTTP/2 201 Created"
+2026-03-09 13:36:03,243 [INFO] 30 prediksi berhasil disimpan ke tb_prediksi_pm25
+2026-03-09 13:36:03,243 [INFO] Selesai!
+2026-03-09 13:36:23,566 [INFO] ============================================================
+2026-03-09 13:36:23,566 [INFO] Pipeline Prediksi PM2.5 — LightGBM (R²=64.44%)
+2026-03-09 13:36:23,566 [INFO] ============================================================
+2026-03-09 13:36:24,437 [INFO] HTTP Request: GET https://knpwncirbhcytssrxcqx.supabase.co/rest/v1/tb_konsentrasi_gas?select=pm25_ugm3%2Ctemperature%2Chumidity%2Ccreated_at&created_at=gte.2026-03-08T06%3A36%3A23.923171&order=created_at.asc&offset=0&limit=1000 "HTTP/2 200 OK"
+2026-03-09 13:36:24,459 [INFO] Data diambil: 300 baris (sejak 2026-03-08T06:36:23.923171)
+2026-03-09 13:36:24,475 [INFO] Training LightGBM pada 239 sampel dengan 48 fitur...
+2026-03-09 13:36:26,687 [INFO] Menghasilkan 30 prediksi LightGBM
+2026-03-09 13:36:26,687 [INFO]   2026-03-09T06:37:18.171041 → PM2.5 = 18.32 µg/m³
+2026-03-09 13:36:26,689 [INFO]   2026-03-09T06:38:18.171041 → PM2.5 = 17.83 µg/m³
+2026-03-09 13:36:26,690 [INFO]   2026-03-09T06:39:18.171041 → PM2.5 = 17.97 µg/m³
+2026-03-09 13:36:26,691 [INFO]   2026-03-09T06:40:18.171041 → PM2.5 = 17.8 µg/m³
+2026-03-09 13:36:26,692 [INFO]   2026-03-09T06:41:18.171041 → PM2.5 = 17.96 µg/m³
+2026-03-09 13:36:26,793 [INFO] HTTP Request: POST https://knpwncirbhcytssrxcqx.supabase.co/rest/v1/tb_prediksi_pm25?columns=%22forecast_at%22%2C%22target_at%22%2C%22is_historical%22%2C%22pm25_pred%22 "HTTP/2 201 Created"
+2026-03-09 13:36:26,804 [INFO] 30 prediksi berhasil disimpan ke tb_prediksi_pm25
+2026-03-09 13:36:26,804 [INFO] Selesai!
+2026-03-09 13:41:26,090 [INFO] ============================================================
+2026-03-09 13:41:26,090 [INFO] Pipeline Prediksi PM2.5 — LightGBM (R²=64.44%)
+2026-03-09 13:41:26,090 [INFO] ============================================================
+2026-03-09 13:41:27,753 [INFO] HTTP Request: GET https://knpwncirbhcytssrxcqx.supabase.co/rest/v1/tb_konsentrasi_gas?select=pm25_ugm3%2Ctemperature%2Chumidity%2Ccreated_at&created_at=gte.2026-03-08T06%3A41%3A26.927497&order=created_at.asc&offset=0&limit=1000 "HTTP/2 200 OK"
+2026-03-09 13:41:27,816 [INFO] Data diambil: 305 baris (sejak 2026-03-08T06:41:26.927497)
+2026-03-09 13:41:27,868 [INFO] Training LightGBM pada 244 sampel dengan 48 fitur...
+2026-03-09 13:41:36,563 [INFO] Menghasilkan 30 prediksi LightGBM
+2026-03-09 13:41:36,565 [INFO]   2026-03-09T06:42:23.729510 → PM2.5 = 19.23 µg/m³
+2026-03-09 13:41:36,569 [INFO]   2026-03-09T06:43:23.729510 → PM2.5 = 19.07 µg/m³
+2026-03-09 13:41:36,572 [INFO]   2026-03-09T06:44:23.729510 → PM2.5 = 18.43 µg/m³
+2026-03-09 13:41:36,573 [INFO]   2026-03-09T06:45:23.729510 → PM2.5 = 19.59 µg/m³
+2026-03-09 13:41:36,574 [INFO]   2026-03-09T06:46:23.729510 → PM2.5 = 18.85 µg/m³
+2026-03-09 13:41:37,124 [INFO] HTTP Request: POST https://knpwncirbhcytssrxcqx.supabase.co/rest/v1/tb_prediksi_pm25?columns=%22is_historical%22%2C%22pm25_pred%22%2C%22target_at%22%2C%22forecast_at%22 "HTTP/2 201 Created"
+2026-03-09 13:41:37,128 [INFO] 30 prediksi berhasil disimpan ke tb_prediksi_pm25
+2026-03-09 13:41:37,128 [INFO] Selesai!
+2026-03-09 13:46:24,888 [INFO] ============================================================
+2026-03-09 13:46:24,889 [INFO] Pipeline Prediksi PM2.5 — LightGBM (R²=64.44%)
+2026-03-09 13:46:24,889 [INFO] ============================================================
+2026-03-09 13:46:25,794 [INFO] HTTP Request: GET https://knpwncirbhcytssrxcqx.supabase.co/rest/v1/tb_konsentrasi_gas?select=pm25_ugm3%2Ctemperature%2Chumidity%2Ccreated_at&created_at=gte.2026-03-08T06%3A46%3A25.296815&order=created_at.asc&offset=0&limit=1000 "HTTP/2 200 OK"
+2026-03-09 13:46:25,843 [INFO] Data diambil: 309 baris (sejak 2026-03-08T06:46:25.296815)
+2026-03-09 13:46:25,865 [INFO] Training LightGBM pada 248 sampel dengan 48 fitur...
+2026-03-09 13:46:30,553 [INFO] Menghasilkan 30 prediksi LightGBM
+2026-03-09 13:46:30,553 [INFO]   2026-03-09T06:46:26.875017 → PM2.5 = 19.69 µg/m³
+2026-03-09 13:46:30,558 [INFO]   2026-03-09T06:47:26.875017 → PM2.5 = 20.43 µg/m³
+2026-03-09 13:46:30,559 [INFO]   2026-03-09T06:48:26.875017 → PM2.5 = 19.89 µg/m³
+2026-03-09 13:46:30,559 [INFO]   2026-03-09T06:49:26.875017 → PM2.5 = 19.42 µg/m³
+2026-03-09 13:46:30,560 [INFO]   2026-03-09T06:50:26.875017 → PM2.5 = 18.98 µg/m³
+2026-03-09 13:46:30,654 [INFO] HTTP Request: POST https://knpwncirbhcytssrxcqx.supabase.co/rest/v1/tb_prediksi_pm25?columns=%22is_historical%22%2C%22target_at%22%2C%22pm25_pred%22%2C%22forecast_at%22 "HTTP/2 201 Created"
+2026-03-09 13:46:30,685 [INFO] 30 prediksi berhasil disimpan ke tb_prediksi_pm25
+2026-03-09 13:46:30,686 [INFO] Selesai!
+2026-03-09 13:49:29,539 [INFO] ============================================================
+2026-03-09 13:49:29,540 [INFO] Pipeline Prediksi PM2.5 — LightGBM (R²=64.44%)
+2026-03-09 13:49:29,540 [INFO] ============================================================
+2026-03-09 13:49:30,530 [INFO] HTTP Request: GET https://knpwncirbhcytssrxcqx.supabase.co/rest/v1/tb_konsentrasi_gas?select=pm25_ugm3%2Ctemperature%2Chumidity%2Ccreated_at&created_at=gte.2026-03-08T06%3A49%3A29.890251&order=created_at.asc&offset=0&limit=1000 "HTTP/2 200 OK"
+2026-03-09 13:49:30,813 [INFO] Data diambil: 313 baris (sejak 2026-03-08T06:49:29.890251)
+2026-03-09 13:49:30,834 [INFO] Training LightGBM pada 252 sampel dengan 48 fitur...
+2026-03-09 13:49:34,542 [INFO] Menghasilkan 30 prediksi LightGBM
+2026-03-09 13:49:34,542 [INFO]   2026-03-09T06:50:30.264030 → PM2.5 = 19.65 µg/m³
+2026-03-09 13:49:34,545 [INFO]   2026-03-09T06:51:30.264030 → PM2.5 = 20.29 µg/m³
+2026-03-09 13:49:34,547 [INFO]   2026-03-09T06:52:30.264030 → PM2.5 = 19.45 µg/m³
+2026-03-09 13:49:34,547 [INFO]   2026-03-09T06:53:30.264030 → PM2.5 = 20.63 µg/m³
+2026-03-09 13:49:34,548 [INFO]   2026-03-09T06:54:30.264030 → PM2.5 = 19.4 µg/m³
+2026-03-09 13:49:34,640 [INFO] HTTP Request: POST https://knpwncirbhcytssrxcqx.supabase.co/rest/v1/tb_prediksi_pm25?columns=%22target_at%22%2C%22is_historical%22%2C%22forecast_at%22%2C%22pm25_pred%22 "HTTP/2 201 Created"
+2026-03-09 13:49:34,643 [INFO] 30 prediksi berhasil disimpan ke tb_prediksi_pm25
+2026-03-09 13:49:34,643 [INFO] Selesai!
+2026-03-09 13:51:51,149 [INFO] ============================================================
+2026-03-09 13:51:51,149 [INFO] Pipeline Prediksi PM2.5 — LightGBM (R²=64.44%)
+2026-03-09 13:51:51,150 [INFO] ============================================================
+2026-03-09 13:51:52,030 [INFO] HTTP Request: GET https://knpwncirbhcytssrxcqx.supabase.co/rest/v1/tb_konsentrasi_gas?select=pm25_ugm3%2Ctemperature%2Chumidity%2Ccreated_at&created_at=gte.2026-03-08T06%3A51%3A51.526226&order=created_at.asc&offset=0&limit=1000 "HTTP/2 200 OK"
+2026-03-09 13:51:52,079 [INFO] Data diambil: 315 baris (sejak 2026-03-08T06:51:51.526226)
+2026-03-09 13:51:52,099 [INFO] Training LightGBM pada 254 sampel dengan 48 fitur...
+2026-03-09 13:51:56,071 [INFO] Menghasilkan 30 prediksi LightGBM
+2026-03-09 13:51:56,072 [INFO]   2026-03-09T06:52:31.694809 → PM2.5 = 18.43 µg/m³
+2026-03-09 13:51:56,076 [INFO]   2026-03-09T06:53:31.694809 → PM2.5 = 20.02 µg/m³
+2026-03-09 13:51:56,077 [INFO]   2026-03-09T06:54:31.694809 → PM2.5 = 18.71 µg/m³
+2026-03-09 13:51:56,077 [INFO]   2026-03-09T06:55:31.694809 → PM2.5 = 18.53 µg/m³
+2026-03-09 13:51:56,079 [INFO]   2026-03-09T06:56:31.694809 → PM2.5 = 18.13 µg/m³
+2026-03-09 13:51:56,172 [INFO] HTTP Request: POST https://knpwncirbhcytssrxcqx.supabase.co/rest/v1/tb_prediksi_pm25?columns=%22pm25_pred%22%2C%22target_at%22%2C%22forecast_at%22%2C%22is_historical%22 "HTTP/2 201 Created"
+2026-03-09 13:51:56,173 [INFO] 30 prediksi berhasil disimpan ke tb_prediksi_pm25
+2026-03-09 13:51:56,173 [INFO] Selesai!
+2026-03-09 13:52:54,181 [INFO] ============================================================
+2026-03-09 13:52:54,181 [INFO] Pipeline Prediksi PM2.5 — LightGBM (R²=64.44%)
+2026-03-09 13:52:54,181 [INFO] ============================================================
+2026-03-09 13:52:54,981 [INFO] HTTP Request: GET https://knpwncirbhcytssrxcqx.supabase.co/rest/v1/tb_konsentrasi_gas?select=pm25_ugm3%2Ctemperature%2Chumidity%2Ccreated_at&created_at=gte.2026-03-08T06%3A52%3A54.475413&order=created_at.asc&offset=0&limit=1000 "HTTP/2 200 OK"
+2026-03-09 13:52:55,017 [INFO] Data diambil: 316 baris (sejak 2026-03-08T06:52:54.475413)
+2026-03-09 13:52:55,032 [INFO] Training LightGBM pada 255 sampel dengan 48 fitur...
+2026-03-09 13:52:57,150 [INFO] Menghasilkan 30 prediksi LightGBM
+2026-03-09 13:52:57,150 [INFO]   2026-03-09T06:53:32.509840 → PM2.5 = 19.84 µg/m³
+2026-03-09 13:52:57,153 [INFO]   2026-03-09T06:54:32.509840 → PM2.5 = 18.65 µg/m³
+2026-03-09 13:52:57,154 [INFO]   2026-03-09T06:55:32.509840 → PM2.5 = 18.19 µg/m³
+2026-03-09 13:52:57,155 [INFO]   2026-03-09T06:56:32.509840 → PM2.5 = 18.09 µg/m³
+2026-03-09 13:52:57,155 [INFO]   2026-03-09T06:57:32.509840 → PM2.5 = 18.59 µg/m³
+2026-03-09 13:52:57,257 [INFO] HTTP Request: POST https://knpwncirbhcytssrxcqx.supabase.co/rest/v1/tb_prediksi_pm25?columns=%22forecast_at%22%2C%22is_historical%22%2C%22target_at%22%2C%22pm25_pred%22 "HTTP/2 201 Created"
+2026-03-09 13:52:57,271 [INFO] 30 prediksi berhasil disimpan ke tb_prediksi_pm25
+2026-03-09 13:52:57,272 [INFO] Selesai!
+2026-03-09 13:54:15,548 [INFO] ============================================================
+2026-03-09 13:54:15,548 [INFO] Pipeline Prediksi PM2.5 — LightGBM (R²=64.44%)
+2026-03-09 13:54:15,548 [INFO] ============================================================
+2026-03-09 13:54:16,602 [INFO] HTTP Request: GET https://knpwncirbhcytssrxcqx.supabase.co/rest/v1/tb_konsentrasi_gas?select=pm25_ugm3%2Ctemperature%2Chumidity%2Ccreated_at&created_at=gte.2026-03-08T06%3A54%3A15.873429&order=created_at.asc&offset=0&limit=1000 "HTTP/2 200 OK"
+2026-03-09 13:54:16,621 [INFO] Data diambil: 317 baris (sejak 2026-03-08T06:54:15.873429)
+2026-03-09 13:54:16,636 [INFO] Training LightGBM pada 256 sampel dengan 48 fitur...
+2026-03-09 13:54:19,601 [INFO] Menghasilkan 30 prediksi LightGBM
+2026-03-09 13:54:19,601 [INFO]   2026-03-09T06:54:33.763278 → PM2.5 = 18.03 µg/m³
+2026-03-09 13:54:19,602 [INFO]   2026-03-09T06:55:33.763278 → PM2.5 = 18.66 µg/m³
+2026-03-09 13:54:19,603 [INFO]   2026-03-09T06:56:33.763278 → PM2.5 = 18.99 µg/m³
+2026-03-09 13:54:19,603 [INFO]   2026-03-09T06:57:33.763278 → PM2.5 = 19.39 µg/m³
+2026-03-09 13:54:19,604 [INFO]   2026-03-09T06:58:33.763278 → PM2.5 = 18.43 µg/m³
+2026-03-09 13:54:19,742 [INFO] HTTP Request: POST https://knpwncirbhcytssrxcqx.supabase.co/rest/v1/tb_prediksi_pm25?columns=%22target_at%22%2C%22is_historical%22%2C%22forecast_at%22%2C%22pm25_pred%22 "HTTP/2 201 Created"
+2026-03-09 13:54:19,746 [INFO] 30 prediksi berhasil disimpan ke tb_prediksi_pm25
+2026-03-09 13:54:19,747 [INFO] Selesai!
+2026-03-09 13:56:36,961 [INFO] ============================================================
+2026-03-09 13:56:36,961 [INFO] Pipeline Prediksi PM2.5 — LightGBM (R²=64.44%)
+2026-03-09 13:56:36,961 [INFO] ============================================================
+2026-03-09 13:56:37,805 [INFO] HTTP Request: GET https://knpwncirbhcytssrxcqx.supabase.co/rest/v1/tb_konsentrasi_gas?select=pm25_ugm3%2Ctemperature%2Chumidity%2Ccreated_at&created_at=gte.2026-03-08T06%3A56%3A37.267811&order=created_at.asc&offset=0&limit=1000 "HTTP/2 200 OK"
+2026-03-09 13:56:37,819 [INFO] Data diambil: 320 baris (sejak 2026-03-08T06:56:37.267811)
+2026-03-09 13:56:37,831 [INFO] Training LightGBM pada 259 sampel dengan 48 fitur...
+2026-03-09 13:56:40,986 [INFO] Menghasilkan 30 prediksi LightGBM
+2026-03-09 13:56:40,987 [INFO]   2026-03-09T06:57:36.597997 → PM2.5 = 19.43 µg/m³
+2026-03-09 13:56:40,989 [INFO]   2026-03-09T06:58:36.597997 → PM2.5 = 18.84 µg/m³
+2026-03-09 13:56:40,989 [INFO]   2026-03-09T06:59:36.597997 → PM2.5 = 17.18 µg/m³
+2026-03-09 13:56:40,990 [INFO]   2026-03-09T07:00:36.597997 → PM2.5 = 17.64 µg/m³
+2026-03-09 13:56:40,991 [INFO]   2026-03-09T07:01:36.597997 → PM2.5 = 18.51 µg/m³
+2026-03-09 13:56:41,108 [INFO] HTTP Request: POST https://knpwncirbhcytssrxcqx.supabase.co/rest/v1/tb_prediksi_pm25?columns=%22target_at%22%2C%22pm25_pred%22%2C%22forecast_at%22%2C%22is_historical%22 "HTTP/2 201 Created"
+2026-03-09 13:56:41,108 [INFO] 30 prediksi berhasil disimpan ke tb_prediksi_pm25
+2026-03-09 13:56:41,108 [INFO] Selesai!
+2026-03-09 14:01:39,359 [INFO] ============================================================
+2026-03-09 14:01:39,361 [INFO] Pipeline Prediksi PM2.5 — LightGBM (R²=64.44%)
+2026-03-09 14:01:39,361 [INFO] ============================================================
+2026-03-09 14:01:41,671 [INFO] HTTP Request: GET https://knpwncirbhcytssrxcqx.supabase.co/rest/v1/tb_konsentrasi_gas?select=pm25_ugm3%2Ctemperature%2Chumidity%2Ccreated_at&created_at=gte.2026-03-08T07%3A01%3A40.549680&order=created_at.asc&offset=0&limit=1000 "HTTP/2 200 OK"
+2026-03-09 14:01:41,723 [INFO] Data diambil: 325 baris (sejak 2026-03-08T07:01:40.549680)
+2026-03-09 14:01:41,779 [INFO] Training LightGBM pada 264 sampel dengan 48 fitur...
+2026-03-09 14:01:45,594 [INFO] Menghasilkan 30 prediksi LightGBM
+2026-03-09 14:01:45,594 [INFO]   2026-03-09T07:02:41.518155 → PM2.5 = 19.31 µg/m³
+2026-03-09 14:01:45,598 [INFO]   2026-03-09T07:03:41.518155 → PM2.5 = 18.69 µg/m³
+2026-03-09 14:01:45,599 [INFO]   2026-03-09T07:04:41.518155 → PM2.5 = 19.47 µg/m³
+2026-03-09 14:01:45,601 [INFO]   2026-03-09T07:05:41.518155 → PM2.5 = 19.24 µg/m³
+2026-03-09 14:01:45,602 [INFO]   2026-03-09T07:06:41.518155 → PM2.5 = 19.79 µg/m³
+2026-03-09 14:01:45,711 [INFO] HTTP Request: POST https://knpwncirbhcytssrxcqx.supabase.co/rest/v1/tb_prediksi_pm25?columns=%22is_historical%22%2C%22forecast_at%22%2C%22pm25_pred%22%2C%22target_at%22 "HTTP/2 201 Created"
+2026-03-09 14:01:45,721 [INFO] 30 prediksi berhasil disimpan ke tb_prediksi_pm25
+2026-03-09 14:01:45,721 [INFO] Selesai!
+2026-03-09 14:06:37,337 [INFO] ============================================================
+2026-03-09 14:06:37,337 [INFO] Pipeline Prediksi PM2.5 — LightGBM (R²=64.44%)
+2026-03-09 14:06:37,338 [INFO] ============================================================
+2026-03-09 14:06:38,329 [INFO] HTTP Request: GET https://knpwncirbhcytssrxcqx.supabase.co/rest/v1/tb_konsentrasi_gas?select=pm25_ugm3%2Ctemperature%2Chumidity%2Ccreated_at&created_at=gte.2026-03-08T07%3A06%3A37.642860&order=created_at.asc&offset=0&limit=1000 "HTTP/2 200 OK"
+2026-03-09 14:06:38,367 [INFO] Data diambil: 329 baris (sejak 2026-03-08T07:06:37.642860)
+2026-03-09 14:06:38,446 [INFO] Training LightGBM pada 268 sampel dengan 48 fitur...
+2026-03-09 14:06:42,464 [INFO] Menghasilkan 30 prediksi LightGBM
+2026-03-09 14:06:42,464 [INFO]   2026-03-09T07:06:45.435317 → PM2.5 = 19.47 µg/m³
+2026-03-09 14:06:42,466 [INFO]   2026-03-09T07:07:45.435317 → PM2.5 = 19.65 µg/m³
+2026-03-09 14:06:42,468 [INFO]   2026-03-09T07:08:45.435317 → PM2.5 = 19.66 µg/m³
+2026-03-09 14:06:42,469 [INFO]   2026-03-09T07:09:45.435317 → PM2.5 = 19.47 µg/m³
+2026-03-09 14:06:42,471 [INFO]   2026-03-09T07:10:45.435317 → PM2.5 = 19.05 µg/m³
+2026-03-09 14:06:42,725 [INFO] HTTP Request: POST https://knpwncirbhcytssrxcqx.supabase.co/rest/v1/tb_prediksi_pm25?columns=%22pm25_pred%22%2C%22forecast_at%22%2C%22target_at%22%2C%22is_historical%22 "HTTP/2 201 Created"
+2026-03-09 14:06:42,729 [INFO] 30 prediksi berhasil disimpan ke tb_prediksi_pm25
+2026-03-09 14:06:42,730 [INFO] Selesai!
+2026-03-09 14:11:37,509 [INFO] ============================================================
+2026-03-09 14:11:37,509 [INFO] Pipeline Prediksi PM2.5 — LightGBM (R²=64.44%)
+2026-03-09 14:11:37,509 [INFO] ============================================================
+2026-03-09 14:11:38,405 [INFO] HTTP Request: GET https://knpwncirbhcytssrxcqx.supabase.co/rest/v1/tb_konsentrasi_gas?select=pm25_ugm3%2Ctemperature%2Chumidity%2Ccreated_at&created_at=gte.2026-03-08T07%3A11%3A37.833736&order=created_at.asc&offset=0&limit=1000 "HTTP/2 200 OK"
+2026-03-09 14:11:38,439 [INFO] Data diambil: 334 baris (sejak 2026-03-08T07:11:37.833736)
+2026-03-09 14:11:38,502 [INFO] Training LightGBM pada 273 sampel dengan 48 fitur...
+2026-03-09 14:11:41,445 [INFO] Menghasilkan 30 prediksi LightGBM
+2026-03-09 14:11:41,445 [INFO]   2026-03-09T07:11:51.269560 → PM2.5 = 20.82 µg/m³
+2026-03-09 14:11:41,452 [INFO]   2026-03-09T07:12:51.269560 → PM2.5 = 20.3 µg/m³
+2026-03-09 14:11:41,453 [INFO]   2026-03-09T07:13:51.269560 → PM2.5 = 18.72 µg/m³
+2026-03-09 14:11:41,454 [INFO]   2026-03-09T07:14:51.269560 → PM2.5 = 18.66 µg/m³
+2026-03-09 14:11:41,456 [INFO]   2026-03-09T07:15:51.269560 → PM2.5 = 19.73 µg/m³
+2026-03-09 14:11:41,555 [INFO] HTTP Request: POST https://knpwncirbhcytssrxcqx.supabase.co/rest/v1/tb_prediksi_pm25?columns=%22pm25_pred%22%2C%22target_at%22%2C%22forecast_at%22%2C%22is_historical%22 "HTTP/2 201 Created"
+2026-03-09 14:11:41,565 [INFO] 30 prediksi berhasil disimpan ke tb_prediksi_pm25
+2026-03-09 14:11:41,565 [INFO] Selesai!
+2026-03-09 14:16:37,254 [INFO] ============================================================
+2026-03-09 14:16:37,254 [INFO] Pipeline Prediksi PM2.5 — LightGBM (R²=64.44%)
+2026-03-09 14:16:37,254 [INFO] ============================================================
+2026-03-09 14:16:38,293 [INFO] HTTP Request: GET https://knpwncirbhcytssrxcqx.supabase.co/rest/v1/tb_konsentrasi_gas?select=pm25_ugm3%2Ctemperature%2Chumidity%2Ccreated_at&created_at=gte.2026-03-08T07%3A16%3A37.526243&order=created_at.asc&offset=0&limit=1000 "HTTP/2 200 OK"
+2026-03-09 14:16:38,325 [INFO] Data diambil: 335 baris (sejak 2026-03-08T07:16:37.526243)
+2026-03-09 14:16:38,391 [INFO] Training LightGBM pada 274 sampel dengan 48 fitur...
+2026-03-09 14:16:41,287 [INFO] Menghasilkan 30 prediksi LightGBM
+2026-03-09 14:16:41,287 [INFO]   2026-03-09T07:12:52.264655 → PM2.5 = 19.91 µg/m³
+2026-03-09 14:16:41,291 [INFO]   2026-03-09T07:13:52.264655 → PM2.5 = 18.96 µg/m³
+2026-03-09 14:16:41,292 [INFO]   2026-03-09T07:14:52.264655 → PM2.5 = 19.35 µg/m³
+2026-03-09 14:16:41,292 [INFO]   2026-03-09T07:15:52.264655 → PM2.5 = 20.34 µg/m³
+2026-03-09 14:16:41,294 [INFO]   2026-03-09T07:16:52.264655 → PM2.5 = 20.09 µg/m³
+2026-03-09 14:16:41,440 [INFO] HTTP Request: POST https://knpwncirbhcytssrxcqx.supabase.co/rest/v1/tb_prediksi_pm25?columns=%22pm25_pred%22%2C%22is_historical%22%2C%22forecast_at%22%2C%22target_at%22 "HTTP/2 201 Created"
+2026-03-09 14:16:41,442 [INFO] 30 prediksi berhasil disimpan ke tb_prediksi_pm25
+2026-03-09 14:16:41,442 [INFO] Selesai!
+2026-03-09 14:21:37,144 [INFO] ============================================================
+2026-03-09 14:21:37,144 [INFO] Pipeline Prediksi PM2.5 — LightGBM (R²=64.44%)
+2026-03-09 14:21:37,144 [INFO] ============================================================
+2026-03-09 14:21:38,360 [INFO] HTTP Request: GET https://knpwncirbhcytssrxcqx.supabase.co/rest/v1/tb_konsentrasi_gas?select=pm25_ugm3%2Ctemperature%2Chumidity%2Ccreated_at&created_at=gte.2026-03-08T07%3A21%3A37.426032&order=created_at.asc&offset=0&limit=1000 "HTTP/2 200 OK"
+2026-03-09 14:21:38,393 [INFO] Data diambil: 335 baris (sejak 2026-03-08T07:21:37.426032)
+2026-03-09 14:21:38,452 [INFO] Training LightGBM pada 274 sampel dengan 48 fitur...
+2026-03-09 14:21:42,523 [INFO] Menghasilkan 30 prediksi LightGBM
+2026-03-09 14:21:42,524 [INFO]   2026-03-09T07:12:52.264655 → PM2.5 = 19.91 µg/m³
+2026-03-09 14:21:42,527 [INFO]   2026-03-09T07:13:52.264655 → PM2.5 = 18.96 µg/m³
+2026-03-09 14:21:42,529 [INFO]   2026-03-09T07:14:52.264655 → PM2.5 = 19.35 µg/m³
+2026-03-09 14:21:42,530 [INFO]   2026-03-09T07:15:52.264655 → PM2.5 = 20.34 µg/m³
+2026-03-09 14:21:42,531 [INFO]   2026-03-09T07:16:52.264655 → PM2.5 = 20.09 µg/m³
+2026-03-09 14:21:42,724 [INFO] HTTP Request: POST https://knpwncirbhcytssrxcqx.supabase.co/rest/v1/tb_prediksi_pm25?columns=%22pm25_pred%22%2C%22forecast_at%22%2C%22is_historical%22%2C%22target_at%22 "HTTP/2 201 Created"
+2026-03-09 14:21:42,728 [INFO] 30 prediksi berhasil disimpan ke tb_prediksi_pm25
+2026-03-09 14:21:42,728 [INFO] Selesai!
+2026-03-09 14:26:37,211 [INFO] ============================================================
+2026-03-09 14:26:37,211 [INFO] Pipeline Prediksi PM2.5 — LightGBM (R²=64.44%)
+2026-03-09 14:26:37,211 [INFO] ============================================================
+2026-03-09 14:26:38,320 [INFO] HTTP Request: GET https://knpwncirbhcytssrxcqx.supabase.co/rest/v1/tb_konsentrasi_gas?select=pm25_ugm3%2Ctemperature%2Chumidity%2Ccreated_at&created_at=gte.2026-03-08T07%3A26%3A37.565464&order=created_at.asc&offset=0&limit=1000 "HTTP/2 200 OK"
+2026-03-09 14:26:38,349 [INFO] Data diambil: 335 baris (sejak 2026-03-08T07:26:37.565464)
+2026-03-09 14:26:38,383 [INFO] Training LightGBM pada 274 sampel dengan 48 fitur...
+2026-03-09 14:26:42,234 [INFO] Menghasilkan 30 prediksi LightGBM
+2026-03-09 14:26:42,235 [INFO]   2026-03-09T07:12:52.264655 → PM2.5 = 19.91 µg/m³
+2026-03-09 14:26:42,237 [INFO]   2026-03-09T07:13:52.264655 → PM2.5 = 18.96 µg/m³
+2026-03-09 14:26:42,239 [INFO]   2026-03-09T07:14:52.264655 → PM2.5 = 19.35 µg/m³
+2026-03-09 14:26:42,240 [INFO]   2026-03-09T07:15:52.264655 → PM2.5 = 20.34 µg/m³
+2026-03-09 14:26:42,240 [INFO]   2026-03-09T07:16:52.264655 → PM2.5 = 20.09 µg/m³
+2026-03-09 14:26:42,397 [INFO] HTTP Request: POST https://knpwncirbhcytssrxcqx.supabase.co/rest/v1/tb_prediksi_pm25?columns=%22pm25_pred%22%2C%22is_historical%22%2C%22forecast_at%22%2C%22target_at%22 "HTTP/2 201 Created"
+2026-03-09 14:26:42,399 [INFO] 30 prediksi berhasil disimpan ke tb_prediksi_pm25
+2026-03-09 14:26:42,399 [INFO] Selesai!
+2026-03-09 14:31:37,237 [INFO] ============================================================
+2026-03-09 14:31:37,237 [INFO] Pipeline Prediksi PM2.5 — LightGBM (R²=64.44%)
+2026-03-09 14:31:37,237 [INFO] ============================================================
+2026-03-09 14:31:38,279 [INFO] HTTP Request: GET https://knpwncirbhcytssrxcqx.supabase.co/rest/v1/tb_konsentrasi_gas?select=pm25_ugm3%2Ctemperature%2Chumidity%2Ccreated_at&created_at=gte.2026-03-08T07%3A31%3A37.551787&order=created_at.asc&offset=0&limit=1000 "HTTP/2 200 OK"
+2026-03-09 14:31:38,297 [INFO] Data diambil: 336 baris (sejak 2026-03-08T07:31:37.551787)
+2026-03-09 14:31:38,337 [INFO] Training LightGBM pada 275 sampel dengan 48 fitur...
+2026-03-09 14:31:41,802 [INFO] Menghasilkan 30 prediksi LightGBM
+2026-03-09 14:31:41,802 [INFO]   2026-03-09T07:32:26.002828 → PM2.5 = 18.96 µg/m³
+2026-03-09 14:31:41,805 [INFO]   2026-03-09T07:33:26.002828 → PM2.5 = 19.59 µg/m³
+2026-03-09 14:31:41,807 [INFO]   2026-03-09T07:34:26.002828 → PM2.5 = 20.56 µg/m³
+2026-03-09 14:31:41,808 [INFO]   2026-03-09T07:35:26.002828 → PM2.5 = 20.23 µg/m³
+2026-03-09 14:31:41,809 [INFO]   2026-03-09T07:36:26.002828 → PM2.5 = 19.76 µg/m³
+2026-03-09 14:31:41,919 [INFO] HTTP Request: POST https://knpwncirbhcytssrxcqx.supabase.co/rest/v1/tb_prediksi_pm25?columns=%22target_at%22%2C%22forecast_at%22%2C%22is_historical%22%2C%22pm25_pred%22 "HTTP/2 201 Created"
+2026-03-09 14:31:41,925 [INFO] 30 prediksi berhasil disimpan ke tb_prediksi_pm25
+2026-03-09 14:31:41,925 [INFO] Selesai!
+2026-03-09 14:36:36,724 [INFO] ============================================================
+2026-03-09 14:36:36,724 [INFO] Pipeline Prediksi PM2.5 — LightGBM (R²=64.44%)
+2026-03-09 14:36:36,724 [INFO] ============================================================
+2026-03-09 14:36:37,587 [INFO] HTTP Request: GET https://knpwncirbhcytssrxcqx.supabase.co/rest/v1/tb_konsentrasi_gas?select=pm25_ugm3%2Ctemperature%2Chumidity%2Ccreated_at&created_at=gte.2026-03-08T07%3A36%3A36.990477&order=created_at.asc&offset=0&limit=1000 "HTTP/2 200 OK"
+2026-03-09 14:36:37,601 [INFO] Data diambil: 341 baris (sejak 2026-03-08T07:36:36.990477)
+2026-03-09 14:36:37,613 [INFO] Training LightGBM pada 280 sampel dengan 48 fitur...
+2026-03-09 14:36:40,238 [INFO] Menghasilkan 30 prediksi LightGBM
+2026-03-09 14:36:40,239 [INFO]   2026-03-09T07:37:31.159262 → PM2.5 = 19.36 µg/m³
+2026-03-09 14:36:40,242 [INFO]   2026-03-09T07:38:31.159262 → PM2.5 = 19.3 µg/m³
+2026-03-09 14:36:40,243 [INFO]   2026-03-09T07:39:31.159262 → PM2.5 = 19.57 µg/m³
+2026-03-09 14:36:40,244 [INFO]   2026-03-09T07:40:31.159262 → PM2.5 = 18.91 µg/m³
+2026-03-09 14:36:40,246 [INFO]   2026-03-09T07:41:31.159262 → PM2.5 = 18.77 µg/m³
+2026-03-09 14:36:40,514 [INFO] HTTP Request: POST https://knpwncirbhcytssrxcqx.supabase.co/rest/v1/tb_prediksi_pm25?columns=%22pm25_pred%22%2C%22forecast_at%22%2C%22is_historical%22%2C%22target_at%22 "HTTP/2 201 Created"
+2026-03-09 14:36:40,517 [INFO] 30 prediksi berhasil disimpan ke tb_prediksi_pm25
+2026-03-09 14:36:40,517 [INFO] Selesai!
+2026-03-09 14:41:36,853 [INFO] ============================================================
+2026-03-09 14:41:36,853 [INFO] Pipeline Prediksi PM2.5 — LightGBM (R²=64.44%)
+2026-03-09 14:41:36,853 [INFO] ============================================================
+2026-03-09 14:41:37,617 [INFO] HTTP Request: GET https://knpwncirbhcytssrxcqx.supabase.co/rest/v1/tb_konsentrasi_gas?select=pm25_ugm3%2Ctemperature%2Chumidity%2Ccreated_at&created_at=gte.2026-03-08T07%3A41%3A37.119494&order=created_at.asc&offset=0&limit=1000 "HTTP/2 200 OK"
+2026-03-09 14:41:37,635 [INFO] Data diambil: 346 baris (sejak 2026-03-08T07:41:37.119494)
+2026-03-09 14:41:37,649 [INFO] Training LightGBM pada 285 sampel dengan 48 fitur...
+2026-03-09 14:41:41,008 [INFO] Menghasilkan 30 prediksi LightGBM
+2026-03-09 14:41:41,008 [INFO]   2026-03-09T07:42:35.453424 → PM2.5 = 21.56 µg/m³
+2026-03-09 14:41:41,012 [INFO]   2026-03-09T07:43:35.453424 → PM2.5 = 21.95 µg/m³
+2026-03-09 14:41:41,013 [INFO]   2026-03-09T07:44:35.453424 → PM2.5 = 21.7 µg/m³
+2026-03-09 14:41:41,013 [INFO]   2026-03-09T07:45:35.453424 → PM2.5 = 21.54 µg/m³
+2026-03-09 14:41:41,015 [INFO]   2026-03-09T07:46:35.453424 → PM2.5 = 20.64 µg/m³
+2026-03-09 14:41:41,142 [INFO] HTTP Request: POST https://knpwncirbhcytssrxcqx.supabase.co/rest/v1/tb_prediksi_pm25?columns=%22is_historical%22%2C%22forecast_at%22%2C%22pm25_pred%22%2C%22target_at%22 "HTTP/2 201 Created"
+2026-03-09 14:41:41,145 [INFO] 30 prediksi berhasil disimpan ke tb_prediksi_pm25
+2026-03-09 14:41:41,145 [INFO] Selesai!
+2026-03-09 14:46:36,800 [INFO] ============================================================
+2026-03-09 14:46:36,800 [INFO] Pipeline Prediksi PM2.5 — LightGBM (R²=64.44%)
+2026-03-09 14:46:36,800 [INFO] ============================================================
+2026-03-09 14:46:37,576 [INFO] HTTP Request: GET https://knpwncirbhcytssrxcqx.supabase.co/rest/v1/tb_konsentrasi_gas?select=pm25_ugm3%2Ctemperature%2Chumidity%2Ccreated_at&created_at=gte.2026-03-08T07%3A46%3A37.066200&order=created_at.asc&offset=0&limit=1000 "HTTP/2 200 OK"
+2026-03-09 14:46:37,592 [INFO] Data diambil: 350 baris (sejak 2026-03-08T07:46:37.066200)
+2026-03-09 14:46:37,603 [INFO] Training LightGBM pada 289 sampel dengan 48 fitur...
+2026-03-09 14:46:39,736 [INFO] Menghasilkan 30 prediksi LightGBM
+2026-03-09 14:46:39,736 [INFO]   2026-03-09T07:46:39.339676 → PM2.5 = 19.93 µg/m³
+2026-03-09 14:46:39,738 [INFO]   2026-03-09T07:47:39.339676 → PM2.5 = 19.83 µg/m³
+2026-03-09 14:46:39,740 [INFO]   2026-03-09T07:48:39.339676 → PM2.5 = 20.34 µg/m³
+2026-03-09 14:46:39,740 [INFO]   2026-03-09T07:49:39.339676 → PM2.5 = 20.08 µg/m³
+2026-03-09 14:46:39,742 [INFO]   2026-03-09T07:50:39.339676 → PM2.5 = 20.88 µg/m³
+2026-03-09 14:46:39,862 [INFO] HTTP Request: POST https://knpwncirbhcytssrxcqx.supabase.co/rest/v1/tb_prediksi_pm25?columns=%22forecast_at%22%2C%22pm25_pred%22%2C%22target_at%22%2C%22is_historical%22 "HTTP/2 201 Created"
+2026-03-09 14:46:39,863 [INFO] 30 prediksi berhasil disimpan ke tb_prediksi_pm25
+2026-03-09 14:46:39,864 [INFO] Selesai!

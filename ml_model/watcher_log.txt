@@ -1,0 +1,188 @@
+2026-03-09 13:15:54,267 [INFO] ==================================================
+2026-03-09 13:15:54,268 [INFO] LIVE FORECAST WATCHER STARTED (Interval: 5 Menit)
+2026-03-09 13:15:54,268 [INFO] ==================================================
+2026-03-09 13:15:54,269 [INFO] Memulai pemicu peramalan (predict_and_save.py)...
+2026-03-09 13:16:08,917 [INFO] Peramalan Berhasil.
+2026-03-09 13:16:08,918 [INFO] Selesai dalam 14.65 detik. Tidur selama 4.76 menit...
+2026-03-09 13:20:54,271 [INFO] Memulai pemicu peramalan (predict_and_save.py)...
+2026-03-09 13:21:06,133 [INFO] Peramalan Berhasil.
+2026-03-09 13:21:06,133 [INFO] Selesai dalam 11.86 detik. Tidur selama 4.80 menit...
+2026-03-09 13:25:54,272 [INFO] Memulai pemicu peramalan (predict_and_save.py)...
+2026-03-09 13:26:02,194 [INFO] Peramalan Berhasil.
+2026-03-09 13:26:02,194 [INFO] Selesai dalam 7.92 detik. Tidur selama 4.87 menit...
+2026-03-09 13:30:54,323 [INFO] Memulai pemicu peramalan (predict_and_save.py)...
+2026-03-09 13:31:06,310 [INFO] Peramalan Berhasil.
+2026-03-09 13:31:06,310 [INFO] Selesai dalam 12.03 detik. Tidur selama 4.80 menit...
+2026-03-09 13:35:54,290 [INFO] Memulai pemicu peramalan (predict_and_save.py)...
+2026-03-09 13:36:03,598 [INFO] Peramalan Berhasil.
+2026-03-09 13:36:03,603 [INFO] Selesai dalam 9.32 detik. Tidur selama 4.84 menit...
+2026-03-09 13:36:08,324 [INFO] Watcher dimatikan oleh pengguna.
+2026-03-09 13:36:21,229 [INFO] ==================================================
+2026-03-09 13:36:21,229 [INFO] LIVE FORECAST WATCHER STARTED (Interval: 5 Menit)
+2026-03-09 13:36:21,230 [INFO] ==================================================
+2026-03-09 13:36:21,230 [INFO] Memulai pemicu peramalan & regresi...
+2026-03-09 13:36:21,230 [INFO]   -> Menjalankan predict_and_save.py
+2026-03-09 13:36:27,153 [INFO]   -> Menjalankan regression_antar_parameter.py
+2026-03-09 13:36:49,451 [INFO] Semua pipa ML Berhasil diperbarui.
+2026-03-09 13:36:49,459 [INFO] Selesai dalam 28.23 detik. Tidur selama 4.53 menit...
+2026-03-09 13:41:21,263 [INFO] Memulai pemicu peramalan & regresi...
+2026-03-09 13:41:21,288 [INFO]   -> Menjalankan predict_and_save.py
+2026-03-09 13:41:37,680 [INFO]   -> Menjalankan regression_antar_parameter.py
+2026-03-09 13:41:57,568 [INFO] Semua pipa ML Berhasil diperbarui.
+2026-03-09 13:41:57,569 [INFO] Selesai dalam 36.33 detik. Tidur selama 4.39 menit...
+2026-03-09 13:46:21,271 [INFO] Memulai pemicu peramalan & regresi...
+2026-03-09 13:46:21,294 [INFO]   -> Menjalankan predict_and_save.py
+2026-03-09 13:46:31,211 [INFO]   -> Menjalankan regression_antar_parameter.py
+2026-03-09 13:46:46,118 [INFO] Semua pipa ML Berhasil diperbarui.
+2026-03-09 13:46:46,119 [INFO] Selesai dalam 24.87 detik. Tidur selama 4.59 menit...
+2026-03-09 13:49:10,813 [INFO] Watcher dimatikan oleh pengguna.
+2026-03-09 13:49:26,918 [INFO] ==================================================
+2026-03-09 13:49:26,918 [INFO] LIVE FORECAST WATCHER STARTED (Interval: 5 Menit)
+2026-03-09 13:49:26,918 [INFO] ==================================================
+2026-03-09 13:49:26,918 [INFO] Memulai pemicu peramalan & regresi...
+2026-03-09 13:49:26,918 [INFO]   -> Menjalankan predict_and_save.py
+2026-03-09 13:49:35,009 [INFO]   -> Menjalankan regression_antar_parameter.py
+2026-03-09 13:49:41,506 [INFO]      [Regress]   Total data bersih: 993 observasi
+2026-03-09 13:49:41,507 [WARNING] Ada pipa ML yang gagal (Codes: 0, 1)
+2026-03-09 13:49:41,507 [INFO] Selesai dalam 14.59 detik. Tidur selama 4.76 menit...
+2026-03-09 13:51:17,681 [INFO] Watcher dimatikan oleh pengguna.
+2026-03-09 13:51:47,864 [INFO] ==================================================
+2026-03-09 13:51:47,865 [INFO] LIVE FORECAST WATCHER STARTED (Interval: 5 Menit)
+2026-03-09 13:51:47,865 [INFO] ==================================================
+2026-03-09 13:51:47,865 [INFO] Memulai pemicu peramalan & regresi...
+2026-03-09 13:51:47,865 [INFO]   -> Menjalankan predict_and_save.py
+2026-03-09 13:51:56,509 [INFO]   -> Menjalankan regression_antar_parameter.py
+2026-03-09 13:52:02,324 [INFO]      [Regress]   Total data bersih: 993 observasi
+2026-03-09 13:52:02,325 [WARNING] Ada pipa ML yang gagal (Codes: 0, 1)
+2026-03-09 13:52:02,325 [ERROR] Regress Error: Traceback (most recent call last):
+  File "D:\DashboardAQ_v3\ml_model\regression_antar_parameter.py", line 272, in <module>
+    evaluate_regression(data)
+  File "D:\DashboardAQ_v3\ml_model\regression_antar_parameter.py", line 161, in evaluate_regression
+    print(f"    {status} R²={r2*100:.2f}% | MAE={mae:.4f} | RMSE={rmse:.4f} | CV-R²={cv_r2_mean*100:.2f}%")
+  File "C:\Users\Yusuf Rajabi\AppData\Local\Programs\Python\Python311\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u2705' in position 4: character maps to <undefined>
+
+2026-03-09 13:52:02,326 [INFO] Selesai dalam 14.46 detik. Tidur selama 4.76 menit...
+2026-03-09 13:52:33,535 [INFO] Watcher dimatikan oleh pengguna.
+2026-03-09 13:52:52,016 [INFO] ==================================================
+2026-03-09 13:52:52,017 [INFO] LIVE FORECAST WATCHER STARTED (Interval: 5 Menit)
+2026-03-09 13:52:52,017 [INFO] ==================================================
+2026-03-09 13:52:52,017 [INFO] Memulai pemicu peramalan & regresi...
+2026-03-09 13:52:52,017 [INFO]   -> Menjalankan predict_and_save.py
+2026-03-09 13:52:57,617 [INFO]   -> Menjalankan regression_antar_parameter.py
+2026-03-09 13:53:09,111 [INFO]      [Regress]   Total data bersih: 993 observasi
+2026-03-09 13:53:09,111 [WARNING] Ada pipa ML yang gagal (Codes: 0, 1)
+2026-03-09 13:53:09,112 [ERROR] Regress Error: Traceback (most recent call last):
+  File "D:\DashboardAQ_v3\ml_model\regression_antar_parameter.py", line 272, in <module>
+    evaluate_regression(data)
+  File "D:\DashboardAQ_v3\ml_model\regression_antar_parameter.py", line 176, in evaluate_regression
+    print(f"    {i+1}. {feature_cols[idx]:30s} \u2192 {pct:.1f}%")
+  File "C:\Users\Yusuf Rajabi\AppData\Local\Programs\Python\Python311\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u2192' in position 38: character maps to <undefined>
+
+2026-03-09 13:53:09,112 [INFO] Selesai dalam 17.10 detik. Tidur selama 4.72 menit...
+2026-03-09 13:53:55,355 [INFO] Watcher dimatikan oleh pengguna.
+2026-03-09 13:54:13,516 [INFO] ==================================================
+2026-03-09 13:54:13,516 [INFO] LIVE FORECAST WATCHER STARTED (Interval: 5 Menit)
+2026-03-09 13:54:13,517 [INFO] ==================================================
+2026-03-09 13:54:13,517 [INFO] Memulai pemicu peramalan & regresi...
+2026-03-09 13:54:13,517 [INFO]   -> Menjalankan predict_and_save.py
+2026-03-09 13:54:20,028 [INFO]   -> Menjalankan regression_antar_parameter.py
+2026-03-09 13:54:31,531 [INFO]      [Regress]   Total data bersih: 993 observasi
+2026-03-09 13:54:31,532 [WARNING] Ada pipa ML yang gagal (Codes: 0, 1)
+2026-03-09 13:54:31,532 [ERROR] Regress Error: Traceback (most recent call last):
+  File "D:\DashboardAQ_v3\ml_model\regression_antar_parameter.py", line 272, in <module>
+    evaluate_regression(data)
+  File "D:\DashboardAQ_v3\ml_model\regression_antar_parameter.py", line 260, in evaluate_regression
+    print(f"  \U0001f4dd Menulis hasil ke: {out_path.absolute()}")
+  File "C:\Users\Yusuf Rajabi\AppData\Local\Programs\Python\Python311\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f4dd' in position 2: character maps to <undefined>
+
+2026-03-09 13:54:31,532 [INFO] Selesai dalam 18.01 detik. Tidur selama 4.70 menit...
+2026-03-09 13:55:29,538 [INFO] Watcher dimatikan oleh pengguna.
+2026-03-09 13:56:34,976 [INFO] ==================================================
+2026-03-09 13:56:34,977 [INFO] LIVE FORECAST WATCHER STARTED (Interval: 5 Menit)
+2026-03-09 13:56:34,977 [INFO] ==================================================
+2026-03-09 13:56:34,977 [INFO] Memulai pemicu peramalan & regresi...
+2026-03-09 13:56:34,977 [INFO]   -> Menjalankan predict_and_save.py
+2026-03-09 13:56:41,383 [INFO]   -> Menjalankan regression_antar_parameter.py
+2026-03-09 13:56:52,966 [INFO]      [Regress]   Total data bersih: 993 observasi
+2026-03-09 13:56:52,966 [INFO]      [Regress]   [DONE] File berhasil diperbarui pada 2026-03-09T13:56:52.588151
+2026-03-09 13:56:52,966 [INFO] Semua pipa ML Berhasil diperbarui.
+2026-03-09 13:56:52,968 [INFO] Selesai dalam 17.99 detik. Tidur selama 4.70 menit...
+2026-03-09 14:01:34,978 [INFO] Memulai pemicu peramalan & regresi...
+2026-03-09 14:01:34,979 [INFO]   -> Menjalankan predict_and_save.py
+2026-03-09 14:01:46,287 [INFO]   -> Menjalankan regression_antar_parameter.py
+2026-03-09 14:02:10,707 [INFO]      [Regress]   Total data bersih: 993 observasi
+2026-03-09 14:02:10,708 [INFO]      [Regress]   [DONE] File berhasil diperbarui pada 2026-03-09T14:02:10.149692
+2026-03-09 14:02:10,708 [INFO] Semua pipa ML Berhasil diperbarui.
+2026-03-09 14:02:10,708 [INFO] Selesai dalam 35.73 detik. Tidur selama 4.40 menit...
+2026-03-09 14:06:34,979 [INFO] Memulai pemicu peramalan & regresi...
+2026-03-09 14:06:34,979 [INFO]   -> Menjalankan predict_and_save.py
+2026-03-09 14:06:43,231 [INFO]   -> Menjalankan regression_antar_parameter.py
+2026-03-09 14:07:05,439 [INFO]      [Regress]   Total data bersih: 993 observasi
+2026-03-09 14:07:05,439 [INFO]      [Regress]   [DONE] File berhasil diperbarui pada 2026-03-09T14:07:04.931727
+2026-03-09 14:07:05,439 [INFO] Semua pipa ML Berhasil diperbarui.
+2026-03-09 14:07:05,440 [INFO] Selesai dalam 30.46 detik. Tidur selama 4.49 menit...
+2026-03-09 14:11:34,980 [INFO] Memulai pemicu peramalan & regresi...
+2026-03-09 14:11:34,983 [INFO]   -> Menjalankan predict_and_save.py
+2026-03-09 14:11:41,978 [INFO]   -> Menjalankan regression_antar_parameter.py
+2026-03-09 14:12:06,351 [INFO]      [Regress]   Total data bersih: 993 observasi
+2026-03-09 14:12:06,351 [INFO]      [Regress]   [DONE] File berhasil diperbarui pada 2026-03-09T14:12:05.824369
+2026-03-09 14:12:06,352 [INFO] Semua pipa ML Berhasil diperbarui.
+2026-03-09 14:12:06,352 [INFO] Selesai dalam 31.37 detik. Tidur selama 4.48 menit...
+2026-03-09 14:16:34,982 [INFO] Memulai pemicu peramalan & regresi...
+2026-03-09 14:16:34,984 [INFO]   -> Menjalankan predict_and_save.py
+2026-03-09 14:16:41,890 [INFO]   -> Menjalankan regression_antar_parameter.py
+2026-03-09 14:17:03,234 [INFO]      [Regress]   Total data bersih: 993 observasi
+2026-03-09 14:17:03,234 [INFO]      [Regress]   [DONE] File berhasil diperbarui pada 2026-03-09T14:17:02.631111
+2026-03-09 14:17:03,236 [INFO] Semua pipa ML Berhasil diperbarui.
+2026-03-09 14:17:03,238 [INFO] Selesai dalam 28.26 detik. Tidur selama 4.53 menit...
+2026-03-09 14:21:34,984 [INFO] Memulai pemicu peramalan & regresi...
+2026-03-09 14:21:34,988 [INFO]   -> Menjalankan predict_and_save.py
+2026-03-09 14:21:43,432 [INFO]   -> Menjalankan regression_antar_parameter.py
+2026-03-09 14:22:07,386 [INFO]      [Regress]   Total data bersih: 994 observasi
+2026-03-09 14:22:07,387 [INFO]      [Regress]   [DONE] File berhasil diperbarui pada 2026-03-09T14:22:06.842868
+2026-03-09 14:22:07,387 [INFO] Semua pipa ML Berhasil diperbarui.
+2026-03-09 14:22:07,388 [INFO] Selesai dalam 32.40 detik. Tidur selama 4.46 menit...
+2026-03-09 14:26:34,985 [INFO] Memulai pemicu peramalan & regresi...
+2026-03-09 14:26:34,987 [INFO]   -> Menjalankan predict_and_save.py
+2026-03-09 14:26:42,792 [INFO]   -> Menjalankan regression_antar_parameter.py
+2026-03-09 14:27:05,793 [INFO]      [Regress]   Total data bersih: 994 observasi
+2026-03-09 14:27:05,793 [INFO]      [Regress]   [DONE] File berhasil diperbarui pada 2026-03-09T14:27:05.046007
+2026-03-09 14:27:05,793 [INFO] Semua pipa ML Berhasil diperbarui.
+2026-03-09 14:27:05,795 [INFO] Selesai dalam 30.81 detik. Tidur selama 4.49 menit...
+2026-03-09 14:31:34,987 [INFO] Memulai pemicu peramalan & regresi...
+2026-03-09 14:31:34,988 [INFO]   -> Menjalankan predict_and_save.py
+2026-03-09 14:31:42,344 [INFO]   -> Menjalankan regression_antar_parameter.py
+2026-03-09 14:32:03,185 [INFO]      [Regress]   Total data bersih: 994 observasi
+2026-03-09 14:32:03,186 [INFO]      [Regress]   [DONE] File berhasil diperbarui pada 2026-03-09T14:32:02.432269
+2026-03-09 14:32:03,187 [INFO] Semua pipa ML Berhasil diperbarui.
+2026-03-09 14:32:03,188 [INFO] Selesai dalam 28.20 detik. Tidur selama 4.53 menit...
+2026-03-09 14:36:34,990 [INFO] Memulai pemicu peramalan & regresi...
+2026-03-09 14:36:34,990 [INFO]   -> Menjalankan predict_and_save.py
+2026-03-09 14:36:41,123 [INFO]   -> Menjalankan regression_antar_parameter.py
+2026-03-09 14:37:05,666 [INFO]      [Regress]   Total data bersih: 994 observasi
+2026-03-09 14:37:05,667 [INFO]      [Regress]   [DONE] File berhasil diperbarui pada 2026-03-09T14:37:04.429677
+2026-03-09 14:37:05,668 [INFO] Semua pipa ML Berhasil diperbarui.
+2026-03-09 14:37:05,669 [INFO] Selesai dalam 30.68 detik. Tidur selama 4.49 menit...
+2026-03-09 14:41:34,991 [INFO] Memulai pemicu peramalan & regresi...
+2026-03-09 14:41:34,992 [INFO]   -> Menjalankan predict_and_save.py
+2026-03-09 14:41:41,665 [INFO]   -> Menjalankan regression_antar_parameter.py
+2026-03-09 14:42:05,755 [INFO]      [Regress]   Total data bersih: 994 observasi
+2026-03-09 14:42:05,755 [INFO]      [Regress]   [DONE] File berhasil diperbarui pada 2026-03-09T14:42:05.025684
+2026-03-09 14:42:05,756 [INFO] Semua pipa ML Berhasil diperbarui.
+2026-03-09 14:42:05,756 [INFO] Selesai dalam 30.77 detik. Tidur selama 4.49 menit...
+2026-03-09 14:46:34,992 [INFO] Memulai pemicu peramalan & regresi...
+2026-03-09 14:46:34,993 [INFO]   -> Menjalankan predict_and_save.py
+2026-03-09 14:46:40,117 [INFO]   -> Menjalankan regression_antar_parameter.py
+2026-03-09 14:46:51,690 [INFO]      [Regress]   Total data bersih: 994 observasi
+2026-03-09 14:46:51,690 [INFO]      [Regress]   [DONE] File berhasil diperbarui pada 2026-03-09T14:46:51.388193
+2026-03-09 14:46:51,690 [INFO] Semua pipa ML Berhasil diperbarui.
+2026-03-09 14:46:51,690 [INFO] Selesai dalam 16.70 detik. Tidur selama 4.72 menit...

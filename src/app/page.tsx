@@ -47,9 +47,11 @@ export default function Home() {
       .channel("realtime-updates")
       .on(
         "postgres_changes",
-        { event: "INSERT", schema: "public", table: "tb_konsentrasi_gas" },
+        { event: "*", schema: "public", table: "tb_konsentrasi_gas" },
         (payload) => {
           const newData = payload.new as any;
+          if (!newData) return; // Prevent crashes if payload.new is missing (e.g., on DELETE)
+
           setRealtimeData({
             pm25: newData.pm25_ugm3 || 0,
             pm10: newData.pm10_corrected_ugm3 || 0,

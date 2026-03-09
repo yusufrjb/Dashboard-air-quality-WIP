@@ -16,6 +16,11 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { supabase } from "@/lib/supabase";
+import HeatmapCalendar from "./HeatmapCalendar";
+import PollutionRose from "./PollutionRose";
+import PeakHourBoxPlot from "./PeakHourBoxPlot";
+import ExposurePercentiles from "./ExposurePercentiles";
+import { isIdeal, getLimitString } from "@/lib/limits";
 import {
   Cloud,
   FlaskConical,
@@ -284,6 +289,25 @@ export default function OverviewTab({ realtimeData, historicalData: _historicalD
   const [bmkgData, setBmkgData] = useState<BmkgWeather | null>(null);
   const [bmkgLoading, setBmkgLoading] = useState(false);
   const [bmkgError, setBmkgError] = useState<string | null>(null);
+  const [hourlyPatternData, setHourlyPatternData] = useState<any[]>([]);
+  const [hourlyLoading, setHourlyLoading] = useState(false);
+
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  // Auto-refresh when new data arrives via Supabase Realtime
+  useEffect(() => {
+    const channel = supabase
+      .channel("overview-realtime")
+      .on("postgres_changes", { event: "*", schema: "public", table: "tb_konsentrasi_gas" }, () => {
+        // Increment key to trigger data refetch in child components and chart
+        setRefreshKey(prev => prev + 1);
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
 
   const fetchChartData = useCallback(async () => {
     setChartLoading(true);
@@ -323,9 +347,26 @@ export default function OverviewTab({ realtimeData, historicalData: _historicalD
     } finally {
       setChartLoading(false);
     }
-  }, [timePeriod]);
+  }, [timePeriod, refreshKey]); // re-run chart fetch when refreshKey increments
 
   useEffect(() => { fetchChartData(); }, [fetchChartData]);
+
+  const fetchHourlyPattern = useCallback(async () => {
+    setHourlyLoading(true);
+    try {
+      const res = await fetch("/api/aggregates/hourly-pattern?days=30");
+      if (!res.ok) throw new Error("Gagal mengambil pola harian");
+      const data = await res.json();
+      setHourlyPatternData(data);
+    } catch (err) {
+      console.error(err);
+      setHourlyPatternData([]);
+    } finally {
+      setHourlyLoading(false);
+    }
+  }, [refreshKey]); // re-run pattern fetch when refreshKey increments
+
+  useEffect(() => { fetchHourlyPattern(); }, [fetchHourlyPattern]);
 
   const fetchBmkg = useCallback(async () => {
     setBmkgLoading(true);
@@ -368,35 +409,7 @@ export default function OverviewTab({ realtimeData, historicalData: _historicalD
     };
   }, [chartData]);
 
-  const dailyPattern = useMemo((): DailyPatternPoint[] => {
-    const buckets: Record<number, { pm25: number[]; pm10: number[] }> = {};
-    for (let h = 0; h < 24; h++) buckets[h] = { pm25: [], pm10: [] };
-    chartData.forEach((d) => {
-      if (!d.time) return;
-      const date = new Date(d.time);
-      const h = date.getHours();
-      if (!isNaN(h)) {
-        if (d.pm25 > 0) buckets[h].pm25.push(d.pm25);
-        if (d.pm10 > 0) buckets[h].pm10.push(d.pm10);
-      }
-    });
-    return Array.from({ length: 24 }, (_, h) => {
-      const b = buckets[h];
-      const pm25Sorted = [...b.pm25].sort((a, c) => a - c);
-      const pm10Sorted = [...b.pm10].sort((a, c) => a - c);
-      const avg = (arr: number[]) => arr.length ? arr.reduce((a, c) => a + c, 0) / arr.length : 0;
-      return {
-        hour: h,
-        label: `${String(h).padStart(2, "0")}:00`,
-        pm25_avg: avg(b.pm25),
-        pm25_min: pm25Sorted[0] ?? 0,
-        pm25_max: pm25Sorted[pm25Sorted.length - 1] ?? 0,
-        pm10_avg: avg(b.pm10),
-        pm10_min: pm10Sorted[0] ?? 0,
-        pm10_max: pm10Sorted[pm10Sorted.length - 1] ?? 0,
-      };
-    });
-  }, [chartData]);
+  // dailyPattern calculation removed; now fetched from backend API via fetchHourlyPattern
 
   const formatXAxis = useCallback(
     (tick: string) => {
@@ -464,6 +477,7 @@ export default function OverviewTab({ realtimeData, historicalData: _historicalD
       {/* ── Metric Cards ────────────────────────────────────────────────────── */}
       <div className="flex flex-wrap gap-2 sm:gap-4">
         <ParameterCard
+          parameterKey="pm25"
           title="PM2.5"
           icon={Cloud}
           value={pm25.toFixed(1)}
@@ -474,6 +488,7 @@ export default function OverviewTab({ realtimeData, historicalData: _historicalD
           className="w-[calc(33.333%-0.34rem)] sm:w-[calc(33.333%-0.67rem)] lg:w-[calc(20%-0.8rem)] flex-auto"
         />
         <ParameterCard
+          parameterKey="pm10"
           title="PM10"
           icon={Cloud}
           value={pm10.toFixed(1)}
@@ -484,6 +499,7 @@ export default function OverviewTab({ realtimeData, historicalData: _historicalD
           className="w-[calc(33.333%-0.34rem)] sm:w-[calc(33.333%-0.67rem)] lg:w-[calc(20%-0.8rem)] flex-auto"
         />
         <ParameterCard
+          parameterKey="no2"
           title="NO₂"
           icon={FlaskConical}
           value={no2.toFixed(1)}
@@ -494,16 +510,18 @@ export default function OverviewTab({ realtimeData, historicalData: _historicalD
           className="w-[calc(33.333%-0.34rem)] sm:w-[calc(33.333%-0.67rem)] lg:w-[calc(20%-0.8rem)] flex-auto"
         />
         <ParameterCard
+          parameterKey="co"
           title="CO"
           icon={Flame}
           value={(co / 1000).toFixed(2)}
-          unit="mg/m³"
+          unit="µg/m³"
           status={coStatus}
           isActive={activeCard === "co"}
           onClick={() => setActiveCard(activeCard === "co" ? null : "co")}
           className="w-[calc(50%-0.25rem)] sm:w-[calc(50%-0.5rem)] lg:w-[calc(20%-0.8rem)] flex-auto"
         />
         <ParameterCard
+          parameterKey="o3"
           title="O₃"
           icon={Cloud}
           value={o3.toFixed(1)}
@@ -546,30 +564,67 @@ export default function OverviewTab({ realtimeData, historicalData: _historicalD
         </div>
 
         {/* Kondisi Sensor */}
-        <div className="rounded-xl border border-border bg-card p-5 shadow-sm">
+        <div className="rounded-xl border border-border bg-card p-5 shadow-sm flex flex-col">
           <h3 className="mb-4 flex items-center gap-2 text-sm font-semibold text-foreground">
             <Activity size={15} className="text-muted-foreground" />
-            Kondisi Sensor
+            Kondisi Ruang / Lingkungan
           </h3>
-          <div className="grid grid-cols-2 gap-2 sm:gap-3">
-            <div className="flex items-center gap-2 rounded-lg bg-orange-50 p-2 sm:p-3">
-              <div className="flex h-8 w-8 sm:h-9 sm:w-9 shrink-0 items-center justify-center rounded-lg bg-orange-100">
-                <Thermometer size={16} className="text-orange-500 sm:h-[18px] sm:w-[18px]" />
+          <div className="flex flex-col gap-3 flex-1 justify-center">
+
+            {/* Suhu */}
+            <div className={cn(
+              "flex items-center gap-3 rounded-lg p-3 sm:p-4 border",
+              isIdeal("temperature", temperature)
+                ? "bg-emerald-50 border-emerald-100"
+                : "bg-red-50 border-red-200"
+            )}>
+              <div className={cn(
+                "flex h-10 w-10 sm:h-12 sm:w-12 shrink-0 items-center justify-center rounded-lg",
+                isIdeal("temperature", temperature) ? "bg-emerald-100" : "bg-red-100"
+              )}>
+                <Thermometer size={20} className={isIdeal("temperature", temperature) ? "text-emerald-600 sm:h-[24px] sm:w-[24px]" : "text-red-500 sm:h-[24px] sm:w-[24px]"} />
               </div>
               <div className="min-w-0 flex-1">
-                <p className="truncate text-[10px] sm:text-[11px] text-muted-foreground">Suhu</p>
-                <p className="truncate text-sm sm:text-lg font-bold text-foreground">{Number(temperature).toFixed(1)}°C</p>
+                <div className="flex justify-between items-start">
+                  <p className="truncate text-xs sm:text-sm text-muted-foreground">Suhu</p>
+                  <span className={cn("text-[9px] font-bold px-1.5 py-0.5 rounded", isIdeal("temperature", temperature) ? "text-emerald-700 bg-emerald-100" : "text-red-700 bg-red-100 animate-pulse")}>
+                    {isIdeal("temperature", temperature) ? "Ideal" : "Di Luar Batas"}
+                  </span>
+                </div>
+                <div className="flex items-end gap-2">
+                  <p className="truncate text-lg sm:text-xl font-bold text-foreground">{Number(temperature).toFixed(1)}°C</p>
+                  <span className="text-[10px] text-muted-foreground mb-1">Batas: {getLimitString("temperature")}</span>
+                </div>
               </div>
             </div>
-            <div className="flex items-center gap-2 rounded-lg bg-blue-50 p-2 sm:p-3">
-              <div className="flex h-8 w-8 sm:h-9 sm:w-9 shrink-0 items-center justify-center rounded-lg bg-blue-100">
-                <Droplets size={16} className="text-blue-500 sm:h-[18px] sm:w-[18px]" />
+
+            {/* Kelembaban */}
+            <div className={cn(
+              "flex items-center gap-3 rounded-lg p-3 sm:p-4 border",
+              isIdeal("humidity", humidity)
+                ? "bg-emerald-50 border-emerald-100"
+                : "bg-orange-50 border-orange-200"
+            )}>
+              <div className={cn(
+                "flex h-10 w-10 sm:h-12 sm:w-12 shrink-0 items-center justify-center rounded-lg",
+                isIdeal("humidity", humidity) ? "bg-emerald-100" : "bg-orange-100"
+              )}>
+                <Droplets size={20} className={isIdeal("humidity", humidity) ? "text-emerald-600 sm:h-[24px] sm:w-[24px]" : "text-orange-500 sm:h-[24px] sm:w-[24px]"} />
               </div>
               <div className="min-w-0 flex-1">
-                <p className="truncate text-[10px] sm:text-[11px] text-muted-foreground">Kelembaban</p>
-                <p className="truncate text-sm sm:text-lg font-bold text-foreground">{Number(humidity).toFixed(1)}%</p>
+                <div className="flex justify-between items-start">
+                  <p className="truncate text-xs sm:text-sm text-muted-foreground">Kelembapan</p>
+                  <span className={cn("text-[9px] font-bold px-1.5 py-0.5 rounded", isIdeal("humidity", humidity) ? "text-emerald-700 bg-emerald-100" : "text-orange-700 bg-orange-100")}>
+                    {isIdeal("humidity", humidity) ? "Ideal" : "Di Luar Batas"}
+                  </span>
+                </div>
+                <div className="flex items-end gap-2">
+                  <p className="truncate text-lg sm:text-xl font-bold text-foreground">{Number(humidity).toFixed(1)}%</p>
+                  <span className="text-[10px] text-muted-foreground mb-1">Batas: {getLimitString("humidity")}</span>
+                </div>
               </div>
             </div>
+
           </div>
         </div>
 
@@ -616,53 +671,51 @@ export default function OverviewTab({ realtimeData, historicalData: _historicalD
       </div>
 
       {/* ── Daily Pattern ───────────────────────────────────────────────────── */}
-      <div className="rounded-xl border border-border bg-card p-5 shadow-sm">
-        <div className="mb-4 flex items-center justify-between">
-          <div>
-            <h3 className="text-sm font-semibold text-foreground">Pola Harian</h3>
-            <p className="mt-0.5 text-xs text-muted-foreground">Rata-rata konsentrasi per jam dalam periode</p>
-          </div>
-          <button
-            onClick={fetchChartData}
-            disabled={chartLoading}
-            className="flex items-center gap-1.5 rounded-md border border-border bg-background px-2.5 py-1.5 text-xs text-muted-foreground transition-colors hover:bg-accent hover:text-foreground disabled:opacity-50"
-          >
-            <RefreshCw size={12} className={chartLoading ? "animate-spin" : ""} />
-            Refresh
-          </button>
-        </div>
-        {chartLoading ? (
-          <ChartSkeleton />
-        ) : (
-          <div className="w-full overflow-x-auto pb-2">
-            <div className="min-w-[500px]">
-              <ResponsiveContainer width="100%" height={220}>
-                <ComposedChart data={dailyPattern} margin={{ top: 4, right: 16, left: -10, bottom: 0 }}>
-                  <defs>
-                    <linearGradient id="pm25GradNew" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.2} />
-                      <stop offset="95%" stopColor="#3b82f6" stopOpacity={0.01} />
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" vertical={false} />
-                  <XAxis dataKey="label" tick={{ fontSize: 11, fill: "#9ca3af" }} tickLine={false} axisLine={false} />
-                  <YAxis tick={{ fontSize: 11, fill: "#9ca3af" }} tickLine={false} axisLine={false} />
-                  <Tooltip contentStyle={tooltipStyle} formatter={(val: number, name: string) => [`${val.toFixed(1)} µg/m³`, name]} />
-                  <Legend wrapperStyle={{ fontSize: 12, paddingTop: 8 }} />
-                  <Area type="monotone" dataKey="pm25_avg" name="PM2.5" stroke="#3b82f6" strokeWidth={2} fill="url(#pm25GradNew)" isAnimationActive={false} />
-                  <Line type="monotone" dataKey="pm10_avg" name="PM10" stroke="#10b981" strokeWidth={2} dot={false} isAnimationActive={false} />
-                </ComposedChart>
-              </ResponsiveContainer>
+      {/* ── Pola Harian & Box Plot Row ─────────────────────────────────────────────── */}
+      <div className="grid gap-4 w-full lg:grid-cols-2">
+        <div className="rounded-xl border border-border bg-card p-5 shadow-sm overflow-hidden w-full h-full flex flex-col">
+          <div className="mb-4 flex items-center justify-between">
+            <div>
+              <h3 className="text-sm font-semibold text-foreground">Pola Harian (PM2.5)</h3>
+              <p className="mt-0.5 text-[11px] text-muted-foreground">Hari Kerja vs Akhir Pekan</p>
             </div>
+            <button
+              onClick={fetchHourlyPattern}
+              disabled={hourlyLoading}
+              className="flex items-center gap-1.5 rounded-md border border-border bg-background px-2.5 py-1.5 text-xs text-muted-foreground transition-colors hover:bg-accent hover:text-foreground disabled:opacity-50"
+            >
+              <RefreshCw size={12} className={hourlyLoading ? "animate-spin" : ""} />
+            </button>
           </div>
-        )}
+          {hourlyLoading ? (
+            <ChartSkeleton />
+          ) : (
+            <div className="w-full overflow-x-auto pb-2">
+              <div className="min-w-[400px]">
+                <ResponsiveContainer width="100%" height={220}>
+                  <LineChart data={hourlyPatternData} margin={{ top: 4, right: 16, left: -10, bottom: 0 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" vertical={false} />
+                    <XAxis dataKey="label" tick={{ fontSize: 11, fill: "#9ca3af" }} tickLine={false} axisLine={false} />
+                    <YAxis tick={{ fontSize: 11, fill: "#9ca3af" }} tickLine={false} axisLine={false} />
+                    <Tooltip contentStyle={tooltipStyle} formatter={(val: number, name: string) => [`${val.toFixed(2)} µg/m³`, name]} />
+                    <Legend wrapperStyle={{ fontSize: 11, paddingTop: 8 }} />
+                    <Line type="monotone" dataKey="weekday_avg" name="Hari Kerja" stroke="#3b82f6" strokeWidth={2} dot={false} isAnimationActive={false} />
+                    <Line type="monotone" dataKey="weekend_avg" name="Akhir Pekan" stroke="#f59e0b" strokeWidth={2} strokeDasharray="5 5" dot={false} isAnimationActive={false} />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+          )}
+        </div>
+        <div className="w-full flex">
+          <PeakHourBoxPlot refreshKey={refreshKey} />
+        </div>
       </div>
-
       {/* ── Trend + Stats ────────────────────────────────────────────────────── */}
-      <div className="grid gap-4 w-full overflow-hidden lg:grid-cols-3">
+      <div className="grid gap-4 w-full overflow-hidden xl:grid-cols-4 lg:grid-cols-3">
 
         {/* Trend chart */}
-        <div className="rounded-xl border border-border bg-card p-4 sm:p-5 shadow-sm lg:col-span-2 overflow-hidden">
+        <div className="rounded-xl border border-border bg-card p-4 sm:p-5 shadow-sm xl:col-span-3 lg:col-span-2 overflow-hidden flex flex-col h-full">
           <div className="mb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
               <h3 className="text-sm font-semibold text-foreground">Trend Data</h3>
@@ -686,11 +739,13 @@ export default function OverviewTab({ realtimeData, historicalData: _historicalD
             </div>
           </div>
           {chartLoading ? (
-            <ChartSkeleton />
+            <div className="flex-1 w-full min-h-[220px]">
+              <ChartSkeleton />
+            </div>
           ) : (
-            <div className="w-full overflow-x-auto pb-2 -mx-5 px-5 sm:mx-0 sm:px-0">
-              <div className="min-w-[600px]">
-                <ResponsiveContainer width="100%" height={220}>
+            <div className="w-full overflow-x-auto pb-2 -mx-5 px-5 sm:mx-0 sm:px-0 flex-1 flex flex-col">
+              <div className="min-w-[600px] flex-1 w-full min-h-[250px]">
+                <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={chartData} margin={{ top: 4, right: 16, left: -10, bottom: 0 }}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" vertical={false} />
                     <XAxis
@@ -713,7 +768,6 @@ export default function OverviewTab({ realtimeData, historicalData: _historicalD
                     <Legend wrapperStyle={{ fontSize: 12, paddingTop: 8 }} />
                     <Line type="monotone" dataKey="pm25" name="PM2.5" stroke="#3b82f6" strokeWidth={2} dot={false} isAnimationActive={false} />
                     <Line type="monotone" dataKey="pm10" name="PM10" stroke="#10b981" strokeWidth={2} dot={false} isAnimationActive={false} />
-                    <Line type="monotone" dataKey="o3" name="O3" stroke="#059669" strokeWidth={2} dot={false} isAnimationActive={false} />
                   </LineChart>
                 </ResponsiveContainer>
               </div>
@@ -721,41 +775,22 @@ export default function OverviewTab({ realtimeData, historicalData: _historicalD
           )}
         </div>
 
-        {/* Stats table */}
-        <div className="rounded-xl border border-border bg-card p-4 sm:p-5 shadow-sm max-w-full overflow-hidden">
-          <h3 className="mb-4 text-sm font-semibold text-foreground">Ringkasan Statistik</h3>
-          <div className="w-full overflow-x-auto rounded-lg border border-border">
-            <table className="w-full text-xs min-w-[300px]">
-              <thead>
-                <tr className="border-b border-border bg-muted/50">
-                  <th className="px-3 py-2.5 text-left font-medium text-muted-foreground">Metrik</th>
-                  <th className="px-3 py-2.5 text-right font-medium text-muted-foreground">PM2.5</th>
-                  <th className="px-3 py-2.5 text-right font-medium text-muted-foreground">PM10</th>
-                  <th className="px-3 py-2.5 text-right font-medium text-muted-foreground">O3</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-border">
-                {[
-                  { label: "Avg", pm25: stats.pm25.avg, pm10: stats.pm10.avg, o3: stats.o3.avg },
-                  { label: "Max", pm25: stats.pm25.max, pm10: stats.pm10.max, o3: stats.o3.max },
-                  { label: "Min", pm25: stats.pm25.min, pm10: stats.pm10.min, o3: stats.o3.min },
-                  { label: "P95", pm25: stats.pm25.p95, pm10: stats.pm10.p95, o3: stats.o3.p95 },
-                ].map((row, i) => (
-                  <tr key={row.label} className={cn("transition-colors hover:bg-muted/30", i % 2 === 1 && "bg-muted/10")}>
-                    <td className="px-3 py-2.5 font-medium text-foreground">{row.label}</td>
-                    <td className="px-3 py-2.5 text-right font-semibold text-blue-600">{row.pm25.toFixed(1)}</td>
-                    <td className="px-3 py-2.5 text-right font-semibold text-emerald-600">{row.pm10.toFixed(1)}</td>
-                    <td className="px-3 py-2.5 text-right font-semibold text-teal-600">{row.o3.toFixed(1)}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <p className="mt-3 text-[11px] text-muted-foreground">Satuan: µg/m³</p>
+        {/* Heatmap (Swapped from bottom row) */}
+        <div className="w-full lg:col-span-1">
+          <HeatmapCalendar />
         </div>
       </div>
 
-      {/* ── CO Distribution ──────────────────────────────────────────────────── */}
+      {/* Heatmap & Pollution Rose Row */}
+      <div className="grid gap-4 w-full lg:grid-cols-2 mt-4">
+        {/* Stats table (Swapped from top row) */}
+        <div className="w-full">
+          <ExposurePercentiles refreshKey={refreshKey} />
+        </div>
+        <div className="w-full">
+          <PollutionRose />
+        </div>
+      </div>
       <div className="rounded-xl border border-border bg-card p-5 shadow-sm">
         <div className="mb-4">
           <h3 className="text-sm font-semibold text-foreground">Distribusi CO</h3>
@@ -852,6 +887,8 @@ function ParameterCard({
   isActive,
   onClick,
   className,
+  parameterKey,
+  rawValue,
 }: {
   title: string;
   icon: React.ElementType;
@@ -861,7 +898,10 @@ function ParameterCard({
   isActive: boolean;
   onClick: () => void;
   className?: string;
+  parameterKey?: string;
+  rawValue?: number;
 }) {
+  const checkValue = rawValue !== undefined ? rawValue : parseFloat(value);
   return (
     <div
       onClick={onClick}
@@ -945,6 +985,13 @@ function ParameterCard({
             </div>
           </>
         )}
+
+        <div className={cn(
+          "mt-3 text-[9px] sm:text-[10px] font-medium transition-colors duration-300",
+          isActive ? "text-foreground" : (parameterKey && isIdeal(parameterKey as any, checkValue) ? "text-emerald-300 group-hover:text-emerald-600" : "text-orange-300 group-hover:text-orange-600")
+        )}>
+          {parameterKey && isIdeal(parameterKey as any, checkValue) ? "✓ Aman" : "⚠️ Berisiko"}{" "}{parameterKey && `(Limit: ${getLimitString(parameterKey as any)})`}
+        </div>
       </div>
     </div>
   );
