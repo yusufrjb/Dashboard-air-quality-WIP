@@ -2,7 +2,6 @@
 
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { VisualEditsMessenger } from "orchids-visual-edits";
 import Sidebar from "@/components/Sidebar";
 import { useState } from "react";
 import { Menu } from "lucide-react";
@@ -49,7 +48,6 @@ export default function RootLayout({
             </div>
           </main>
         </div>
-        <VisualEditsMessenger />
       </body>
     </html>
   );
