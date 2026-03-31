@@ -17,9 +17,7 @@ import {
 } from "recharts";
 import { supabase } from "@/lib/supabase";
 import HeatmapCalendar from "./HeatmapCalendar";
-import PollutionRose from "./PollutionRose";
 import PeakHourBoxPlot from "./PeakHourBoxPlot";
-import ExposurePercentiles from "./ExposurePercentiles";
 import { isIdeal, getLimitString } from "@/lib/limits";
 import {
   Cloud,
@@ -35,6 +33,7 @@ import {
   TrendingDown,
   Activity,
   Minus,
+  Info,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { RealtimeData } from "@/types";
@@ -475,7 +474,7 @@ export default function OverviewTab({ realtimeData, historicalData: _historicalD
       )}
 
       {/* ── Metric Cards ────────────────────────────────────────────────────── */}
-      <div className="flex flex-wrap gap-2 sm:gap-4">
+      <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
         <ParameterCard
           parameterKey="pm25"
           title="PM2.5"
@@ -485,7 +484,6 @@ export default function OverviewTab({ realtimeData, historicalData: _historicalD
           status={pm25Status}
           isActive={activeCard === "pm25"}
           onClick={() => setActiveCard(activeCard === "pm25" ? null : "pm25")}
-          className="w-[calc(33.333%-0.34rem)] sm:w-[calc(33.333%-0.67rem)] lg:w-[calc(20%-0.8rem)] flex-auto"
         />
         <ParameterCard
           parameterKey="pm10"
@@ -496,7 +494,6 @@ export default function OverviewTab({ realtimeData, historicalData: _historicalD
           status={pm10Status}
           isActive={activeCard === "pm10"}
           onClick={() => setActiveCard(activeCard === "pm10" ? null : "pm10")}
-          className="w-[calc(33.333%-0.34rem)] sm:w-[calc(33.333%-0.67rem)] lg:w-[calc(20%-0.8rem)] flex-auto"
         />
         <ParameterCard
           parameterKey="no2"
@@ -507,18 +504,16 @@ export default function OverviewTab({ realtimeData, historicalData: _historicalD
           status={no2Status}
           isActive={activeCard === "no2"}
           onClick={() => setActiveCard(activeCard === "no2" ? null : "no2")}
-          className="w-[calc(33.333%-0.34rem)] sm:w-[calc(33.333%-0.67rem)] lg:w-[calc(20%-0.8rem)] flex-auto"
         />
         <ParameterCard
           parameterKey="co"
           title="CO"
           icon={Flame}
           value={(co / 1000).toFixed(2)}
-          unit="µg/m³"
+          unit="mg/m³"
           status={coStatus}
           isActive={activeCard === "co"}
           onClick={() => setActiveCard(activeCard === "co" ? null : "co")}
-          className="w-[calc(50%-0.25rem)] sm:w-[calc(50%-0.5rem)] lg:w-[calc(20%-0.8rem)] flex-auto"
         />
         <ParameterCard
           parameterKey="o3"
@@ -529,7 +524,6 @@ export default function OverviewTab({ realtimeData, historicalData: _historicalD
           status={o3Status}
           isActive={activeCard === "o3"}
           onClick={() => setActiveCard(activeCard === "o3" ? null : "o3")}
-          className="w-[calc(50%-0.25rem)] sm:w-[calc(50%-0.5rem)] lg:w-[calc(20%-0.8rem)] flex-auto"
         />
       </div>
 
@@ -538,28 +532,70 @@ export default function OverviewTab({ realtimeData, historicalData: _historicalD
 
         {/* Statistik Periode */}
         <div className="rounded-xl border border-border bg-card p-5 shadow-sm">
-          <h3 className="mb-4 flex items-center gap-2 text-sm font-semibold text-foreground">
+          <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold text-foreground">
             <Activity size={15} className="text-muted-foreground" />
-            Statistik Periode
+            Ringkasan PM2.5
           </h3>
-          <div className="space-y-2">
-            <StatRow label="Rata-rata PM2.5" value={`${stats.pm25.avg.toFixed(1)} µg/m³`} />
-            <StatRow label="Minimum PM2.5" value={`${stats.pm25.min.toFixed(1)} µg/m³`} />
-            <StatRow label="Persentil-95 PM2.5" value={`${stats.pm25.p95.toFixed(1)} µg/m³`} />
-            <div className="my-2 border-t border-border" />
-            <StatRow label="Std. Deviasi" value={`± ${stats.pm25.stdDev.toFixed(2)}`} muted />
-            <div className="flex items-center justify-between">
-              <span className="text-xs text-muted-foreground">Tren</span>
-              <span
-                className={cn(
-                  "flex items-center gap-1 text-xs font-semibold",
-                  stats.pm25.trend > 0 ? "text-red-500" : stats.pm25.trend < 0 ? "text-emerald-600" : "text-muted-foreground"
-                )}
-              >
-                {stats.pm25.trend > 0 ? <TrendingUp size={12} /> : stats.pm25.trend < 0 ? <TrendingDown size={12} /> : <Minus size={12} />}
-                {stats.pm25.trend >= 0 ? "+" : ""}{stats.pm25.trend.toFixed(1)}%
+
+          <div className="text-center mb-3">
+            <span className="text-xs text-muted-foreground">Rata-rata PM2.5</span>
+            <div className="flex items-baseline justify-center gap-1.5 mt-0.5">
+              <span className={cn(
+                "text-3xl font-bold tabular-nums",
+                stats.pm25.avg <= 15 ? "text-emerald-600" : stats.pm25.avg <= 35 ? "text-blue-600" : stats.pm25.avg <= 55 ? "text-amber-600" : "text-red-600"
+              )}>
+                {stats.pm25.avg.toFixed(1)}
               </span>
+              <span className="text-xs text-muted-foreground">µg/m³</span>
             </div>
+          </div>
+
+          <div className="relative h-2 rounded-full bg-gradient-to-r from-emerald-400 via-amber-400 to-red-500 mb-1">
+            <div
+              className="absolute top-1/2 -translate-y-1/2 h-3.5 w-1 rounded-full bg-foreground shadow-sm"
+              style={{ left: `${Math.min((stats.pm25.avg / 150) * 100, 98)}%` }}
+            />
+          </div>
+          <div className="flex justify-between text-[9px] text-muted-foreground/60 mb-3">
+            <span>0</span>
+            <span>75</span>
+            <span>150 µg/m³</span>
+          </div>
+
+          <div className="grid grid-cols-3 gap-2 mb-3">
+            <div className="rounded-lg bg-muted/40 px-2 py-1.5 text-center">
+              <p className="text-[10px] text-muted-foreground" title="Minimum PM2.5">Terendah</p>
+              <p className="text-sm font-semibold text-foreground tabular-nums">{stats.pm25.min.toFixed(1)}</p>
+            </div>
+            <div className="rounded-lg bg-muted/40 px-2 py-1.5 text-center">
+              <p className="text-[10px] text-muted-foreground" title="Nilai tertinggi tercatat">Tertinggi</p>
+              <p className="text-sm font-semibold text-foreground tabular-nums">{stats.pm25.max.toFixed(1)}</p>
+            </div>
+            <div className="rounded-lg bg-muted/40 px-2 py-1.5 text-center">
+              <p className="text-[10px] text-muted-foreground" title="Persentil-95 PM2.5">Hampir Tertinggi</p>
+              <p className="text-sm font-semibold text-foreground tabular-nums">{stats.pm25.p95.toFixed(1)}</p>
+            </div>
+          </div>
+
+          <div className="flex items-center justify-between border-t border-border pt-2">
+            <span className="flex items-center gap-1 text-xs text-muted-foreground">
+              Tren
+              <span className="group/tooltip relative inline-flex cursor-help">
+                <Info size={11} className="text-muted-foreground/40" />
+                <span className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-1 hidden group-hover/tooltip:block whitespace-nowrap rounded bg-foreground px-2 py-1 text-[10px] text-background shadow-lg z-10">
+                  Std. Deviasi: ± {stats.pm25.stdDev.toFixed(2)} µg/m³
+                </span>
+              </span>
+            </span>
+            <span
+              className={cn(
+                "flex items-center gap-1 text-xs font-semibold",
+                stats.pm25.trend > 0 ? "text-red-500" : stats.pm25.trend < 0 ? "text-emerald-600" : "text-muted-foreground"
+              )}
+            >
+              {stats.pm25.trend > 0 ? <TrendingUp size={12} /> : stats.pm25.trend < 0 ? <TrendingDown size={12} /> : <Minus size={12} />}
+              {stats.pm25.trend >= 0 ? "+" : ""}{stats.pm25.trend.toFixed(1)}%
+            </span>
           </div>
         </div>
 
@@ -781,16 +817,6 @@ export default function OverviewTab({ realtimeData, historicalData: _historicalD
         </div>
       </div>
 
-      {/* Heatmap & Pollution Rose Row */}
-      <div className="grid gap-4 w-full lg:grid-cols-2 mt-4">
-        {/* Stats table (Swapped from top row) */}
-        <div className="w-full">
-          <ExposurePercentiles refreshKey={refreshKey} />
-        </div>
-        <div className="w-full">
-          <PollutionRose />
-        </div>
-      </div>
       <div className="rounded-xl border border-border bg-card p-5 shadow-sm">
         <div className="mb-4">
           <h3 className="text-sm font-semibold text-foreground">Distribusi CO</h3>
@@ -902,96 +928,85 @@ function ParameterCard({
   rawValue?: number;
 }) {
   const checkValue = rawValue !== undefined ? rawValue : parseFloat(value);
+  const dotColorMap: Record<string, string> = {
+    good: isActive ? "bg-emerald-500" : "bg-white/70 group-hover:bg-emerald-500",
+    moderate: isActive ? "bg-blue-500" : "bg-white/70 group-hover:bg-blue-500",
+    unhealthy: isActive ? "bg-amber-500" : "bg-white/70 group-hover:bg-amber-500",
+    very_unhealthy: isActive ? "bg-red-500" : "bg-white/70 group-hover:bg-red-500",
+  };
+  const thinBarColorMap: Record<string, string> = {
+    good: isActive ? "bg-emerald-500" : "bg-white/40 group-hover:bg-emerald-500",
+    moderate: isActive ? "bg-blue-500" : "bg-white/40 group-hover:bg-blue-500",
+    unhealthy: isActive ? "bg-amber-500" : "bg-white/40 group-hover:bg-amber-500",
+    very_unhealthy: isActive ? "bg-red-500" : "bg-white/40 group-hover:bg-red-500",
+  };
+
   return (
     <div
       onClick={onClick}
       className={cn(
-        "group relative overflow-hidden rounded-xl p-3 sm:p-5 shadow-sm transition-all duration-300 cursor-pointer border",
+        "group relative overflow-hidden rounded-lg p-3 shadow-sm transition-all duration-200 cursor-pointer border",
         isActive
           ? "border-border bg-card"
-          : "border-transparent bg-gradient-to-br from-blue-500 to-blue-700 shadow-blue-200 hover:border-border hover:bg-card hover:bg-none",
+          : "border-transparent bg-gradient-to-br from-blue-500 to-blue-700 shadow-blue-200/40 hover:border-border hover:bg-card hover:bg-none",
         className
       )}
     >
-      <div
-        className={cn(
-          "absolute -right-4 -top-4 h-20 w-20 rounded-full transition-colors duration-300 pointer-events-none",
-          isActive ? "bg-blue-50" : "bg-white/10 group-hover:bg-blue-50"
-        )}
-      />
-      <div
-        className={cn(
-          "absolute -bottom-6 -left-2 h-16 w-16 rounded-full transition-opacity duration-300 pointer-events-none",
-          isActive ? "opacity-0" : "bg-white/5 opacity-100 group-hover:opacity-0"
-        )}
-      />
-      <div className="relative">
-        <div className="mb-2 flex items-center justify-between">
-          <span
-            className={cn(
-              "text-xs font-semibold uppercase tracking-widest transition-colors duration-300",
-              isActive ? "text-muted-foreground" : "text-blue-100 group-hover:text-muted-foreground"
-            )}
-          >
+      <div className="flex items-center justify-between mb-1.5">
+        <div className="flex items-center gap-1.5">
+          <span className={cn(
+            "h-2 w-2 rounded-full shrink-0",
+            dotColorMap[status.level]
+          )} />
+          <span className={cn(
+            "text-[11px] font-semibold uppercase tracking-wider transition-colors duration-200",
+            isActive ? "text-muted-foreground" : "text-blue-100 group-hover:text-muted-foreground"
+          )}>
             {title}
           </span>
-          <Icon
-            size={18}
-            className={cn(
-              "transition-colors duration-300",
-              isActive ? "text-blue-500" : "text-blue-200 group-hover:text-blue-500"
-            )}
-          />
         </div>
+        <Icon
+          size={14}
+          className={cn(
+            "shrink-0 transition-colors duration-200",
+            isActive ? "text-muted-foreground/60" : "text-blue-200/60 group-hover:text-muted-foreground/60"
+          )}
+        />
+      </div>
 
-        {/* Badge mapping */}
-        {isActive ? (
-          <Badge level={status.level} label={status.label} />
-        ) : (
-          <>
-            <div className="group-hover:hidden"><BadgeDark level={status.level} label={status.label} /></div>
-            <div className="hidden group-hover:block"><Badge level={status.level} label={status.label} /></div>
-          </>
-        )}
-
-        <div className="mt-2 flex items-baseline gap-1">
-          <span
-            className={cn(
-              "text-2xl sm:text-4xl font-bold tabular-nums transition-colors duration-300",
-              isActive ? "text-foreground" : "text-white group-hover:text-foreground"
-            )}
-          >
-            {value}
-          </span>
-          <span
-            className={cn(
-              "text-[10px] sm:text-xs transition-colors duration-300",
-              isActive ? "text-muted-foreground" : "text-blue-200 group-hover:text-muted-foreground"
-            )}
-          >
-            {unit}
-          </span>
-        </div>
-
-        {isActive ? (
-          <ProgressLight value={status.percent} trackCn="bg-blue-100" fillCn="bg-blue-500" />
-        ) : (
-          <>
-            <div className="group-hover:hidden mt-3">
-              <Progress value={status.percent} className="bg-white/20" />
-            </div>
-            <div className="hidden group-hover:block">
-              <ProgressLight value={status.percent} trackCn="bg-blue-100" fillCn="bg-blue-500" />
-            </div>
-          </>
-        )}
-
-        <div className={cn(
-          "mt-3 text-[9px] sm:text-[10px] font-medium transition-colors duration-300",
-          isActive ? "text-foreground" : (parameterKey && isIdeal(parameterKey as any, checkValue) ? "text-emerald-300 group-hover:text-emerald-600" : "text-orange-300 group-hover:text-orange-600")
+      <div className="flex items-baseline gap-1">
+        <span className={cn(
+          "text-xl sm:text-2xl font-bold tabular-nums leading-tight transition-colors duration-200",
+          isActive ? "text-foreground" : "text-white group-hover:text-foreground"
         )}>
-          {parameterKey && isIdeal(parameterKey as any, checkValue) ? "✓ Aman" : "⚠️ Berisiko"}{" "}{parameterKey && `(Limit: ${getLimitString(parameterKey as any)})`}
-        </div>
+          {value}
+        </span>
+        <span className={cn(
+          "text-[10px] transition-colors duration-200",
+          isActive ? "text-muted-foreground" : "text-blue-200 group-hover:text-muted-foreground"
+        )}>
+          {unit}
+        </span>
+      </div>
+
+      <div className={cn(
+        "mt-2 text-[10px] leading-tight transition-colors duration-200",
+        isActive
+          ? "text-muted-foreground"
+          : (parameterKey && isIdeal(parameterKey as any, checkValue) ? "text-emerald-300 group-hover:text-emerald-600" : "text-orange-200 group-hover:text-orange-600")
+      )}>
+        {parameterKey && (isIdeal(parameterKey as any, checkValue) ? "Aman" : "Berisiko")}
+        {parameterKey && <span className="opacity-60"> · {getLimitString(parameterKey as any)}</span>}
+      </div>
+
+      <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-muted/30">
+        <div
+          className={cn(
+            "h-full transition-all duration-500",
+            thinBarColorMap[status.level]
+          )}
+          style={{ width: `${Math.min(status.percent, 100)}%` }}
+        />
       </div>
     </div>
   );

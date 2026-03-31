@@ -86,7 +86,6 @@ export default function Home() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-lg font-semibold text-foreground">Monitor Kualitas Udara</h1>
-              <p className="text-xs text-muted-foreground">Stasiun Pemantau — Jawa Timur</p>
             </div>
             <div className="flex items-center gap-2">
               <span className="inline-flex flex-col items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700 ring-1 ring-emerald-600/20">

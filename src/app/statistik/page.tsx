@@ -1,5 +1,4 @@
 import React from 'react';
-import ScatterPlotEDA from '@/components/ScatterPlotEDA';
 import MLForecastPrototype from '@/components/MLForecastPrototype';
 import RegressionVisualization from '@/components/RegressionVisualization';
 
@@ -12,7 +11,6 @@ export default function StatistikPage() {
             </div>
 
             <div className="grid grid-cols-1 gap-6">
-                <ScatterPlotEDA />
                 <MLForecastPrototype />
                 <RegressionVisualization />
             </div>
