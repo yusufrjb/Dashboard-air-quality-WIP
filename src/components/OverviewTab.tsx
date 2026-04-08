@@ -54,11 +54,11 @@ interface HistoricalDataPoint {
   timestamp?: string;
   created_at?: string;
   time?: string;
-  pm25_ugm3?: number | null;
-  pm10_corrected_ugm3?: number | null;
-  no2_ugm3?: number | null;
-  co_ugm3?: number | null;
-  o3_ugm3?: number | null;
+  pm2_5_ispu?: number | null;
+  pm10_ispu?: number | null;
+  no2_ispu?: number | null;
+  co_ispu?: number | null;
+  o3_ispu?: number | null;
   [key: string]: unknown;
 }
 
@@ -105,58 +105,39 @@ interface AggStats {
 type AQLevel = "good" | "moderate" | "unhealthy" | "very_unhealthy" | "hazardous";
 type AQStatus = { label: string; level: AQLevel; percent: number };
 
-function getAirQualityStatus(pollutant: string, value: number): AQStatus {
-  // Threshold arrays for each pollutant [Baik, Sedang, Tidak Sehat, Sangat Tidak Sehat]
-  // Values above the last threshold are "Berbahaya"
-  // CO thresholds in PPM: 9, 34, 64, 124
-  const thresholds: Record<string, number[]> = {
-    pm25: [15, 35, 55, 150],
-    pm10: [15, 35, 55, 150],
-    no2: [80, 180, 280, 480],
-    co: [9, 34, 64, 124],
-    o3: [50, 100, 150, 250],
-  };
-
-  let val = value;
-  if (pollutant === "co") {
-    // Convert CO from µg/m³ to ppm (1 ppm ≈ 1.145 mg/m³ = 1145 µg/m³)
-    val = value / 1145;
-  }
-
-  const levels = thresholds[pollutant] ?? [50, 100, 150, 250];
-
-  if (val <= levels[0]) {
+function getAirQualityStatus(pollutant: string, ispu: number): AQStatus {
+  if (ispu <= 50) {
     return {
       label: "Baik",
       level: "good",
-      percent: Math.round((val / levels[0]) * 20)
+      percent: Math.round((ispu / 50) * 20)
     };
   }
-  if (val <= levels[1]) {
+  if (ispu <= 100) {
     return {
       label: "Sedang",
       level: "moderate",
-      percent: 20 + Math.round(((val - levels[0]) / (levels[1] - levels[0])) * 20),
+      percent: 20 + Math.round(((ispu - 50) / 50) * 20),
     };
   }
-  if (val <= levels[2]) {
+  if (ispu <= 200) {
     return {
       label: "Tidak Sehat",
       level: "unhealthy",
-      percent: 40 + Math.round(((val - levels[1]) / (levels[2] - levels[1])) * 20),
+      percent: 40 + Math.round(((ispu - 100) / 100) * 20),
     };
   }
-  if (val <= levels[3]) {
+  if (ispu <= 300) {
     return {
       label: "Sangat Tidak Sehat",
       level: "very_unhealthy",
-      percent: 60 + Math.round(((val - levels[2]) / (levels[3] - levels[2])) * 20),
+      percent: 60 + Math.round(((ispu - 200) / 100) * 20),
     };
   }
   return {
     label: "Berbahaya",
     level: "hazardous",
-    percent: Math.min(100, 80 + Math.round(((val - levels[3]) / levels[3]) * 20)),
+    percent: Math.min(100, 80 + Math.round(((ispu - 300) / 200) * 20)),
   };
 }
 
@@ -289,6 +270,7 @@ export default function OverviewTab({ realtimeData, historicalData: _historicalD
   const [bmkgLoading, setBmkgLoading] = useState(false);
   const [bmkgError, setBmkgError] = useState<string | null>(null);
   const [hourlyPatternData, setHourlyPatternData] = useState<any[]>([]);
+  const [hourlyPatternMeta, setHourlyPatternMeta] = useState<any>(null);
   const [hourlyLoading, setHourlyLoading] = useState(false);
 
   const [refreshKey, setRefreshKey] = useState(0);
@@ -315,30 +297,62 @@ export default function OverviewTab({ realtimeData, historicalData: _historicalD
       since.setDate(since.getDate() - timePeriod);
       const sinceIso = since.toISOString();
 
-      let table: string;
-      let tsCol: string;
-      if (timePeriod <= 1) { table = "tb_konsentrasi_gas"; tsCol = "created_at"; }
-      else if (timePeriod <= 14) { table = "air_quality_hourly_agg"; tsCol = "timestamp"; }
-      else { table = "air_quality_daily_agg"; tsCol = "timestamp"; }
-
+      // Use air_quality_hourly_agg table for better performance
       const { data, error } = await supabase
-        .from(table)
-        .select("*")
-        .gte(tsCol, sinceIso)
-        .order(tsCol, { ascending: true })
-        .limit(2000);
+        .from('air_quality_hourly_agg')
+        .select('time, pm25_ugm3, pm10_corrected_ugm3, no2_ugm3, co_ugm3')
+        .gte('time', sinceIso)
+        .order('time', { ascending: true });
 
       if (error) throw error;
 
-      const rows = (data as HistoricalDataPoint[]) ?? [];
+      const rows = data || [];
+
+      // Conversion functions from µg/m³ to ISPU
+      const pm25ToISPU = (ugm3: number) => {
+        if (ugm3 <= 15) return (ugm3 / 15) * 50;
+        if (ugm3 <= 35) return 50 + ((ugm3 - 15) / 20) * 50;
+        if (ugm3 <= 55) return 100 + ((ugm3 - 35) / 20) * 100;
+        if (ugm3 <= 150) return 200 + ((ugm3 - 55) / 95) * 100;
+        if (ugm3 <= 250) return 300 + ((ugm3 - 150) / 100) * 100;
+        return 400 + ((ugm3 - 250) / 100) * 100;
+      };
+
+      const pm10ToISPU = (ugm3: number) => {
+        if (ugm3 <= 50) return (ugm3 / 50) * 50;
+        if (ugm3 <= 150) return 50 + ((ugm3 - 50) / 100) * 50;
+        if (ugm3 <= 350) return 100 + ((ugm3 - 150) / 200) * 100;
+        if (ugm3 <= 420) return 200 + ((ugm3 - 350) / 70) * 100;
+        if (ugm3 <= 500) return 300 + ((ugm3 - 420) / 80) * 100;
+        return 400 + ((ugm3 - 500) / 100) * 100;
+      };
+
+      const no2ToISPU = (ugm3: number) => {
+        if (ugm3 <= 40) return (ugm3 / 40) * 50;
+        if (ugm3 <= 80) return 50 + ((ugm3 - 40) / 40) * 50;
+        if (ugm3 <= 180) return 100 + ((ugm3 - 80) / 100) * 100;
+        if (ugm3 <= 280) return 200 + ((ugm3 - 180) / 100) * 100;
+        if (ugm3 <= 565) return 300 + ((ugm3 - 280) / 285) * 100;
+        return 400 + ((ugm3 - 565) / 100) * 100;
+      };
+
+      const coToISPU = (ugm3: number) => {
+        if (ugm3 <= 5000) return (ugm3 / 5000) * 50;
+        if (ugm3 <= 10000) return 50 + ((ugm3 - 5000) / 5000) * 50;
+        if (ugm3 <= 17000) return 100 + ((ugm3 - 10000) / 7000) * 100;
+        if (ugm3 <= 34000) return 200 + ((ugm3 - 17000) / 17000) * 100;
+        if (ugm3 <= 46000) return 300 + ((ugm3 - 34000) / 12000) * 100;
+        return 400 + ((ugm3 - 46000) / 10000) * 100;
+      };
+
       setChartData(
-        rows.map((row) => ({
-          time: getTimestamp(row),
-          pm25: extractValue(row, timePeriod <= 1 ? "pm25_ugm3" : "pm25"),
-          pm10: extractValue(row, timePeriod <= 1 ? "pm10_corrected_ugm3" : "pm10"),
-          no2: extractValue(row, timePeriod <= 1 ? "no2_ugm3" : "no2"),
-          co: extractValue(row, timePeriod <= 1 ? "co_ugm3" : "co") / 1000,
-          o3: extractValue(row, timePeriod <= 1 ? "o3_ugm3" : "o3"),
+        rows.map((row: any) => ({
+          time: row.time,
+          pm25: pm25ToISPU(row.pm25_ugm3 || 0),
+          pm10: pm10ToISPU(row.pm10_corrected_ugm3 || 0),
+          no2: no2ToISPU(row.no2_ugm3 || 0),
+          co: coToISPU(row.co_ugm3 || 0),
+          o3: 0, // O3 not available in hourly agg table
         }))
       );
     } catch {
@@ -353,13 +367,21 @@ export default function OverviewTab({ realtimeData, historicalData: _historicalD
   const fetchHourlyPattern = useCallback(async () => {
     setHourlyLoading(true);
     try {
-      const res = await fetch("/api/aggregates/hourly-pattern?days=30");
+      const res = await fetch("/api/aggregates/hourly-pattern?days=60");
       if (!res.ok) throw new Error("Gagal mengambil pola harian");
-      const data = await res.json();
-      setHourlyPatternData(data);
+      const response = await res.json();
+      
+      if (response.data && response.meta) {
+        setHourlyPatternData(response.data);
+        setHourlyPatternMeta(response.meta);
+      } else {
+        setHourlyPatternData(response);
+        setHourlyPatternMeta(null);
+      }
     } catch (err) {
       console.error(err);
       setHourlyPatternData([]);
+      setHourlyPatternMeta(null);
     } finally {
       setHourlyLoading(false);
     }
@@ -444,7 +466,7 @@ export default function OverviewTab({ realtimeData, historicalData: _historicalD
   const pm25Status = getAirQualityStatus("pm25", pm25);
   const pm10Status = getAirQualityStatus("pm10", pm10);
   const no2Status = getAirQualityStatus("no2", no2);
-  const coStatus = getAirQualityStatus("co", co / 1000);
+  const coStatus = getAirQualityStatus("co", co);
   const o3Status = getAirQualityStatus("o3", o3);
 
   const periodOptions: Array<{ label: string; value: 1 | 7 | 14 | 30 | 90 }> = [
@@ -479,8 +501,8 @@ export default function OverviewTab({ realtimeData, historicalData: _historicalD
           parameterKey="pm25"
           title="PM2.5"
           icon={Cloud}
-          value={pm25.toFixed(1)}
-          unit="µg/m³"
+          value={pm25.toFixed(2)}
+          unit="ISPU"
           status={pm25Status}
           isActive={activeCard === "pm25"}
           onClick={() => setActiveCard(activeCard === "pm25" ? null : "pm25")}
@@ -489,8 +511,8 @@ export default function OverviewTab({ realtimeData, historicalData: _historicalD
           parameterKey="pm10"
           title="PM10"
           icon={Cloud}
-          value={pm10.toFixed(1)}
-          unit="µg/m³"
+          value={pm10.toFixed(2)}
+          unit="ISPU"
           status={pm10Status}
           isActive={activeCard === "pm10"}
           onClick={() => setActiveCard(activeCard === "pm10" ? null : "pm10")}
@@ -499,8 +521,8 @@ export default function OverviewTab({ realtimeData, historicalData: _historicalD
           parameterKey="no2"
           title="NO₂"
           icon={FlaskConical}
-          value={no2.toFixed(1)}
-          unit="µg/m³"
+          value={no2.toFixed(2)}
+          unit="ISPU"
           status={no2Status}
           isActive={activeCard === "no2"}
           onClick={() => setActiveCard(activeCard === "no2" ? null : "no2")}
@@ -509,8 +531,8 @@ export default function OverviewTab({ realtimeData, historicalData: _historicalD
           parameterKey="co"
           title="CO"
           icon={Flame}
-          value={(co / 1000).toFixed(2)}
-          unit="mg/m³"
+          value={co.toFixed(2)}
+          unit="ISPU"
           status={coStatus}
           isActive={activeCard === "co"}
           onClick={() => setActiveCard(activeCard === "co" ? null : "co")}
@@ -519,8 +541,8 @@ export default function OverviewTab({ realtimeData, historicalData: _historicalD
           parameterKey="o3"
           title="O₃"
           icon={Cloud}
-          value={o3.toFixed(1)}
-          unit="µg/m³"
+          value={o3.toFixed(2)}
+          unit="ISPU"
           status={o3Status}
           isActive={activeCard === "o3"}
           onClick={() => setActiveCard(activeCard === "o3" ? null : "o3")}
@@ -546,7 +568,7 @@ export default function OverviewTab({ realtimeData, historicalData: _historicalD
               )}>
                 {stats.pm25.avg.toFixed(1)}
               </span>
-              <span className="text-xs text-muted-foreground">µg/m³</span>
+              <span className="text-xs text-muted-foreground">ISPU</span>
             </div>
           </div>
 
@@ -559,7 +581,7 @@ export default function OverviewTab({ realtimeData, historicalData: _historicalD
           <div className="flex justify-between text-[9px] text-muted-foreground/60 mb-3">
             <span>0</span>
             <span>75</span>
-            <span>150 µg/m³</span>
+            <span>150 ISPU</span>
           </div>
 
           <div className="grid grid-cols-3 gap-2 mb-3">
@@ -583,7 +605,7 @@ export default function OverviewTab({ realtimeData, historicalData: _historicalD
               <span className="group/tooltip relative inline-flex cursor-help">
                 <Info size={11} className="text-muted-foreground/40" />
                 <span className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-1 hidden group-hover/tooltip:block whitespace-nowrap rounded bg-foreground px-2 py-1 text-[10px] text-background shadow-lg z-10">
-                  Std. Deviasi: ± {stats.pm25.stdDev.toFixed(2)} µg/m³
+                  Std. Deviasi: ± {stats.pm25.stdDev.toFixed(2)} ISPU
                 </span>
               </span>
             </span>
@@ -713,7 +735,18 @@ export default function OverviewTab({ realtimeData, historicalData: _historicalD
           <div className="mb-4 flex items-center justify-between">
             <div>
               <h3 className="text-sm font-semibold text-foreground">Pola Harian (PM2.5)</h3>
-              <p className="mt-0.5 text-[11px] text-muted-foreground">Hari Kerja vs Akhir Pekan</p>
+              <p className="mt-0.5 text-[11px] text-muted-foreground">
+                {hourlyPatternMeta ? (
+                  <>
+                    {hourlyPatternMeta.totalWeekdayDays} hari kerja · {hourlyPatternMeta.totalWeekendDays} hari weekend
+                    {hourlyPatternMeta.totalWeekendDays === 0 && (
+                      <span className="text-amber-600 ml-2">⚠️ Tidak ada data weekend</span>
+                    )}
+                  </>
+                ) : (
+                  "Hari Kerja vs Akhir Pekan"
+                )}
+              </p>
             </div>
             <button
               onClick={fetchHourlyPattern}
@@ -733,13 +766,20 @@ export default function OverviewTab({ realtimeData, historicalData: _historicalD
                     <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" vertical={false} />
                     <XAxis dataKey="label" tick={{ fontSize: 11, fill: "#9ca3af" }} tickLine={false} axisLine={false} />
                     <YAxis tick={{ fontSize: 11, fill: "#9ca3af" }} tickLine={false} axisLine={false} />
-                    <Tooltip contentStyle={tooltipStyle} formatter={(val: number, name: string) => [`${val.toFixed(2)} µg/m³`, name]} />
+                    <Tooltip contentStyle={tooltipStyle} formatter={(val: number, name: string) => [`${val.toFixed(2)} ISPU`, name]} />
                     <Legend wrapperStyle={{ fontSize: 11, paddingTop: 8 }} />
-                    <Line type="monotone" dataKey="weekday_avg" name="Hari Kerja" stroke="#3b82f6" strokeWidth={2} dot={false} isAnimationActive={false} />
-                    <Line type="monotone" dataKey="weekend_avg" name="Akhir Pekan" stroke="#f59e0b" strokeWidth={2} strokeDasharray="5 5" dot={false} isAnimationActive={false} />
+                    <Line type="monotone" dataKey="weekday_avg" name="Hari Kerja" stroke="#3b82f6" strokeWidth={2} dot={false} isAnimationActive={false} connectNulls={false} />
+                    {hourlyPatternMeta?.hasWeekendData && (
+                      <Line type="monotone" dataKey="weekend_avg" name="Akhir Pekan" stroke="#f59e0b" strokeWidth={2} strokeDasharray="5 5" dot={false} isAnimationActive={false} connectNulls={false} />
+                    )}
                   </LineChart>
                 </ResponsiveContainer>
               </div>
+              {!hourlyPatternMeta?.hasWeekendData && (
+                <p className="text-xs text-muted-foreground mt-2 text-center">
+                  Data akhir pekan tidak tersedia dalam periode 60 hari terakhir
+                </p>
+              )}
             </div>
           )}
         </div>

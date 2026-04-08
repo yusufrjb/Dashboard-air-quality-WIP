@@ -1,6 +1,16 @@
 import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
 
+// Convert PM2.5 µg/m³ to ISPU
+function pm25ToISPU(ugm3: number): number {
+    if (ugm3 <= 15) return Math.round((ugm3 / 15) * 50);
+    if (ugm3 <= 35) return Math.round(50 + ((ugm3 - 15) / 20) * 50);
+    if (ugm3 <= 55) return Math.round(100 + ((ugm3 - 35) / 20) * 100);
+    if (ugm3 <= 150) return Math.round(200 + ((ugm3 - 55) / 95) * 100);
+    if (ugm3 <= 250) return Math.round(300 + ((ugm3 - 150) / 100) * 100);
+    return Math.round(400 + ((ugm3 - 250) / 100) * 100);
+}
+
 // Helper to calculate percentiles
 function percentile(arr: number[], p: number) {
     if (arr.length === 0) return 0;
@@ -17,36 +27,39 @@ function percentile(arr: number[], p: number) {
 export async function GET(request: Request) {
     try {
         const { searchParams } = new URL(request.url);
-        const days = parseInt(searchParams.get('days') || '30');
+        const days = parseInt(searchParams.get('days') || '7');
 
         const since = new Date();
         since.setDate(since.getDate() - days);
 
-        // Fetch raw data because we need all points for distribution
+        // Use air_quality_hourly_agg table
         const { data, error } = await supabase
-            .from('tb_konsentrasi_gas')
-            .select('created_at, pm25_ugm3')
-            .gte('created_at', since.toISOString())
-            .limit(100000); // Need enough limit to cover days
+            .from('air_quality_hourly_agg')
+            .select('time, pm25_ugm3')
+            .gte('time', since.toISOString())
+            .order('time', { ascending: true });
 
         if (error) throw error;
 
         const rows = data || [];
         const peakHourValues: number[] = [];
 
-        // Filter: Weekdays (1-5) & Peak Hours (07:00 - 08:59)
+        // Filter: Weekdays (1-5) & Peak Hours (07:00 - 08:59) - Asia/Jakarta timezone
         for (const row of rows) {
-            if (!row.created_at || row.pm25_ugm3 == null) continue;
+            if (!row.time || row.pm25_ugm3 == null) continue;
 
-            const date = new Date(row.created_at);
-            const hour = date.getHours();
-            const day = date.getDay(); // 0 is Sunday, 6 is Saturday
+            const date = new Date(row.time);
+            const dateInJakarta = new Date(date.toLocaleString('en-US', { timeZone: 'Asia/Jakarta' }));
+            const hour = dateInJakarta.getHours();
+            const day = dateInJakarta.getDay();
 
             if (isNaN(hour) || isNaN(day)) continue;
 
             const isWeekday = day >= 1 && day <= 5;
             if (isWeekday && hour >= 7 && hour < 9) {
-                peakHourValues.push(row.pm25_ugm3);
+                // Convert µg/m³ to ISPU
+                const ispuValue = pm25ToISPU(row.pm25_ugm3);
+                peakHourValues.push(ispuValue);
             }
         }
 

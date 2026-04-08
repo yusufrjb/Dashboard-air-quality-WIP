@@ -1,21 +1,22 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Info } from "lucide-react";
+import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Cell, ReferenceLine } from "recharts";
 
-interface BoxPlotStats {
+interface HistogramData {
+    range: string;
     min: number;
-    q1: number;
-    median: number;
-    q3: number;
     max: number;
-    outliers: number[];
+    count: number;
+    category: string;
+    color: string;
 }
 
-export default function PeakHourDistribution({ days = 30, refreshKey = 0 }: { days?: number, refreshKey?: number }) {
-    const [stats, setStats] = useState<BoxPlotStats | null>(null);
+export default function PeakHourDistribution({ days = 7, refreshKey = 0 }: { days?: number, refreshKey?: number }) {
+    const [histogramData, setHistogramData] = useState<HistogramData[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [totalCount, setTotalCount] = useState(0);
 
     useEffect(() => {
         async function fetchData() {
@@ -23,7 +24,11 @@ export default function PeakHourDistribution({ days = 30, refreshKey = 0 }: { da
                 const res = await fetch(`/api/aggregates/peak-hour-distribution?days=${days}`);
                 if (!res.ok) throw new Error("Gagal mengambil data distribusi");
                 const data = await res.json();
-                setStats(data);
+                
+                // Create histogram bins from box plot data
+                const bins = createHistogramBins(data);
+                setHistogramData(bins.data);
+                setTotalCount(bins.totalCount);
             } catch (err: any) {
                 setError(err.message);
             } finally {
@@ -33,6 +38,55 @@ export default function PeakHourDistribution({ days = 30, refreshKey = 0 }: { da
         fetchData();
     }, [days, refreshKey]);
 
+    // Create histogram bins based on ISPU categories
+    function createHistogramBins(data: any) {
+        const bins: HistogramData[] = [
+            { range: "0-50", min: 0, max: 50, count: 0, category: "Baik", color: "#10b981" },
+            { range: "51-100", min: 51, max: 100, count: 0, category: "Sedang", color: "#facc15" },
+            { range: "101-150", min: 101, max: 150, count: 0, category: "Sensitif", color: "#f97316" },
+            { range: "151-200", min: 151, max: 200, count: 0, category: "Tidak Sehat", color: "#ef4444" },
+            { range: "201-300", min: 201, max: 300, count: 0, category: "Sangat T.Sehat", color: "#a855f7" },
+            { range: ">300", min: 301, max: 9999, count: 0, category: "Berbahaya", color: "#991b1b" },
+        ];
+
+        // Count data points in each bin
+        const allValues = [
+            data.min, data.q1, data.median, data.q3, data.max,
+            ...data.outliers
+        ].filter(v => v !== undefined && v !== null && !isNaN(v));
+
+        allValues.forEach(val => {
+            for (const bin of bins) {
+                if (val >= bin.min && val <= bin.max) {
+                    bin.count++;
+                    break;
+                }
+            }
+        });
+
+        return {
+            data: bins,
+            totalCount: allValues.length
+        };
+    }
+
+    const maxCount = Math.max(...histogramData.map(d => d.count), 1);
+
+    const CustomTooltip = ({ active, payload }: any) => {
+        if (active && payload && payload.length) {
+            const data = payload[0].payload;
+            const percentage = totalCount > 0 ? ((data.count / totalCount) * 100).toFixed(1) : 0;
+            return (
+                <div className="bg-white border border-gray-200 rounded-lg shadow-lg px-3 py-2">
+                    <p className="text-xs font-semibold text-gray-700 mb-1">{data.category}</p>
+                    <p className="text-xs text-gray-600">Rentang ISPU: {data.range}</p>
+                    <p className="text-sm font-bold text-gray-800">{data.count} data ({percentage}%)</p>
+                </div>
+            );
+        }
+        return null;
+    };
+
     if (loading) {
         return (
             <div className="flex h-40 items-center justify-center rounded-xl border border-border bg-card p-5 animate-pulse">
@@ -41,7 +95,7 @@ export default function PeakHourDistribution({ days = 30, refreshKey = 0 }: { da
         );
     }
 
-    if (error || !stats) {
+    if (error) {
         return (
             <div className="flex h-40 items-center justify-center rounded-xl border border-red-200 bg-red-50 p-5">
                 <p className="text-sm font-medium text-red-600">Gagal memuat distribusi: {error}</p>
@@ -49,108 +103,51 @@ export default function PeakHourDistribution({ days = 30, refreshKey = 0 }: { da
         );
     }
 
-    // Calculate scales for the SVG
-    const absMax = Math.max(stats.max, ...stats.outliers, 150); // Minimum scale of 150 for reference
-    const PADDING = 20;
-
-    // Helpers to position elements in SVG width (0 to 100%)
-    const getX = (val: number) => `${(val / absMax) * 100}%`;
-
     return (
         <div className="rounded-xl border border-border bg-card p-4 sm:p-5 shadow-sm max-w-full overflow-hidden flex flex-col w-full h-full">
             <div className="mb-4">
                 <h3 className="text-sm font-semibold text-foreground">Distribusi PM2.5 (Jam Sibuk)</h3>
                 <p className="mt-0.5 text-[11px] text-muted-foreground">
-                    Rentang 07:00 - 09:00 WIB (Senin - Jumat) selama 30 Hari Terakhir
+                    Rentang 07:00 - 09:00 WIB (Senin - Jumat) selama 7 Hari Terakhir · Total: {totalCount} data
                 </p>
             </div>
 
-            <div className="flex-1 flex flex-col justify-center min-h-[120px] relative mt-2 pt-6 pb-8 px-2">
-                {/* SVG Canvas */}
-                <div className="relative w-full h-24 mt-2 border-b border-border/50">
-                    {/* Grid markings */}
-                    <div className="absolute top-0 bottom-0 left-[20%] border-l border-dashed border-border/60 pointer-events-none" />
-                    <div className="absolute top-0 bottom-0 left-[40%] border-l border-dashed border-border/60 pointer-events-none" />
-                    <div className="absolute top-0 bottom-0 left-[60%] border-l border-dashed border-border/60 pointer-events-none" />
-                    <div className="absolute top-0 bottom-0 left-[80%] border-l border-dashed border-border/60 pointer-events-none" />
-
-                    {/* WHO Guide line */}
-                    <div
-                        className="absolute top-0 bottom-0 border-l border-dashed border-emerald-500 z-0"
-                        style={{ left: getX(15) }}
-                    />
-                    <span
-                        className="absolute -top-5 text-[10px] font-semibold text-emerald-600 whitespace-nowrap"
-                        style={{ left: `calc(${getX(15)} - 10px)` }}
-                    >
-                        WHO (15)
-                    </span>
-
-                    {/* Primary SVG Box Plot */}
-                    {stats.q3 > 0 && (
-                        <svg className="absolute inset-0 w-full h-full overflow-visible z-10">
-                            {/* Whiskers (Lines from min to Q1 and Q3 to max) */}
-                            <line x1={getX(stats.min)} y1="50%" x2={getX(stats.q1)} y2="50%" stroke="currentColor" className="text-muted-foreground" strokeWidth="2" strokeDasharray="3,3" />
-                            <line x1={getX(stats.q3)} y1="50%" x2={getX(stats.max)} y2="50%" stroke="currentColor" className="text-muted-foreground" strokeWidth="2" strokeDasharray="3,3" />
-
-                            {/* Whisker Caps */}
-                            <line x1={getX(stats.min)} y1="35%" x2={getX(stats.min)} y2="65%" stroke="currentColor" className="text-muted-foreground" strokeWidth="2" />
-                            <line x1={getX(stats.max)} y1="35%" x2={getX(stats.max)} y2="65%" stroke="currentColor" className="text-muted-foreground" strokeWidth="2" />
-
-                            {/* IQR Box (Q1 to Q3) */}
-                            <rect
-                                x={getX(stats.q1)}
-                                y="25%"
-                                width={`calc(${getX(stats.q3)} - ${getX(stats.q1)})`}
-                                height="50%"
-                                className="fill-blue-500/20 stroke-blue-600 dark:stroke-blue-400 stroke-2"
-                                rx="4"
-                            />
-
-                            {/* Median Line */}
-                            <line x1={getX(stats.median)} y1="25%" x2={getX(stats.median)} y2="75%" stroke="currentColor" className="text-blue-700 dark:text-blue-300" strokeWidth="3" />
-
-                            {/* Outliers */}
-                            {stats.outliers.map((val, idx) => (
-                                <circle
-                                    key={idx}
-                                    cx={getX(val)}
-                                    cy="50%"
-                                    r="3.5"
-                                    className="fill-red-500 stroke-white dark:stroke-black stroke-1 opacity-75"
-                                />
+            <div className="flex-1 flex flex-col justify-center min-h-[160px]">
+                <ResponsiveContainer width="100%" height={160}>
+                    <BarChart data={histogramData} margin={{ top: 10, right: 10, left: 0, bottom: 30 }}>
+                        <XAxis 
+                            dataKey="range" 
+                            axisLine={false} 
+                            tickLine={false}
+                            tick={{ fontSize: 9, fill: "#9ca3af" }}
+                            dy={15}
+                        />
+                        <YAxis 
+                            axisLine={false} 
+                            tickLine={false}
+                            tick={{ fontSize: 10, fill: "#9ca3af" }}
+                            width={30}
+                        />
+                        <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(0, 0, 0, 0.05)' }} />
+                        <Bar dataKey="count" radius={[4, 4, 0, 0]}>
+                            {histogramData.map((entry, index) => (
+                                <Cell key={`cell-${index}`} fill={entry.color} />
                             ))}
-
-                            {/* Data Labels */}
-                            <text x={getX(stats.median)} y="90%" fill="currentColor" fontSize="10" textAnchor="middle" className="text-foreground font-semibold">
-                                {stats.median}
-                            </text>
-                            <text x={getX(stats.q3)} y="15%" fill="currentColor" fontSize="9" textAnchor="start" dx="3" className="text-muted-foreground">
-                                Q3: {stats.q3}
-                            </text>
-                            <text x={getX(stats.q1)} y="15%" fill="currentColor" fontSize="9" textAnchor="end" dx="-3" className="text-muted-foreground">
-                                {stats.q1} :Q1
-                            </text>
-                        </svg>
-                    )}
-                </div>
-
-                {/* Scale labels */}
-                <div className="flex justify-between w-full text-[9px] text-muted-foreground mt-3 font-medium">
-                    <span>0</span>
-                    <span>{Math.round(absMax * 0.2)}</span>
-                    <span>{Math.round(absMax * 0.4)}</span>
-                    <span>{Math.round(absMax * 0.6)}</span>
-                    <span>{Math.round(absMax * 0.8)}</span>
-                    <span>{Math.round(absMax)} µg/m³</span>
-                </div>
+                        </Bar>
+                        <ReferenceLine y={0} stroke="#e5e7eb" strokeWidth={1} />
+                    </BarChart>
+                </ResponsiveContainer>
             </div>
 
-            <div className="mt-auto px-3 py-2 bg-blue-50 dark:bg-blue-950/30 rounded-lg flex gap-2 items-start mt-4">
-                <Info size={14} className="text-blue-500 mt-0.5 shrink-0" />
-                <p className="text-[10px] text-blue-700 dark:text-blue-300 leading-tight">
-                    Visualisasi <strong>Box Plot</strong> menampilkan dimana rerata aktivitas PM2.5 sebenarnya berkumpul. Kotak biru berisi 50% data yang biasa terjadi. Titik merah mewakili anomali ekstrem yang perlu diwaspadai di perjalanan pagi.
-                </p>
+            {/* Legend - similar to heatmap */}
+            <div className="mt-3 pt-3 border-t border-border flex flex-wrap gap-x-2 gap-y-1.5 items-center justify-center text-[9px] sm:text-[10px]">
+                <div className="text-muted-foreground font-medium">ISPU:</div>
+                {histogramData.map(bin => (
+                    <div key={bin.range} className="flex items-center gap-1">
+                        <span className="w-3 h-3 rounded-sm" style={{ backgroundColor: bin.color }} />
+                        <span className="text-slate-600">{bin.category}</span>
+                    </div>
+                ))}
             </div>
         </div>
     );

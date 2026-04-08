@@ -149,9 +149,9 @@ export default function HeatmapCalendar() {
                 <div>
                     <h3 className="flex items-center gap-2 text-sm font-semibold text-foreground">
                         <Calendar size={15} className="text-muted-foreground" />
-                        Kalender Kontribusi Bulan (PM2.5)
+                        Kalender Kontribusi Bulan (ISPU PM2.5)
                     </h3>
-                    <p className="mt-0.5 text-xs text-muted-foreground">Rata-rata polusi harian warna-warni layaknya rumput GitHub</p>
+                    <p className="mt-0.5 text-xs text-muted-foreground">Rata-rata harian dari agregasi hourly</p>
                 </div>
 
                 {/* Navigation */}
@@ -233,7 +233,7 @@ export default function HeatmapCalendar() {
                     <p className="text-xs font-semibold whitespace-nowrap mb-0.5">{hoveredDay.displayDate}</p>
                     {hoveredDay.value !== null ? (
                         <p className="text-[11px] text-slate-300">
-                            PM2.5: <span className="text-white font-medium">{hoveredDay.value.toFixed(1)} µg/m³</span>
+                            ISPU: <span className="text-white font-medium">{hoveredDay.value.toFixed(0)}</span>
                             <span className="mx-1.5 text-slate-500">•</span>
                             <span className={getColorClass(hoveredDay.value).split(' ')[0].replace('bg-', 'text-')}>{getStatusText(hoveredDay.value)}</span>
                         </p>

@@ -1,17 +1,17 @@
 """
 predict_and_save.py
 -------------------
-Pipeline LightGBM untuk forecasting PM2.5.
+Pipeline XGBoost untuk forecasting PM2.5.
 
 Cara kerja:
 1. Ambil data 3 jam terakhir dari Supabase
 2. Feature engineering (55+ fitur: lag, rolling, diff, cyclical time)
-3. Fit LightGBM secara online (atau load model yang sudah disimpan)
+3. Fit XGBoost secara online (atau load model yang sudah disimpan)
 4. Prediksi 30 menit ke depan secara rekursif
 5. Simpan prediksi ke tabel tb_prediksi_pm25 di Supabase
 
-Model: LightGBM — R²=64.44%, MAE=0.81, RMSE=1.18
-(Mengungguli ARIMAX, Prophet, XGBoost, Random Forest)
+Model: XGBoost — R²=64.16%, MAE=0.82, RMSE=1.19
+(Hyperparameter dari Tabel 4.8: n_estimators=300, max_depth=6)
 
 Jalankan secara berkala dengan Windows Task Scheduler.
 """
@@ -25,7 +25,7 @@ from pathlib import Path
 
 import pandas as pd
 import numpy as np
-from lightgbm import LGBMRegressor
+from xgboost import XGBRegressor
 from supabase import create_client, Client
 
 warnings.filterwarnings("ignore")
@@ -50,15 +50,16 @@ TABLE_PRED    = "tb_prediksi_pm25"
 FORECAST_MINUTES = 30
 DATA_WINDOW_MIN  = 1440  # 24 jam data untuk menangkap pola harian
 
-# LightGBM hyperparameters (tuned dari comprehensive_model_search.py)
-LGBM_PARAMS = {
-    "n_estimators": 500,
-    "max_depth": 5,
-    "learning_rate": 0.03,
+# XGBoost hyperparameters (dari Tabel 4.8 halaman 53)
+XGB_PARAMS = {
+    "n_estimators": 300,
+    "max_depth": 6,
+    "learning_rate": 0.05,
     "subsample": 0.8,
-    "colsample_bytree": 0.7,
+    "colsample_bytree": 0.8,
     "random_state": 42,
-    "verbose": -1,
+    "objective": "reg:squarederror",
+    "verbosity": 0,
 }
 
 
@@ -165,9 +166,9 @@ def fetch_recent_data(supabase: Client, minutes: int = DATA_WINDOW_MIN) -> pd.Da
 # ---------------------------------------------------------------------------
 # Forecasting
 # ---------------------------------------------------------------------------
-def lightgbm_recursive_forecast(df: pd.DataFrame, n_steps: int = FORECAST_MINUTES) -> list[dict]:
+def xgboost_recursive_forecast(df: pd.DataFrame, n_steps: int = FORECAST_MINUTES) -> list[dict]:
     """
-    Train LightGBM on available data, then predict recursively n steps ahead.
+    Train XGBoost on available data, then predict recursively n steps ahead.
     Each step uses its own prediction as input for the next step.
     """
     # Build features with target (next step PM2.5)
@@ -182,9 +183,9 @@ def lightgbm_recursive_forecast(df: pd.DataFrame, n_steps: int = FORECAST_MINUTE
     X = feat[feature_cols].values
     y = feat["target"].values
 
-    log.info(f"Training LightGBM pada {len(X)} sampel dengan {len(feature_cols)} fitur...")
+    log.info(f"Training XGBoost pada {len(X)} sampel dengan {len(feature_cols)} fitur...")
 
-    model = LGBMRegressor(**LGBM_PARAMS)
+    model = XGBRegressor(**XGB_PARAMS)
     model.fit(X, y)
 
     # Recursive forecasting
@@ -248,7 +249,7 @@ def save_predictions(supabase: Client, predictions: list[dict], forecast_at: dat
 # ---------------------------------------------------------------------------
 def main():
     log.info("=" * 60)
-    log.info("Pipeline Prediksi PM2.5 — LightGBM (R²=64.44%)")
+    log.info("Pipeline Prediksi PM2.5 — XGBoost (R²=64.16%)")
     log.info("=" * 60)
 
     # Koneksi Supabase
@@ -276,8 +277,8 @@ def main():
 
     # Prediksi
     forecast_at = datetime.utcnow()
-    predictions = lightgbm_recursive_forecast(df_raw, n_steps=FORECAST_MINUTES)
-    log.info(f"Menghasilkan {len(predictions)} prediksi LightGBM")
+    predictions = xgboost_recursive_forecast(df_raw, n_steps=FORECAST_MINUTES)
+    log.info(f"Menghasilkan {len(predictions)} prediksi XGBoost")
     for p in predictions[:5]:
         log.info(f"  {p['target_at']} → PM2.5 = {p['pm25_pred']} µg/m³")
 

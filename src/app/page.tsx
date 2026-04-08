@@ -14,23 +14,36 @@ export default function Home() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const { data, error } = await supabase
-          .from("tb_konsentrasi_gas")
-          .select("*")
-          .order("created_at", { ascending: false })
-          .limit(1)
-          .single();
+        const [gasResponse, predResponse] = await Promise.all([
+          supabase
+            .from("tb_konsentrasi_gas")
+            .select("*")
+            .order("created_at", { ascending: false })
+            .limit(1)
+            .single(),
+          supabase
+            .from("tb_prediksi_kualitas_udara")
+            .select("*")
+            .order("created_at", { ascending: false })
+            .limit(1)
+            .single()
+        ]);
 
-        if (error) throw error;
-        if (data) {
+        if (gasResponse.error && gasResponse.error.code !== 'PGRST116') throw gasResponse.error;
+        if (predResponse.error && predResponse.error.code !== 'PGRST116') throw predResponse.error;
+
+        const dataGas = gasResponse.data;
+        const dataPred = predResponse.data;
+
+        if (dataPred) {
           setRealtimeData({
-            pm25: data.pm25_ugm3 || 0,
-            pm10: data.pm10_corrected_ugm3 || 0,
-            no2: data.no2_ugm3 || 0,
-            co: data.co_ugm3 || 0,
-            o3: data.o3_ugm3 || 0,
-            temperature: data.temperature || 0,
-            humidity: data.humidity || 0,
+            pm25: dataPred.pm2_5_ispu || 0,
+            pm10: dataPred.pm10_ispu || 0,
+            no2: dataPred.no2_ispu || 0,
+            co: dataPred.co_ispu || 0,
+            o3: dataPred.o3_ispu || 0,
+            temperature: dataGas?.temperature || 0,
+            humidity: dataGas?.humidity || 0,
           });
         }
       } catch (err) {
@@ -42,25 +55,26 @@ export default function Home() {
 
     fetchData();
 
-    // Subscribe to changes
+    // Subscribe to changes from the prediction table since that has the core ISPU
     const channel = supabase
       .channel("realtime-updates")
       .on(
         "postgres_changes",
-        { event: "*", schema: "public", table: "tb_konsentrasi_gas" },
+        { event: "*", schema: "public", table: "tb_prediksi_kualitas_udara" },
         (payload) => {
           const newData = payload.new as any;
-          if (!newData) return; // Prevent crashes if payload.new is missing (e.g., on DELETE)
+          if (!newData) return;
 
-          setRealtimeData({
-            pm25: newData.pm25_ugm3 || 0,
-            pm10: newData.pm10_corrected_ugm3 || 0,
-            no2: newData.no2_ugm3 || 0,
-            co: newData.co_ugm3 || 0,
-            o3: newData.o3_ugm3 || 0,
-            temperature: newData.temperature || 0,
-            humidity: newData.humidity || 0,
-          });
+          setRealtimeData((prev) => ({
+            ...prev,
+            pm25: newData.pm2_5_ispu || prev?.pm25 || 0,
+            pm10: newData.pm10_ispu || prev?.pm10 || 0,
+            no2: newData.no2_ispu || prev?.no2 || 0,
+            co: newData.co_ispu || prev?.co || 0,
+            o3: newData.o3_ispu || prev?.o3 || 0,
+            temperature: prev?.temperature || 0,
+            humidity: prev?.humidity || 0,
+          }));
         }
       )
       .subscribe();
