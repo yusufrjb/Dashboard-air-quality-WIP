@@ -20,32 +20,32 @@ export const IDEAL_LIMITS: Record<string, ParameterLimit> = {
     },
     pm25: {
         min: 0,
-        max: 15.5, // ISPU KLHK 0-50 (Baik)
-        unit: "µg/m³",
+        max: 50, // ISPU KLHK 0-50 (Baik)
+        unit: "ISPU",
         label: "Partikulat (PM2.5)",
     },
     pm10: {
         min: 0,
         max: 50, // ISPU KLHK 0-50 (Baik)
-        unit: "µg/m³",
+        unit: "ISPU",
         label: "Partikulat (PM10)",
     },
     co: {
         min: 0,
-        max: 4000, // ISPU KLHK 0-50 (Baik)
-        unit: "µg/m³",
+        max: 50, // ISPU KLHK 0-50 (Baik)
+        unit: "ISPU",
         label: "Karbon Monoksida (CO)",
     },
     o3: {
         min: 0,
-        max: 120, // ISPU KLHK 0-50 (Baik)
-        unit: "µg/m³",
+        max: 50, // ISPU KLHK 0-50 (Baik)
+        unit: "ISPU",
         label: "Ozon (O3)",
     },
     no2: {
         min: 0,
-        max: 80, // ISPU KLHK 0-50 (Baik)
-        unit: "µg/m³",
+        max: 50, // ISPU KLHK 0-50 (Baik)
+        unit: "ISPU",
         label: "Nitrogen Dioksida (NO2)",
     }
 };

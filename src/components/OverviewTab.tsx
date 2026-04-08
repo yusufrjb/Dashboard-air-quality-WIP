@@ -630,55 +630,31 @@ export default function OverviewTab({ realtimeData, historicalData: _historicalD
           <div className="flex flex-col gap-3 flex-1 justify-center">
 
             {/* Suhu */}
-            <div className={cn(
-              "flex items-center gap-3 rounded-lg p-3 sm:p-4 border",
-              isIdeal("temperature", temperature)
-                ? "bg-emerald-50 border-emerald-100"
-                : "bg-red-50 border-red-200"
-            )}>
-              <div className={cn(
-                "flex h-10 w-10 sm:h-12 sm:w-12 shrink-0 items-center justify-center rounded-lg",
-                isIdeal("temperature", temperature) ? "bg-emerald-100" : "bg-red-100"
-              )}>
-                <Thermometer size={20} className={isIdeal("temperature", temperature) ? "text-emerald-600 sm:h-[24px] sm:w-[24px]" : "text-red-500 sm:h-[24px] sm:w-[24px]"} />
+            <div className="flex items-center gap-3 rounded-lg p-3 sm:p-4 border border-border bg-muted/30">
+              <div className="flex h-10 w-10 sm:h-12 sm:w-12 shrink-0 items-center justify-center rounded-lg bg-blue-50">
+                <Thermometer size={20} className="text-blue-500 sm:h-[24px] sm:w-[24px]" />
               </div>
               <div className="min-w-0 flex-1">
                 <div className="flex justify-between items-start">
                   <p className="truncate text-xs sm:text-sm text-muted-foreground">Suhu</p>
-                  <span className={cn("text-[9px] font-bold px-1.5 py-0.5 rounded", isIdeal("temperature", temperature) ? "text-emerald-700 bg-emerald-100" : "text-red-700 bg-red-100 animate-pulse")}>
-                    {isIdeal("temperature", temperature) ? "Ideal" : "Di Luar Batas"}
-                  </span>
                 </div>
                 <div className="flex items-end gap-2">
                   <p className="truncate text-lg sm:text-xl font-bold text-foreground">{Number(temperature).toFixed(1)}°C</p>
-                  <span className="text-[10px] text-muted-foreground mb-1">Batas: {getLimitString("temperature")}</span>
                 </div>
               </div>
             </div>
 
             {/* Kelembaban */}
-            <div className={cn(
-              "flex items-center gap-3 rounded-lg p-3 sm:p-4 border",
-              isIdeal("humidity", humidity)
-                ? "bg-emerald-50 border-emerald-100"
-                : "bg-orange-50 border-orange-200"
-            )}>
-              <div className={cn(
-                "flex h-10 w-10 sm:h-12 sm:w-12 shrink-0 items-center justify-center rounded-lg",
-                isIdeal("humidity", humidity) ? "bg-emerald-100" : "bg-orange-100"
-              )}>
-                <Droplets size={20} className={isIdeal("humidity", humidity) ? "text-emerald-600 sm:h-[24px] sm:w-[24px]" : "text-orange-500 sm:h-[24px] sm:w-[24px]"} />
+            <div className="flex items-center gap-3 rounded-lg p-3 sm:p-4 border border-border bg-muted/30">
+              <div className="flex h-10 w-10 sm:h-12 sm:w-12 shrink-0 items-center justify-center rounded-lg bg-cyan-50">
+                <Droplets size={20} className="text-cyan-500 sm:h-[24px] sm:w-[24px]" />
               </div>
               <div className="min-w-0 flex-1">
                 <div className="flex justify-between items-start">
                   <p className="truncate text-xs sm:text-sm text-muted-foreground">Kelembapan</p>
-                  <span className={cn("text-[9px] font-bold px-1.5 py-0.5 rounded", isIdeal("humidity", humidity) ? "text-emerald-700 bg-emerald-100" : "text-orange-700 bg-orange-100")}>
-                    {isIdeal("humidity", humidity) ? "Ideal" : "Di Luar Batas"}
-                  </span>
                 </div>
                 <div className="flex items-end gap-2">
                   <p className="truncate text-lg sm:text-xl font-bold text-foreground">{Number(humidity).toFixed(1)}%</p>
-                  <span className="text-[10px] text-muted-foreground mb-1">Batas: {getLimitString("humidity")}</span>
                 </div>
               </div>
             </div>

@@ -5,14 +5,10 @@ import { cn } from "@/lib/utils";
 import {
   LayoutDashboard,
   BarChart2,
-  MapPin,
-  Bell,
   Settings,
   ChevronLeft,
   Wind,
-  FileText,
   Info,
-  Menu,
   X
 } from "lucide-react";
 import { usePathname } from "next/navigation";
@@ -27,9 +23,6 @@ interface NavItem {
 const navItems: NavItem[] = [
   { label: "Overview", icon: <LayoutDashboard size={18} />, href: "/", active: true },
   { label: "Statistics", icon: <BarChart2 size={18} />, href: "/statistik" },
-  { label: "Peta Sensor", icon: <MapPin size={18} />, href: "/peta" },
-  { label: "Notifikasi", icon: <Bell size={18} />, href: "/notifikasi" },
-  { label: "Laporan", icon: <FileText size={18} />, href: "/laporan" },
 ];
 
 const bottomItems: NavItem[] = [
