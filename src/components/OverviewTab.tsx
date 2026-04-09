@@ -18,6 +18,7 @@ import {
 import { supabase } from "@/lib/supabase";
 import HeatmapCalendar from "./HeatmapCalendar";
 import PeakHourBoxPlot from "./PeakHourBoxPlot";
+import DensityPlotCO from "./DensityPlotCO";
 import { isIdeal, getLimitString } from "@/lib/limits";
 import {
   Cloud,
@@ -833,48 +834,9 @@ export default function OverviewTab({ realtimeData, historicalData: _historicalD
         </div>
       </div>
 
-      <div className="rounded-xl border border-border bg-card p-5 shadow-sm">
-        <div className="mb-4">
-          <h3 className="text-sm font-semibold text-foreground">Distribusi CO</h3>
-          <p className="mt-0.5 text-xs text-muted-foreground">120 data point terakhir</p>
-        </div>
-        {chartLoading ? (
-          <ChartSkeleton />
-        ) : (
-          <div className="w-full overflow-x-auto pb-2">
-            <div className="min-w-[500px]">
-              <ResponsiveContainer width="100%" height={200}>
-                <BarChart data={chartData.slice(-120)} margin={{ top: 4, right: 16, left: -10, bottom: 0 }}>
-                  <defs>
-                    <linearGradient id="coGradNew" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#f59e0b" stopOpacity={0.9} />
-                      <stop offset="100%" stopColor="#fbbf24" stopOpacity={0.6} />
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" vertical={false} />
-                  <XAxis
-                    dataKey="time"
-                    tickFormatter={formatXAxis}
-                    tick={{ fontSize: 10, fill: "#9ca3af" }}
-                    tickLine={false}
-                    axisLine={false}
-                    interval="preserveStartEnd"
-                  />
-                  <YAxis tick={{ fontSize: 11, fill: "#9ca3af" }} tickLine={false} axisLine={false} />
-                  <Tooltip
-                    contentStyle={tooltipStyle}
-                    labelFormatter={(label: string) => {
-                      const d = new Date(label);
-                      return isNaN(d.getTime()) ? label : d.toLocaleString("id-ID");
-                    }}
-                    formatter={(val: number) => [`${val.toFixed(1)} µg/m³`, "CO"]}
-                  />
-                  <Bar dataKey="co" name="CO" fill="url(#coGradNew)" isAnimationActive={false} radius={[3, 3, 0, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
-        )}
+      {/* Density Plot CO - Visualisasi terbawah */}
+      <div className="w-full">
+        <DensityPlotCO refreshKey={refreshKey} />
       </div>
 
     </div>
