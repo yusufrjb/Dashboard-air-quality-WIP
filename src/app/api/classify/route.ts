@@ -1,0 +1,131 @@
+import { NextResponse } from 'next/server';
+import { supabase } from '@/lib/supabase';
+import { execSync } from 'child_process';
+import path from 'path';
+
+const SCRIPT_PATH = path.resolve(process.cwd(), 'ml_model', 'classify.py');
+
+const CATEGORIES = [
+    { min: 0, max: 50, label: 'Baik', color: '#10b981', bg: 'bg-emerald-500', bgLight: 'bg-emerald-50', text: 'text-emerald-700' },
+    { min: 51, max: 100, label: 'Sedang', color: '#3b82f6', bg: 'bg-blue-500', bgLight: 'bg-blue-50', text: 'text-blue-700' },
+    { min: 101, max: 200, label: 'Tidak Sehat', color: '#f59e0b', bg: 'bg-amber-500', bgLight: 'bg-amber-50', text: 'text-amber-700' },
+    { min: 201, max: 300, label: 'Sangat Tidak Sehat', color: '#ef4444', bg: 'bg-red-500', bgLight: 'bg-red-50', text: 'text-red-700' },
+    { min: 301, max: 500, label: 'Berbahaya', color: '#7c3aed', bg: 'bg-purple-500', bgLight: 'bg-purple-50', text: 'text-purple-700' },
+];
+
+function getCategory(ispu: number) {
+    return CATEGORIES.find(c => ispu >= c.min && ispu <= c.max) ?? CATEGORIES[0];
+}
+
+function ispuFromFeatures(pm25: number, pm10: number, co: number, no2: number, o3Ugm3: number): { ispu: number; subIspu: Record<string, number>; dominant: string } {
+    type BP = number[][];
+    const toISPI = (val: number, bp: BP): number => {
+        if (val <= 0) return 0;
+        for (const [cl, ch, il, ih] of bp) {
+            if (val <= ch) return il + (val - cl) / (ch - cl) * (ih - il);
+        }
+        return bp[bp.length - 1][3];
+    };
+
+    const BP_PM25: BP = [[0,15,0,50],[15,35,50,100],[35,55,100,200],[55,150,200,300],[150,250,300,400],[250,350,400,500]];
+    const BP_PM10: BP = [[0,50,0,50],[50,150,50,100],[150,350,100,200],[350,420,200,300],[420,500,300,400],[500,600,400,500]];
+    const BP_CO: BP = [[0,5000,0,50],[5000,10000,50,100],[10000,17000,100,200],[17000,34000,200,300],[34000,46000,300,400],[46000,56000,400,500]];
+    const BP_NO2: BP = [[0,40,0,50],[40,80,50,100],[80,180,100,200],[180,280,200,300],[280,565,300,400],[565,665,400,500]];
+    const BP_O3_PPb: BP = [[0,60,0,50],[60,120,50,100],[120,180,100,200],[180,240,200,300],[240,400,300,500]];
+
+    const o3Ppb = o3Ugm3 / 1.963;
+    const subIspu: Record<string, number> = {
+        pm25: Math.round(toISPI(pm25, BP_PM25) * 10) / 10,
+        pm10: Math.round(toISPI(pm10, BP_PM10) * 10) / 10,
+        co: Math.round(toISPI(co, BP_CO) * 10) / 10,
+        no2: Math.round(toISPI(no2, BP_NO2) * 10) / 10,
+        o3: Math.round(toISPI(o3Ppb, BP_O3_PPb) * 10) / 10,
+    };
+
+    const ispu = Math.round(Math.max(...Object.values(subIspu)) * 10) / 10;
+    const dominant = Object.entries(subIspu).reduce((a, b) => b[1] > a[1] ? b : a)[0];
+    return { ispu, subIspu, dominant };
+}
+
+export async function GET() {
+    try {
+        const { data, error } = await supabase
+            .from('tb_konsentrasi_gas')
+            .select('pm25_ugm3, pm10_ugm3, co_ugm3, no2_ugm3, o3_ugm3, created_at')
+            .order('created_at', { ascending: false })
+            .limit(1);
+
+        if (error) throw error;
+        if (!data || data.length === 0) {
+            return NextResponse.json({ error: 'No data' }, { status: 404 });
+        }
+
+        const row = data[0];
+        const pm25 = Number(row.pm25_ugm3) || 0;
+        const pm10 = Number(row.pm10_ugm3) || 0;
+        const co = Number(row.co_ugm3) || 0;
+        const no2 = Number(row.no2_ugm3) || 0;
+        const o3Ugm3 = Number(row.o3_ugm3) || 0;
+
+        const fallback = ispuFromFeatures(pm25, pm10, co, no2, o3Ugm3);
+        const fallbackCat = getCategory(fallback.ispu);
+
+        let result: Record<string, unknown>;
+
+        try {
+            const cmd = `python "${SCRIPT_PATH}" ${pm25} ${pm10} ${co} ${no2} ${o3Ugm3} --model xgboost`;
+            console.log('[/api/classify] exec:', cmd);
+            console.log('[/api/classify] SCRIPT_PATH:', SCRIPT_PATH);
+
+            const output = execSync(cmd, {
+                timeout: 10000,
+                encoding: 'utf-8',
+                stdio: ['pipe', 'pipe', 'pipe'],
+                cwd: path.resolve(process.cwd()),
+            });
+
+            console.log('[/api/classify] raw output:', output.substring(0, 200));
+
+            const lastLine = output.trim().split('\n').filter(l => l.trim().startsWith('{')).pop();
+            if (!lastLine) throw new Error('No JSON output from Python');
+
+            const parsed = JSON.parse(lastLine);
+            if (parsed.error) throw new Error(parsed.error);
+            result = parsed;
+        } catch (err) {
+            console.warn('[/api/classify] RF model failed, using ISPU fallback:', err);
+
+            const probabilities: Record<string, number> = {};
+            let totalProb = 0;
+            for (const cat of CATEGORIES) {
+                const center = (cat.min + cat.max) / 2;
+                const dist = Math.abs(fallback.ispu - center);
+                const prob = Math.exp(-dist / 40);
+                probabilities[cat.label] = prob;
+                totalProb += prob;
+            }
+            for (const key of Object.keys(probabilities)) {
+                probabilities[key] = Math.round((probabilities[key] / totalProb) * 1000) / 1000;
+            }
+
+            result = {
+                category: fallbackCat.label,
+                ispu: fallback.ispu,
+                color: fallbackCat.color,
+                confidence: Math.max(...Object.values(probabilities)),
+                dominant: fallback.dominant,
+                subIspu: fallback.subIspu,
+                probabilities,
+                features: { pm25, pm10, co, no2, o3: o3Ugm3 },
+                method: 'ISPU Breakpoint (XGBoost fallback)',
+            };
+        }
+
+        result.timestamp = row.created_at;
+        return NextResponse.json(result);
+    } catch (err) {
+        console.error('[/api/classify]', err);
+        const msg = err instanceof Error ? err.message : 'Unknown error';
+        return NextResponse.json({ error: 'Internal server error', detail: msg }, { status: 500 });
+    }
+}

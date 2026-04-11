@@ -31,7 +31,7 @@ export default function DensityPlotCO({ days = 7, refreshKey = 0 }: { days?: num
 
     if (loading) {
         return (
-            <div className="flex h-28 items-center justify-center rounded-xl border border-border bg-card p-4 animate-pulse">
+            <div className="flex h-40 items-center justify-center rounded-xl border border-border bg-card p-4 animate-pulse">
                 <p className="text-xs font-medium text-muted-foreground">Memuat Data CO...</p>
             </div>
         );
@@ -39,7 +39,7 @@ export default function DensityPlotCO({ days = 7, refreshKey = 0 }: { days?: num
 
     if (error) {
         return (
-            <div className="flex h-28 items-center justify-center rounded-xl border border-red-200 bg-red-50 p-4">
+            <div className="flex h-40 items-center justify-center rounded-xl border border-red-200 bg-red-50 p-4">
                 <p className="text-xs font-medium text-red-600">Gagal memuat sebaran CO: {error}</p>
             </div>
         );
@@ -65,8 +65,8 @@ export default function DensityPlotCO({ days = 7, refreshKey = 0 }: { days?: num
                 <p className="mt-0.5 text-[10px] text-muted-foreground">120 Data Terakhir</p>
             </div>
 
-            <div className="flex-1 min-h-[120px]">
-                <ResponsiveContainer width="100%" height={120}>
+            <div className="flex-1 min-h-[180px]">
+                <ResponsiveContainer width="100%" height={180}>
                     <AreaChart data={bins} margin={{ top: 5, right: 5, left: -10, bottom: 0 }}>
                         <defs>
                             <linearGradient id="coGrad" x1="0" y1="0" x2="0" y2="1">

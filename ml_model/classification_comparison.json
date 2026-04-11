@@ -1,0 +1,41 @@
+{
+  "best_model": "XGBoost",
+  "accuracy": 99.84,
+  "f1_weighted": 99.84,
+  "f1_macro": 99.71,
+  "all_results": [
+    {
+      "Model": "Random Forest",
+      "Accuracy": 99.71,
+      "Precision_W": 99.71,
+      "Recall_W": 99.71,
+      "F1_W": 99.71,
+      "Precision_M": 99.41,
+      "Recall_M": 99.56,
+      "F1_M": 99.48,
+      "Train_time": 0.313
+    },
+    {
+      "Model": "XGBoost",
+      "Accuracy": 99.84,
+      "Precision_W": 99.84,
+      "Recall_W": 99.84,
+      "F1_W": 99.84,
+      "Precision_M": 99.71,
+      "Recall_M": 99.71,
+      "F1_M": 99.71,
+      "Train_time": 1.124
+    },
+    {
+      "Model": "LightGBM",
+      "Accuracy": 99.55,
+      "Precision_W": 99.55,
+      "Recall_W": 99.55,
+      "F1_W": 99.55,
+      "Precision_M": 99.06,
+      "Recall_M": 99.22,
+      "F1_M": 99.14,
+      "Train_time": 1.042
+    }
+  ]
+}

@@ -55,6 +55,8 @@ export default function Home() {
 
     fetchData();
 
+    const interval = setInterval(fetchData, 60000);
+
     // Subscribe to changes from the prediction table since that has the core ISPU
     const channel = supabase
       .channel("realtime-updates")
@@ -81,6 +83,7 @@ export default function Home() {
 
     return () => {
       supabase.removeChannel(channel);
+      clearInterval(interval);
     };
   }, []);
 

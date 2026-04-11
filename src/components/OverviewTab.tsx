@@ -35,6 +35,7 @@ import {
   Activity,
   Minus,
   Info,
+  Shield,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { RealtimeData } from "@/types";
@@ -141,6 +142,14 @@ function getAirQualityStatus(pollutant: string, ispu: number): AQStatus {
     percent: Math.min(100, 80 + Math.round(((ispu - 300) / 200) * 20)),
   };
 }
+
+const CATEGORIES = [
+  { min: 0, max: 50, label: 'Baik', color: '#10b981' },
+  { min: 51, max: 100, label: 'Sedang', color: '#3b82f6' },
+  { min: 101, max: 200, label: 'Tidak Sehat', color: '#f59e0b' },
+  { min: 201, max: 300, label: 'Sangat Tidak Sehat', color: '#ef4444' },
+  { min: 301, max: 500, label: 'Berbahaya', color: '#7c3aed' },
+];
 
 function calcStats(arr: number[]): AggStats {
   if (!arr.length) return { avg: 0, max: 0, min: 0, stdDev: 0, p95: 0, trend: 0 };
@@ -433,16 +442,33 @@ export default function OverviewTab({ realtimeData, historicalData: _historicalD
 
   // dailyPattern calculation removed; now fetched from backend API via fetchHourlyPattern
 
+  const [mlClassData, setMlClassData] = useState<any>(null);
+
+  const fetchMlClass = useCallback(async () => {
+    try {
+      const res = await fetch("/api/classify");
+      if (!res.ok) return;
+      const json = await res.json();
+      if (!json.error) setMlClassData(json);
+    } catch (err) {
+      console.error("ML classification error:", err);
+    }
+  }, []);
+
+  useEffect(() => { fetchMlClass(); }, [fetchMlClass, refreshKey]);
+
   const formatXAxis = useCallback(
     (tick: string) => {
       if (!tick) return "";
       const d = new Date(tick);
       if (isNaN(d.getTime())) return tick;
+      const timeStr = d.toLocaleTimeString('id-ID', { timeZone: 'Asia/Jakarta', hour: '2-digit', minute: '2-digit', hour12: false });
+      const dateStr = d.toLocaleDateString('id-ID', { timeZone: 'Asia/Jakarta', day: '2-digit', month: '2-digit' });
       if (timePeriod <= 1)
-        return `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
+        return timeStr;
       if (timePeriod <= 14)
-        return `${d.getDate()}/${d.getMonth() + 1} ${String(d.getHours()).padStart(2, "0")}:00`;
-      return `${d.getDate()}/${d.getMonth() + 1}`;
+        return `${dateStr} ${timeStr}`;
+      return dateStr;
     },
     [timePeriod]
   );
@@ -493,6 +519,41 @@ export default function OverviewTab({ realtimeData, historicalData: _historicalD
             <RefreshCw size={12} />
             Muat Ulang
           </button>
+        </div>
+      )}
+
+      {/* ── Air Quality Classification ──────────────────────────────────────── */}
+      {mlClassData ? (
+        <div className="rounded-xl border border-slate-200 bg-gradient-to-r from-slate-50 to-white p-4">
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2">
+              <Shield size={16} className="text-slate-500" />
+              <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Klasifikasi Kualitas Udara</span>
+            </div>
+            <span className="text-[10px] text-slate-400 font-medium">XGBoost</span>
+          </div>
+
+          <div className="flex items-center gap-4">
+            <div className="flex flex-col items-center justify-center rounded-xl px-6 py-3 text-white"
+              style={{ backgroundColor: mlClassData.color }}
+            >
+              <span className="text-2xl font-black leading-tight">{mlClassData.category}</span>
+              <span className="text-xs font-medium opacity-70">ISPU | {mlClassData.dominant?.toUpperCase()}</span>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className="rounded-xl border border-slate-200 bg-gradient-to-r from-slate-50 to-white p-4">
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2">
+              <Shield size={16} className="text-slate-500" />
+              <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Klasifikasi Kualitas Udara</span>
+            </div>
+            <span className="text-[10px] text-slate-400 font-medium">XGBoost</span>
+          </div>
+          <div className="flex items-center justify-center rounded-xl px-6 py-3 bg-slate-100">
+            <Spinner className="h-5 w-5" />
+          </div>
         </div>
       )}
 
@@ -816,7 +877,7 @@ export default function OverviewTab({ realtimeData, historicalData: _historicalD
                         const d = new Date(label);
                         return isNaN(d.getTime()) ? label : d.toLocaleString("id-ID");
                       }}
-                      formatter={(val: number, name: string) => [`${val.toFixed(1)} µg/m³`, name]}
+                      formatter={(val: number, name: string) => [`${val.toFixed(1)} ISPU`, name]}
                     />
                     <Legend wrapperStyle={{ fontSize: 12, paddingTop: 8 }} />
                     <Line type="monotone" dataKey="pm25" name="PM2.5" stroke="#3b82f6" strokeWidth={2} dot={false} isAnimationActive={false} />
