@@ -73,6 +73,40 @@ interface BmkgWeather {
   icon: string;
 }
 
+// ISPU Recommendations based on KLHK regulations
+const ISPU_RECOMMENDATIONS = {
+  "Baik": {
+    level: "Baik",
+    description: "Kualitas udara sangat baik dan tidak berpengaruh terhadap kesehatan manusia. Kondisi ini menunjukkan bahwa konsentrasi pollutant berada pada tingkat yang sangat rendah sehingga tidak menimbulkan dampak negatif apapun terhadap kesehatan.",
+    sensitive: "Semua kelompok masyarakat dapat melakukan aktivitas luar ruangan secara normal tanpa pembatasan.",
+    general: "Seluruh masyarakat dapat melakukan aktivitas di luar ruangan tanpa batas dan pembatasan."
+  },
+  "Sedang": {
+    level: "Sedang",
+    description: "Kualitas udara masih dapat diterima namun perlu kewaspadaan. Pada kondisi ini, konsentrasi pollutant sudah mulai meningkat meskipun masih dalam batas yang masih aman untuk sebagian besar masyarakat.",
+    sensitive: "Orang dengan penyakit pernapasan disarankan membatasi aktivitas fisik berat di luar ruangan.",
+    general: "Masyarakat umum masih dapat beraktivitas di luar seperti biasa, namun tetap memantau kondisi udara."
+  },
+  "Tidak Sehat": {
+    level: "Tidak Sehat",
+    description: "Kualitas udara telah mencapai tingkat yang dapat merugikan kesehatan manusia. Paparan terhadap udara dengan kualitas seperti ini dalam waktu lama dapat menyebabkan berbagai masalah kesehatan.",
+    sensitive: "Kelompok sensitif wajib mengurangi aktivitas di luar ruangan dan mengenakan masker.",
+    general: "Masyarakat umum disarankan mengurangi aktivitas fisik berat di luar ruangan dan menggunakan masker."
+  },
+  "Sangat Tidak Sehat": {
+    level: "Sangat Tidak Sehat",
+    description: "Kualitas udara pada tingkat yang meningkatkan risiko kesehatan serius bagi seluruh masyarakat. Paparan singkat pun dapat menimbulkan dampak kesehatan yang signifikan.",
+    sensitive: "Semua aktivitas di luar ruangan harus dihindari, gunakan masker N95 jika harus keluar.",
+    general: "Hindari seluruh aktivitas fisik di luar ruangan dan gunakan masker jika harus keluar sebentar."
+  },
+  "Berbahaya": {
+    level: "Berbahaya",
+    description: "Kualitas udara berbahaya dan dapat menimbulkan dampak kesehatan yang sangat serius bahkan dalam waktu singkat. Kondisi ini merupakan darurat lingkungan yang memerlukan tindakan segera.",
+    sensitive: "Tetap di dalam ruangan dengan masker, hindarkan keluar rumah dalam keadaan apapun.",
+    general: "Seluruh aktivitas di luar ruangan sangat tidak disarankan, tetap di dalam ruangan."
+  },
+};
+
 interface ChartPoint {
   time: string;
   pm25: number;
@@ -524,21 +558,63 @@ export default function OverviewTab({ realtimeData, historicalData: _historicalD
 
       {/* ── Air Quality Classification ──────────────────────────────────────── */}
       {mlClassData ? (
-        <div className="rounded-xl border border-slate-200 bg-gradient-to-r from-slate-50 to-white p-4">
-          <div className="flex items-center justify-between mb-3">
+        <div className="rounded-xl border border-slate-200 p-4" style={{ backgroundColor: mlClassData.color + '10' }}>
+          <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-2">
               <Shield size={16} className="text-slate-500" />
               <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Klasifikasi Kualitas Udara</span>
             </div>
-            <span className="text-[10px] text-slate-400 font-medium">XGBoost</span>
+            <span className="text-[10px] text-slate-400 font-medium">Random Forest</span>
           </div>
 
-          <div className="flex items-center gap-4">
-            <div className="flex flex-col items-center justify-center rounded-xl px-6 py-3 text-white"
-              style={{ backgroundColor: mlClassData.color }}
-            >
-              <span className="text-2xl font-black leading-tight">{mlClassData.category}</span>
-              <span className="text-xs font-medium opacity-70">ISPU | {mlClassData.dominant?.toUpperCase()}</span>
+          <div className="space-y-4">
+            {/* Header: Gauge + Description */}
+            <div className="flex flex-col sm:flex-row gap-4 items-stretch">
+              {/* Circular Gauge */}
+              <div className="shrink-0 flex items-center justify-center">
+                <div className="relative w-36 h-36">
+                  <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                    {/* Background circle */}
+                    <circle cx="50" cy="50" r="40" fill="none" stroke="#e2e8f0" strokeWidth="8" />
+                    {/* Progress arc */}
+                    <circle 
+                      cx="50" 
+                      cy="50" 
+                      r="40" 
+                      fill="none" 
+                      stroke={mlClassData.color} 
+                      strokeWidth="8"
+                      strokeLinecap="round"
+                      strokeDasharray={`${(Math.min(mlClassData.ispu || 50, 500) / 500) * 251.2} 251.2`}
+                    />
+                  </svg>
+                  <div className="absolute inset-0 flex flex-col items-center justify-center">
+                    <span className="text-2xl font-black text-slate-800">{mlClassData.category}</span>
+                    <span className="text-xs font-medium text-slate-500">ISPU | {mlClassData.dominant ? mlClassData.dominant.toUpperCase() : '-'}</span>
+                  </div>
+                </div>
+              </div>
+              <div className="flex-1 bg-slate-50 rounded-xl p-4 flex items-center">
+                <p className="text-base text-slate-700 leading-relaxed font-medium">
+                  {ISPU_RECOMMENDATIONS[mlClassData.category as keyof typeof ISPU_RECOMMENDATIONS]?.description || "Kualitas udara perlu diperhatikan."}
+                </p>
+              </div>
+            </div>
+
+            {/* Recommendation Cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <div className="rounded border p-3 text-center" style={{ borderColor: mlClassData.color + '60' }}>
+                <div className="font-semibold text-slate-700 text-xs mb-1">Kelompok Sensitif</div>
+                <div className="text-slate-500 text-xs leading-relaxed text-justify">
+                  {ISPU_RECOMMENDATIONS[mlClassData.category as keyof typeof ISPU_RECOMMENDATIONS]?.sensitive || "-"}
+                </div>
+              </div>
+              <div className="rounded border p-3 text-center" style={{ borderColor: mlClassData.color + '60' }}>
+                <div className="font-semibold text-slate-700 text-xs mb-1">Setiap Orang</div>
+                <div className="text-slate-500 text-xs leading-relaxed text-justify">
+                  {ISPU_RECOMMENDATIONS[mlClassData.category as keyof typeof ISPU_RECOMMENDATIONS]?.general || "-"}
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -549,7 +625,7 @@ export default function OverviewTab({ realtimeData, historicalData: _historicalD
               <Shield size={16} className="text-slate-500" />
               <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Klasifikasi Kualitas Udara</span>
             </div>
-            <span className="text-[10px] text-slate-400 font-medium">XGBoost</span>
+            <span className="text-[10px] text-slate-400 font-medium">Random Forest</span>
           </div>
           <div className="flex items-center justify-center rounded-xl px-6 py-3 bg-slate-100">
             <Spinner className="h-5 w-5" />
@@ -967,18 +1043,28 @@ function ParameterCard({
   rawValue?: number;
 }) {
   const checkValue = rawValue !== undefined ? rawValue : parseFloat(value);
+  const bgColorMap: Record<string, string> = {
+    good: "from-emerald-500 to-emerald-700 shadow-emerald-200/40",
+    moderate: "from-blue-500 to-blue-700 shadow-blue-200/40",
+    unhealthy: "from-amber-500 to-amber-700 shadow-amber-200/40",
+    very_unhealthy: "from-red-500 to-red-700 shadow-red-200/40",
+    hazardous: "from-purple-500 to-purple-700 shadow-purple-200/40",
+  };
   const dotColorMap: Record<string, string> = {
     good: isActive ? "bg-emerald-500" : "bg-white/70 group-hover:bg-emerald-500",
     moderate: isActive ? "bg-blue-500" : "bg-white/70 group-hover:bg-blue-500",
     unhealthy: isActive ? "bg-amber-500" : "bg-white/70 group-hover:bg-amber-500",
     very_unhealthy: isActive ? "bg-red-500" : "bg-white/70 group-hover:bg-red-500",
+    hazardous: isActive ? "bg-purple-500" : "bg-white/70 group-hover:bg-purple-500",
   };
   const thinBarColorMap: Record<string, string> = {
     good: isActive ? "bg-emerald-500" : "bg-white/40 group-hover:bg-emerald-500",
     moderate: isActive ? "bg-blue-500" : "bg-white/40 group-hover:bg-blue-500",
     unhealthy: isActive ? "bg-amber-500" : "bg-white/40 group-hover:bg-amber-500",
     very_unhealthy: isActive ? "bg-red-500" : "bg-white/40 group-hover:bg-red-500",
+    hazardous: isActive ? "bg-purple-500" : "bg-white/40 group-hover:bg-purple-500",
   };
+  const statusColorClass = bgColorMap[status.level] || bgColorMap.moderate;
 
   return (
     <div
@@ -987,7 +1073,7 @@ function ParameterCard({
         "group relative overflow-hidden rounded-lg p-3 shadow-sm transition-all duration-200 cursor-pointer border",
         isActive
           ? "border-border bg-card"
-          : "border-transparent bg-gradient-to-br from-blue-500 to-blue-700 shadow-blue-200/40 hover:border-border hover:bg-card hover:bg-none",
+          : `border-transparent bg-gradient-to-br ${statusColorClass} hover:border-border hover:bg-card hover:bg-none`,
         className
       )}
     >
@@ -999,7 +1085,7 @@ function ParameterCard({
           )} />
           <span className={cn(
             "text-[11px] font-semibold uppercase tracking-wider transition-colors duration-200",
-            isActive ? "text-muted-foreground" : "text-blue-100 group-hover:text-muted-foreground"
+            isActive ? "text-muted-foreground" : "text-white/80 group-hover:text-muted-foreground"
           )}>
             {title}
           </span>
@@ -1008,7 +1094,7 @@ function ParameterCard({
           size={14}
           className={cn(
             "shrink-0 transition-colors duration-200",
-            isActive ? "text-muted-foreground/60" : "text-blue-200/60 group-hover:text-muted-foreground/60"
+            isActive ? "text-muted-foreground/60" : "text-white/60 group-hover:text-muted-foreground/60"
           )}
         />
       </div>
@@ -1022,7 +1108,7 @@ function ParameterCard({
         </span>
         <span className={cn(
           "text-[10px] transition-colors duration-200",
-          isActive ? "text-muted-foreground" : "text-blue-200 group-hover:text-muted-foreground"
+          isActive ? "text-muted-foreground" : "text-white/70 group-hover:text-muted-foreground"
         )}>
           {unit}
         </span>

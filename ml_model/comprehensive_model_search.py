@@ -36,8 +36,8 @@ np.random.seed(42)
 # ---------------------------------------------------------------------------
 # Config
 # ---------------------------------------------------------------------------
-SUPABASE_URL = os.environ.get("NEXT_PUBLIC_SUPABASE_URL", "")
-SUPABASE_KEY = os.environ.get("NEXT_PUBLIC_SUPABASE_ANON_KEY", "")
+SUPABASE_URL = os.environ.get("NEXT_PUBLIC_SUPABASE_URL", "") or os.environ.get("SUPABASE_URL", "")
+SUPABASE_KEY = os.environ.get("NEXT_PUBLIC_SUPABASE_ANON_KEY", "") or os.environ.get("SUPABASE_ANON_KEY", "") or os.environ.get("SUPABASE_KEY", "")
 OUTPUT_DIR = Path(__file__).parent
 
 # Try importing optional libs
@@ -65,7 +65,7 @@ def fetch_all_data():
     while True:
         resp = (
             sb.table("tb_konsentrasi_gas")
-            .select("pm25_ugm3,pm10_corrected_ugm3,no2_ugm3,co_corrected_ugm3,temperature,humidity,created_at")
+            .select("pm25_ugm3,pm10_corrected_ugm3,no2_ugm3,co_ugm3,temperature,humidity,created_at")
             .order("created_at", desc=False)
             .range(offset, offset + page_size - 1)
             .execute()
@@ -79,7 +79,7 @@ def fetch_all_data():
             break
 
     df = pd.DataFrame(all_rows)
-    for col in ["pm25_ugm3", "pm10_corrected_ugm3", "no2_ugm3", "co_corrected_ugm3", "temperature", "humidity"]:
+    for col in ["pm25_ugm3", "pm10_corrected_ugm3", "no2_ugm3", "co_ugm3", "temperature", "humidity"]:
         df[col] = pd.to_numeric(df[col], errors="coerce")
     df["created_at"] = pd.to_datetime(df["created_at"]).dt.tz_localize(None)
     df = df.dropna(subset=["pm25_ugm3"])
@@ -181,7 +181,7 @@ def feature_engineering(df):
     feat = feat[feat["target"] <= p99]
 
     # Separate features and target
-    exclude_cols = ["target", "pm25_ugm3", "pm10_corrected_ugm3", "no2_ugm3", "co_corrected_ugm3"]
+    exclude_cols = ["target", "pm25_ugm3", "pm10_corrected_ugm3", "no2_ugm3", "co_ugm3"]
     feature_cols = [c for c in feat.columns if c not in exclude_cols]
 
     print(f"  Features created: {len(feature_cols)}")

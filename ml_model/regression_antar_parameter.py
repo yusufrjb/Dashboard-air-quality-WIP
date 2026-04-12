@@ -35,18 +35,34 @@ from supabase import create_client
 warnings.filterwarnings("ignore")
 np.random.seed(42)
 
-SUPABASE_URL = os.environ.get("NEXT_PUBLIC_SUPABASE_URL", "")
-SUPABASE_KEY = os.environ.get("NEXT_PUBLIC_SUPABASE_ANON_KEY", "")
+SUPABASE_URL = os.environ.get("SUPABASE_URL", "")
+SUPABASE_KEY = os.environ.get("SUPABASE_ANON_KEY", "") or os.environ.get("SUPABASE_KEY", "")
 OUTPUT_DIR = Path(__file__).parent
 
 
 def fetch_all_data():
-    sb = create_client(SUPABASE_URL, SUPABASE_KEY)
+    global SUPABASE_URL, SUPABASE_KEY
+    if not SUPABASE_URL or not SUPABASE_KEY:
+        for env_path in [
+            OUTPUT_DIR / ".env",
+            OUTPUT_DIR.parent / ".env.local",
+            OUTPUT_DIR.parent / ".env",
+        ]:
+            if env_path.exists():
+                for line in env_path.read_text(encoding="utf-8").splitlines():
+                    if "=" in line and not line.startswith("#"):
+                        k, _, v = line.partition("=")
+                        k = k.strip()
+                        if not os.environ.get(k):
+                            os.environ[k] = v.strip().strip('"')
+        SUPABASE_URL = os.environ.get("SUPABASE_URL", "")
+        SUPABASE_KEY = os.environ.get("SUPABASE_ANON_KEY", "") or os.environ.get("SUPABASE_KEY", "")
+    sb = create_client(SUPABASE_URL.replace("http://", "https://"), SUPABASE_KEY)
     
     print("Mengambil 20.000 data terbaru dari Supabase untuk Continuous Learning...")
     resp = (
         sb.table("tb_konsentrasi_gas")
-        .select("pm25_ugm3,pm10_corrected_ugm3,no2_ugm3,co_corrected_ugm3,temperature,humidity,created_at")
+        .select("pm25_ugm3,pm10_corrected_ugm3,no2_ugm3,co_ugm3,temperature,humidity,created_at")
         .order("created_at", desc=True)
         .limit(20000)
         .execute()
@@ -58,7 +74,7 @@ def fetch_all_data():
         return pd.DataFrame()
 
     df = pd.DataFrame(all_rows)
-    for col in ["pm25_ugm3", "pm10_corrected_ugm3", "no2_ugm3", "co_corrected_ugm3", "temperature", "humidity"]:
+    for col in ["pm25_ugm3", "pm10_corrected_ugm3", "no2_ugm3", "co_ugm3", "temperature", "humidity"]:
         df[col] = pd.to_numeric(df[col], errors="coerce")
     df["created_at"] = pd.to_datetime(df["created_at"])
     df = df.dropna()
@@ -83,7 +99,7 @@ def evaluate_regression(df):
         return None
 
     # Features dan target
-    feature_cols = ["temperature", "humidity", "pm10_corrected_ugm3", "no2_ugm3", "co_corrected_ugm3"]
+    feature_cols = ["temperature", "humidity", "pm10_corrected_ugm3", "no2_ugm3", "co_ugm3"]
     target_col = "pm25_ugm3"
 
     # Hapus baris dengan nilai target konstan jika ada (biasa terjadi pada kegagalan sensor)
@@ -182,7 +198,7 @@ def evaluate_regression(df):
                     "humidity": "Kelembapan",
                     "pm10_corrected_ugm3": "PM10",
                     "no2_ugm3": "NO₂",
-                    "co_corrected_ugm3": "CO",
+                    "co_ugm3": "CO",
                 }.get(feature_cols[idx], feature_cols[idx])
             })
 

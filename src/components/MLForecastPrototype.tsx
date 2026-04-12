@@ -9,28 +9,28 @@ import { Activity, Zap, TrendingUp, TrendingDown, Minus, AlertTriangle } from 'l
 import { cn } from '@/lib/utils';
 import { supabase } from '@/lib/supabase';
 
-// A) FORECASTING TIME-SERIES (comprehensive_model_search.py)
-// Target: PM2.5(t+1) | Data: 35.524 obs | 80/20 split
+// A) TIME SERIES FORECASTING - Multi-Horizon Comparison
+// Hasil training: xgb_pm25_timeseries.pkl, xgb_pm10_timeseries.pkl, xgb_co_timeseries.pkl
+// Evaluasi: horizon 1, 5, 15, 30, 60 menit | 80/20 split | 14 hari data
 const forecastModels = [
-    { name: "LightGBM", type: "Gradient Boosting", mae: 0.81, rmse: 1.18, mape: 33.26, r2: 64.44, status: "Terbaik" },
-    { name: "XGBoost", type: "Gradient Boosting", mae: 0.82, rmse: 1.19, mape: 34.12, r2: 64.16, status: "Kedua" },
-    { name: "Random Forest", type: "Ensemble", mae: 0.82, rmse: 1.20, mape: 33.06, r2: 63.16, status: "Alternatif" },
-    { name: "Prophet", type: "Time-Series", mae: 1.37, rmse: 1.95, mape: 50.17, r2: 2.89, status: "Tidak Disarankan" },
-    { name: "ARIMAX(2,1,2)", type: "Time-Series", mae: 1.59, rmse: 2.13, mape: 62.68, r2: -15.57, status: "Tidak Disarankan" },
+    { name: "XGBoost (Multi-Horizon)", type: "Gradient Boosting", mae: 1.65, rmse: 2.12, mape: 28.5, r2: 72.1, status: "Terbaik", improvement: "16.3%" },
+    { name: "Naive (Persistensi)", type: "Baseline", mae: 1.97, rmse: 2.45, mape: 35.2, r2: 65.0, status: "Baseline", improvement: "-" },
+    { name: "ARIMA(1,1,1)", type: "Time-Series", mae: 3.75, rmse: 4.50, mape: 68.5, r2: 35.2, status: "Tidak Disarankan", improvement: "-47.5%" },
+    { name: "ETS (Holt-Winters)", type: "Time-Series", mae: 4.89, rmse: 5.80, mape: 85.0, r2: 25.8, status: "Tidak Disarankan", improvement: "-59.8%" },
 ];
-// B) REGRESI ANTAR-PARAMETER (regression_antar_parameter.py)
-// Target: PM2.5 dari [suhu, kelembapan, PM10, NO2, CO] | Data: 35.514 obs
-const regressionModels = [
-    { name: "Random Forest", type: "Ensemble", mae: 0.16, rmse: 1.38, mape: 3.35, r2: 93.36, cvR2: 92.14, status: "Terbaik" },
-    { name: "Linear Regression", type: "Linear", mae: 0.65, rmse: 1.44, mape: 14.99, r2: 92.74, cvR2: 88.23, status: "Robust" },
-    { name: "XGBoost", type: "Gradient Boosting", mae: 0.18, rmse: 1.54, mape: 4.73, r2: 91.76, cvR2: 90.13, status: "Sangat Akurat" },
-    { name: "Gradient Boosting", type: "Ensemble", mae: 0.19, rmse: 1.56, mape: 3.92, r2: 91.57, cvR2: 89.85, status: "Konsisten" },
-    { name: "LightGBM", type: "Gradient Boosting", mae: 0.26, rmse: 1.91, mape: 4.55, r2: 87.35, cvR2: 85.02, status: "Konsisten" },
-];
+
+// Parameter-specific results
+const parameterResults = {
+    pm25: { naive: 1.97, xgboost: 1.65, improvement: "16.3%", horizons: { "1min": 1.39, "5min": 1.44, "15min": 1.59, "30min": 1.75, "60min": 2.07 } },
+    pm10: { naive: 2.50, xgboost: 2.12, improvement: "15.3%", horizons: { "1min": 1.75, "5min": 1.87, "15min": 2.05, "30min": 2.24, "60min": 2.68 } },
+    co: { naive: 138.23, xgboost: 112.96, improvement: "18.3%", horizons: { "1min": 101.41, "5min": 102.21, "15min": 108.95, "30min": 115.69, "60min": 136.54 } },
+};
 
 interface ForecastPoint {
     time: string;
     pm25: number;
+    pm10?: number;
+    co?: number;
     isHistorical: boolean;
     timestamp: number;
 }
@@ -38,8 +38,12 @@ interface ForecastPoint {
 interface ForecastMetadata {
     dataPoints: number;
     latestPm25: number;
+    latestPm10?: number;
+    latestCo?: number;
     forecastedIn10min?: number;
     forecastedIn30min: number;
+    forecastedIn30minPm10?: number;
+    forecastedIn30minCo?: number;
     trendDirection: 'naik' | 'turun' | 'stabil';
     method: string;
 }
@@ -51,38 +55,6 @@ export default function ForecastDashboard() {
     const [error, setError] = useState<string | null>(null);
     const [forecastData, setForecastData] = useState<ForecastPoint[]>([]);
     const [metadata, setMetadata] = useState<ForecastMetadata | null>(null);
-    const [regressionMetrics, setRegressionMetrics] = useState<any[]>([]);
-    const [regressionMetadata, setRegressionMetadata] = useState<any>(null);
-
-    const fetchRegression = async () => {
-        try {
-            const res = await fetch('/api/regression');
-            const json = await res.json();
-            if (json.allResults) {
-                // Map API results to table structure
-                const mapped = json.allResults.map((r: any) => ({
-                    name: r.name,
-                    type: r.name === 'Random Forest' || r.name === 'Gradient Boosting' ? 'Ensemble' :
-                        r.name === 'Linear Regression' ? 'Linear' : 'Boosting',
-                    mae: r.MAE,
-                    rmse: r.RMSE,
-                    mape: r.MAPE,
-                    r2: r.R2,
-                    cvR2: r.CV_R2,
-                    status: r.name === json.model ? 'Terbaik' :
-                        r.R2 > 90 ? 'Sangat Akurat' : 'Konsisten'
-                }));
-                setRegressionMetrics(mapped);
-                setRegressionMetadata({
-                    evaluatedAt: json.evaluatedAt,
-                    totalData: json.totalData,
-                    bestModel: json.model
-                });
-            }
-        } catch (err) {
-            console.error('Gagal memuat metrik regresi', err);
-        }
-    };
 
     const fetchForecast = async () => {
         try {
@@ -106,10 +78,7 @@ export default function ForecastDashboard() {
     useEffect(() => {
         setMounted(true);
         fetchForecast();
-        fetchRegression();
 
-        // Realtime subscription for tb_prediksi_pm25
-        // Memicu fetch ulang setiap kali ada data prediksi baru masuk (setiap 5 menit)
         const channel = supabase
             .channel('realtime_forecast')
             .on(
@@ -122,19 +91,12 @@ export default function ForecastDashboard() {
                 () => {
                     console.log('🔄 Data prediksi baru terdeteksi, memperbarui grafik...');
                     fetchForecast();
-                    fetchRegression(); // Also refresh regression metrics
                 }
             )
             .subscribe();
 
-        // Fallback polling for regression results (since it's file-based on server)
-        const interval = setInterval(() => {
-            fetchRegression();
-        }, 5 * 60 * 1000);
-
         return () => {
             supabase.removeChannel(channel);
-            clearInterval(interval);
         };
     }, []);
 
@@ -225,98 +187,132 @@ export default function ForecastDashboard() {
                             <button onClick={fetchForecast} className="text-sm text-indigo-600 hover:underline">Coba lagi</button>
                         </div>
                     ) : (
-                        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-                            <div className="lg:col-span-3 h-[310px] bg-slate-50 rounded-xl p-4 border border-slate-100">
-                                <ResponsiveContainer width="100%" height="100%">
-                                    <AreaChart data={forecastData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                                        <defs>
-                                            <linearGradient id="colorHistorical" x1="0" y1="0" x2="0" y2="1">
-                                                <stop offset="5%" stopColor="#6366f1" stopOpacity={0.25} />
-                                                <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
-                                            </linearGradient>
-                                            <linearGradient id="colorForecast" x1="0" y1="0" x2="0" y2="1">
-                                                <stop offset="5%" stopColor="#f97316" stopOpacity={0.2} />
-                                                <stop offset="95%" stopColor="#f97316" stopOpacity={0} />
-                                            </linearGradient>
-                                        </defs>
-                                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
-                                        <XAxis
-                                            dataKey="time"
-                                            tick={{ fill: '#64748b', fontSize: 11 }}
-                                            tickLine={false}
-                                            axisLine={false}
-                                            minTickGap={30}
-                                        />
-                                        <YAxis
-                                            tick={{ fill: '#64748b', fontSize: 11 }}
-                                            tickLine={false}
-                                            axisLine={false}
-                                            unit=" µg"
-                                        />
-                                        <Tooltip content={<CustomTooltip />} />
-                                        {/* WHO threshold */}
-                                        <ReferenceLine
-                                            y={15}
-                                            label={{ position: 'insideTopRight', value: 'Aman WHO', fill: '#10b981', fontSize: 10 }}
-                                            stroke="#10b981"
-                                            strokeDasharray="3 3"
-                                        />
-                                        <ReferenceLine
-                                            y={55}
-                                            label={{ position: 'insideTopRight', value: 'Sedang ISPU', fill: '#f59e0b', fontSize: 10 }}
-                                            stroke="#f59e0b"
-                                            strokeDasharray="3 3"
-                                        />
-                                        {/* Actual line (blue) */}
-                                        <Area
-                                            type="monotone"
-                                            dataKey={(d) => d.isHistorical ? d.pm25 : null}
-                                            stroke="#6366f1"
-                                            strokeWidth={2.5}
-                                            fillOpacity={1}
-                                            fill="url(#colorHistorical)"
-                                            dot={false}
-                                            name="Aktual"
-                                            animationDuration={1000}
-                                        />
-                                        {/* Forecast line (orange dashed) */}
-                                        <Area
-                                            type="monotone"
-                                            dataKey={(d) => !d.isHistorical ? d.pm25 : null}
-                                            stroke="#f97316"
-                                            strokeWidth={2.5}
-                                            strokeDasharray="5 3"
-                                            fillOpacity={1}
-                                            fill="url(#colorForecast)"
-                                            dot={false}
-                                            name="Prediksi"
-                                            animationDuration={1200}
-                                        />
-                                    </AreaChart>
-                                </ResponsiveContainer>
+                        <div className="space-y-6">
+                            {/* PM2.5 Chart */}
+                            <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                                <div className="lg:col-span-3 h-[250px] bg-slate-50 rounded-xl p-4 border border-slate-100">
+                                    <h4 className="text-xs font-semibold text-indigo-500 uppercase tracking-wide mb-2">PM2.5</h4>
+                                    <ResponsiveContainer width="100%" height="90%">
+                                        <AreaChart data={forecastData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                                            <defs>
+                                                <linearGradient id="colorHistoricalPM25" x1="0" y1="0" x2="0" y2="1">
+                                                    <stop offset="5%" stopColor="#6366f1" stopOpacity={0.25} />
+                                                    <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
+                                                </linearGradient>
+                                                <linearGradient id="colorForecastPM25" x1="0" y1="0" x2="0" y2="1">
+                                                    <stop offset="5%" stopColor="#f97316" stopOpacity={0.2} />
+                                                    <stop offset="95%" stopColor="#f97316" stopOpacity={0} />
+                                                </linearGradient>
+                                            </defs>
+                                            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                                            <XAxis dataKey="time" tick={{ fill: '#64748b', fontSize: 11 }} tickLine={false} axisLine={false} minTickGap={30} />
+                                            <YAxis tick={{ fill: '#64748b', fontSize: 11 }} tickLine={false} axisLine={false} />
+                                            <Tooltip contentStyle={{ fontSize: 12 }} />
+                                            <Area type="monotone" dataKey={(d) => d.isHistorical ? d.pm25 : null} stroke="#6366f1" strokeWidth={2} fillOpacity={1} fill="url(#colorHistoricalPM25)" name="Aktual PM2.5" />
+                                            <Area type="monotone" dataKey={(d) => !d.isHistorical ? d.pm25 : null} stroke="#f97316" strokeWidth={2} strokeDasharray="5 3" fillOpacity={1} fill="url(#colorForecastPM25)" name="Prediksi PM2.5" />
+                                        </AreaChart>
+                                    </ResponsiveContainer>
+                                </div>
+                                <div className="flex flex-col gap-3">
+                                    <div className="bg-indigo-50 p-3 rounded-xl border border-indigo-100">
+                                        <h4 className="text-xs font-semibold text-indigo-500 uppercase mb-1">PM2.5 Saat Ini</h4>
+                                        <p className="text-2xl font-black text-indigo-800">{metadata?.latestPm25?.toFixed(2) ?? '—'}</p>
+                                        <p className="text-xs text-indigo-400">µg/m³</p>
+                                    </div>
+                                    <div className="bg-orange-50 p-3 rounded-xl border border-orange-100">
+                                        <h4 className="text-xs font-semibold text-orange-500 uppercase mb-1">Prediksi 30m</h4>
+                                        <p className="text-2xl font-black text-orange-700">{metadata?.forecastedIn30min?.toFixed(2) ?? '—'}</p>
+                                        <p className="text-xs text-orange-400">µg/m³</p>
+                                    </div>
+                                </div>
                             </div>
 
-                            <div className="lg:col-span-1 flex flex-col justify-between gap-4">
-                                <div className="bg-indigo-50 p-4 rounded-xl border border-indigo-100">
-                                    <h4 className="text-xs font-semibold text-indigo-500 uppercase tracking-wide mb-1">PM2.5 Saat Ini</h4>
-                                    <p className="text-3xl font-black text-indigo-800">{metadata?.latestPm25?.toFixed(1) ?? '—'}</p>
-                                    <p className="text-sm text-indigo-400">µg/m³</p>
+                            {/* PM10 Chart */}
+                            <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                                <div className="lg:col-span-3 h-[250px] bg-slate-50 rounded-xl p-4 border border-slate-100">
+                                    <h4 className="text-xs font-semibold text-emerald-500 uppercase tracking-wide mb-2">PM10</h4>
+                                    <ResponsiveContainer width="100%" height="90%">
+                                        <AreaChart data={forecastData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                                            <defs>
+                                                <linearGradient id="colorHistoricalPM10" x1="0" y1="0" x2="0" y2="1">
+                                                    <stop offset="5%" stopColor="#10b981" stopOpacity={0.25} />
+                                                    <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
+                                                </linearGradient>
+                                                <linearGradient id="colorForecastPM10" x1="0" y1="0" x2="0" y2="1">
+                                                    <stop offset="5%" stopColor="#f97316" stopOpacity={0.2} />
+                                                    <stop offset="95%" stopColor="#f97316" stopOpacity={0} />
+                                                </linearGradient>
+                                            </defs>
+                                            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                                            <XAxis dataKey="time" tick={{ fill: '#64748b', fontSize: 11 }} tickLine={false} axisLine={false} minTickGap={30} />
+                                            <YAxis tick={{ fill: '#64748b', fontSize: 11 }} tickLine={false} axisLine={false} />
+                                            <Tooltip contentStyle={{ fontSize: 12 }} />
+                                            <Area type="monotone" dataKey={(d) => d.isHistorical ? d.pm10 : null} stroke="#10b981" strokeWidth={2} fillOpacity={1} fill="url(#colorHistoricalPM10)" name="Aktual PM10" />
+                                            <Area type="monotone" dataKey={(d) => !d.isHistorical ? d.pm10 : null} stroke="#f97316" strokeWidth={2} strokeDasharray="5 3" fillOpacity={1} fill="url(#colorForecastPM10)" name="Prediksi PM10" />
+                                        </AreaChart>
+                                    </ResponsiveContainer>
                                 </div>
-
-                                <div className="bg-orange-50 p-4 rounded-xl border border-orange-100">
-                                    <h4 className="text-xs font-semibold text-orange-500 uppercase tracking-wide mb-1">Prediksi 30 Menit</h4>
-                                    <p className="text-3xl font-black text-orange-700">{metadata?.forecastedIn30min?.toFixed(1) ?? '—'}</p>
-                                    <p className="text-sm text-orange-400">µg/m³</p>
-                                </div>
-
-                                <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
-                                    <h4 className="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-2">Tren</h4>
-                                    <div className="flex items-center gap-2">
-                                        {trendIcon}
-                                        <span className={cn("font-bold capitalize text-sm", trendColor)}>{metadata?.trendDirection}</span>
+                                <div className="flex flex-col gap-3">
+                                    <div className="bg-emerald-50 p-3 rounded-xl border border-emerald-100">
+                                        <h4 className="text-xs font-semibold text-emerald-500 uppercase mb-1">PM10 Saat Ini</h4>
+                                        <p className="text-2xl font-black text-emerald-800">{metadata?.latestPm10?.toFixed(2) ?? '—'}</p>
+                                        <p className="text-xs text-emerald-400">µg/m³</p>
                                     </div>
-                                    <p className="text-xs text-slate-400 mt-1">Berbasis {metadata?.dataPoints ?? 0} titik data</p>
+                                    <div className="bg-orange-50 p-3 rounded-xl border border-orange-100">
+                                        <h4 className="text-xs font-semibold text-orange-500 uppercase mb-1">Prediksi 30m</h4>
+                                        <p className="text-2xl font-black text-orange-700">{metadata?.forecastedIn30minPm10?.toFixed(2) ?? '—'}</p>
+                                        <p className="text-xs text-orange-400">µg/m³</p>
+                                    </div>
                                 </div>
+                            </div>
+
+                            {/* CO Chart */}
+                            <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                                <div className="lg:col-span-3 h-[250px] bg-slate-50 rounded-xl p-4 border border-slate-100">
+                                    <h4 className="text-xs font-semibold text-amber-500 uppercase tracking-wide mb-2">CO</h4>
+                                    <ResponsiveContainer width="100%" height="90%">
+                                        <AreaChart data={forecastData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                                            <defs>
+                                                <linearGradient id="colorHistoricalCO" x1="0" y1="0" x2="0" y2="1">
+                                                    <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.25} />
+                                                    <stop offset="95%" stopColor="#f59e0b" stopOpacity={0} />
+                                                </linearGradient>
+                                                <linearGradient id="colorForecastCO" x1="0" y1="0" x2="0" y2="1">
+                                                    <stop offset="5%" stopColor="#f97316" stopOpacity={0.2} />
+                                                    <stop offset="95%" stopColor="#f97316" stopOpacity={0} />
+                                                </linearGradient>
+                                            </defs>
+                                            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                                            <XAxis dataKey="time" tick={{ fill: '#64748b', fontSize: 11 }} tickLine={false} axisLine={false} minTickGap={30} />
+                                            <YAxis tick={{ fill: '#64748b', fontSize: 11 }} tickLine={false} axisLine={false} />
+                                            <Tooltip contentStyle={{ fontSize: 12 }} />
+                                            <Area type="monotone" dataKey={(d) => d.isHistorical ? d.co : null} stroke="#f59e0b" strokeWidth={2} fillOpacity={1} fill="url(#colorHistoricalCO)" name="Aktual CO" />
+                                            <Area type="monotone" dataKey={(d) => !d.isHistorical ? d.co : null} stroke="#f97316" strokeWidth={2} strokeDasharray="5 3" fillOpacity={1} fill="url(#colorForecastCO)" name="Prediksi CO" />
+                                        </AreaChart>
+                                    </ResponsiveContainer>
+                                </div>
+                                <div className="flex flex-col gap-3">
+                                    <div className="bg-amber-50 p-3 rounded-xl border border-amber-100">
+                                        <h4 className="text-xs font-semibold text-amber-500 uppercase mb-1">CO Saat Ini</h4>
+                                        <p className="text-2xl font-black text-amber-800">{metadata?.latestCo?.toFixed(2) ?? '—'}</p>
+                                        <p className="text-xs text-amber-400">ppb</p>
+                                    </div>
+                                    <div className="bg-orange-50 p-3 rounded-xl border border-orange-100">
+                                        <h4 className="text-xs font-semibold text-orange-500 uppercase mb-1">Prediksi 30m</h4>
+                                        <p className="text-2xl font-black text-orange-700">{metadata?.forecastedIn30minCo?.toFixed(2) ?? '—'}</p>
+                                        <p className="text-xs text-orange-400">ppb</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Tren */}
+                            <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                                <h4 className="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-2">Tren PM2.5</h4>
+                                <div className="flex items-center gap-2">
+                                    {trendIcon}
+                                    <span className={cn("font-bold capitalize text-sm", trendColor)}>{metadata?.trendDirection}</span>
+                                </div>
+                                <p className="text-xs text-slate-400 mt-1">Berbasis {metadata?.dataPoints ?? 0} titik data</p>
                             </div>
                         </div>
                     )}
@@ -372,74 +368,6 @@ export default function ForecastDashboard() {
                         </div>
                     </div>
 
-                    {/* Tabel 2: Regresi Antar-Parameter */}
-                    <div className="mt-8">
-                        <div className="flex flex-col md:flex-row md:items-end justify-between gap-2 mb-3">
-                            <div>
-                                <h4 className="text-sm font-bold text-amber-700 uppercase tracking-wide flex items-center gap-2">
-                                    <GitCompareArrows className="w-4 h-4" />
-                                    Regresi Antar-Parameter
-                                </h4>
-                                <p className="text-[10px] text-slate-400 mt-0.5">Memprediksi PM2.5 dari suhu, kelembapan, PM10, NO₂, CO</p>
-                            </div>
-                            {regressionMetadata && (
-                                <div className="text-[10px] text-slate-400 bg-slate-50 px-2 py-1 rounded-md border border-slate-100 flex items-center gap-2">
-                                    <span className="flex items-center gap-1">
-                                        <Activity className="w-3 h-3 text-amber-500" />
-                                        Data: <b>{regressionMetadata.totalData?.toLocaleString()} obs</b>
-                                    </span>
-                                    <span className="w-px h-2 bg-slate-200" />
-                                    <span>
-                                        Update: <b>{new Date(regressionMetadata.evaluatedAt).toLocaleString()}</b>
-                                    </span>
-                                </div>
-                            )}
-                        </div>
-                        <div className="overflow-x-auto">
-                            <table className="w-full text-left text-sm text-slate-500">
-                                <thead className="text-xs text-slate-700 uppercase bg-amber-50 border-b border-amber-100">
-                                    <tr>
-                                        <th className="px-4 py-3 rounded-tl-lg">Model</th>
-                                        <th className="px-4 py-3">MAE</th>
-                                        <th className="px-4 py-3">RMSE</th>
-                                        <th className="px-4 py-3 text-center">R² Test</th>
-                                        <th className="px-4 py-3 text-center">R² CV</th>
-                                        <th className="px-4 py-3 rounded-tr-lg">Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {(regressionMetrics.length > 0 ? regressionMetrics : regressionModels).map((m, i) => (
-                                        <tr key={i} className="bg-white border-b border-slate-100 hover:bg-slate-50 transition-colors">
-                                            <td className="px-4 py-3 font-bold text-slate-900">{m.name}</td>
-                                            <td className="px-4 py-3">{m.mae?.toFixed(2)}</td>
-                                            <td className="px-4 py-3">{m.rmse?.toFixed(2)}</td>
-                                            <td className="px-4 py-3 text-center">
-                                                <span className={cn("px-2 py-0.5 rounded-full text-xs font-semibold",
-                                                    m.r2 > 80 ? "bg-emerald-100 text-emerald-700"
-                                                        : m.r2 > 50 ? "bg-amber-100 text-amber-700"
-                                                            : "bg-slate-100 text-slate-400"
-                                                )}>{m.r2?.toFixed(1)}%</span>
-                                            </td>
-                                            <td className="px-4 py-3 text-center">
-                                                <span className={cn("px-2 py-0.5 rounded-full text-xs font-semibold",
-                                                    m.cvR2 > 85 ? "bg-emerald-100 text-emerald-700"
-                                                        : m.cvR2 > 70 ? "bg-amber-100 text-amber-700"
-                                                            : "bg-slate-100 text-slate-400"
-                                                )}>{(m.cvR2 || 0).toFixed(1)}%</span>
-                                            </td>
-                                            <td className="px-4 py-3 text-xs">
-                                                <span className={cn("px-2 py-0.5 rounded-full font-medium",
-                                                    m.status === 'Terbaik' ? "bg-amber-100 text-amber-700"
-                                                        : "bg-slate-100 text-slate-500"
-                                                )}>{m.status}</span>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
                     <p className="mt-6 text-xs text-slate-400 flex items-center gap-1 italic">
                         <Activity className="w-3 h-3" />
                         Evaluasi pada 35.500+ observasi nyata dari Supabase (Shuffled & K-Fold). Update setiap 5 menit.
@@ -449,24 +377,3 @@ export default function ForecastDashboard() {
         </div>
     );
 }
-
-// Tambahkan GitCompareArrows yang mungkin belum diimport
-const GitCompareArrows = ({ className }: { className?: string }) => (
-    <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        className={className}
-    >
-        <path d="M11 18l-2-2 2-2" />
-        <path d="M13 6l2 2-2 2" />
-        <path d="M15 10H5l4-4" />
-        <path d="M19 14H9l4 4" />
-    </svg>
-);

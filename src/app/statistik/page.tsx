@@ -1,6 +1,6 @@
 import React from 'react';
 import MLForecastPrototype from '@/components/MLForecastPrototype';
-import RegressionVisualization from '@/components/RegressionVisualization';
+import HourlyForecastClassification from '@/components/HourlyForecastClassification';
 
 export default function StatistikPage() {
     return (
@@ -11,8 +11,8 @@ export default function StatistikPage() {
             </div>
 
             <div className="grid grid-cols-1 gap-6">
+                <HourlyForecastClassification />
                 <MLForecastPrototype />
-                <RegressionVisualization />
             </div>
         </div>
     );

@@ -17,7 +17,7 @@ function getCategory(ispu: number) {
     return CATEGORIES.find(c => ispu >= c.min && ispu <= c.max) ?? CATEGORIES[0];
 }
 
-function ispuFromFeatures(pm25: number, pm10: number, co: number, no2: number, o3Ugm3: number): { ispu: number; subIspu: Record<string, number>; dominant: string } {
+function ispuFromFeatures(pm25: number, pm10: number, co: number): { ispu: number; subIspu: Record<string, number>; dominant: string } {
     type BP = number[][];
     const toISPI = (val: number, bp: BP): number => {
         if (val <= 0) return 0;
@@ -30,19 +30,15 @@ function ispuFromFeatures(pm25: number, pm10: number, co: number, no2: number, o
     const BP_PM25: BP = [[0,15,0,50],[15,35,50,100],[35,55,100,200],[55,150,200,300],[150,250,300,400],[250,350,400,500]];
     const BP_PM10: BP = [[0,50,0,50],[50,150,50,100],[150,350,100,200],[350,420,200,300],[420,500,300,400],[500,600,400,500]];
     const BP_CO: BP = [[0,5000,0,50],[5000,10000,50,100],[10000,17000,100,200],[17000,34000,200,300],[34000,46000,300,400],[46000,56000,400,500]];
-    const BP_NO2: BP = [[0,40,0,50],[40,80,50,100],[80,180,100,200],[180,280,200,300],[280,565,300,400],[565,665,400,500]];
-    const BP_O3_PPb: BP = [[0,60,0,50],[60,120,50,100],[120,180,100,200],[180,240,200,300],[240,400,300,500]];
 
-    const o3Ppb = o3Ugm3 / 1.963;
     const subIspu: Record<string, number> = {
         pm25: Math.round(toISPI(pm25, BP_PM25) * 10) / 10,
         pm10: Math.round(toISPI(pm10, BP_PM10) * 10) / 10,
         co: Math.round(toISPI(co, BP_CO) * 10) / 10,
-        no2: Math.round(toISPI(no2, BP_NO2) * 10) / 10,
-        o3: Math.round(toISPI(o3Ppb, BP_O3_PPb) * 10) / 10,
     };
 
     const ispu = Math.round(Math.max(...Object.values(subIspu)) * 10) / 10;
+    // Dominant hanya dari parameter yang diukur (PM2.5, PM10, CO)
     const dominant = Object.entries(subIspu).reduce((a, b) => b[1] > a[1] ? b : a)[0];
     return { ispu, subIspu, dominant };
 }
@@ -64,62 +60,34 @@ export async function GET() {
         const pm25 = Number(row.pm25_ugm3) || 0;
         const pm10 = Number(row.pm10_ugm3) || 0;
         const co = Number(row.co_ugm3) || 0;
-        const no2 = Number(row.no2_ugm3) || 0;
-        const o3Ugm3 = Number(row.o3_ugm3) || 0;
 
-        const fallback = ispuFromFeatures(pm25, pm10, co, no2, o3Ugm3);
+        const fallback = ispuFromFeatures(pm25, pm10, co);
         const fallbackCat = getCategory(fallback.ispu);
 
-        let result: Record<string, unknown>;
-
-        try {
-            const cmd = `python "${SCRIPT_PATH}" ${pm25} ${pm10} ${co} ${no2} ${o3Ugm3} --model xgboost`;
-            console.log('[/api/classify] exec:', cmd);
-            console.log('[/api/classify] SCRIPT_PATH:', SCRIPT_PATH);
-
-            const output = execSync(cmd, {
-                timeout: 10000,
-                encoding: 'utf-8',
-                stdio: ['pipe', 'pipe', 'pipe'],
-                cwd: path.resolve(process.cwd()),
-            });
-
-            console.log('[/api/classify] raw output:', output.substring(0, 200));
-
-            const lastLine = output.trim().split('\n').filter(l => l.trim().startsWith('{')).pop();
-            if (!lastLine) throw new Error('No JSON output from Python');
-
-            const parsed = JSON.parse(lastLine);
-            if (parsed.error) throw new Error(parsed.error);
-            result = parsed;
-        } catch (err) {
-            console.warn('[/api/classify] RF model failed, using ISPU fallback:', err);
-
-            const probabilities: Record<string, number> = {};
-            let totalProb = 0;
-            for (const cat of CATEGORIES) {
-                const center = (cat.min + cat.max) / 2;
-                const dist = Math.abs(fallback.ispu - center);
-                const prob = Math.exp(-dist / 40);
-                probabilities[cat.label] = prob;
-                totalProb += prob;
-            }
-            for (const key of Object.keys(probabilities)) {
-                probabilities[key] = Math.round((probabilities[key] / totalProb) * 1000) / 1000;
-            }
-
-            result = {
-                category: fallbackCat.label,
-                ispu: fallback.ispu,
-                color: fallbackCat.color,
-                confidence: Math.max(...Object.values(probabilities)),
-                dominant: fallback.dominant,
-                subIspu: fallback.subIspu,
-                probabilities,
-                features: { pm25, pm10, co, no2, o3: o3Ugm3 },
-                method: 'ISPU Breakpoint (XGBoost fallback)',
-            };
+        const probabilities: Record<string, number> = {};
+        let totalProb = 0;
+        for (const cat of CATEGORIES) {
+            const center = (cat.min + cat.max) / 2;
+            const dist = Math.abs(fallback.ispu - center);
+            const prob = Math.exp(-dist / 40);
+            probabilities[cat.label] = prob;
+            totalProb += prob;
         }
+        for (const key of Object.keys(probabilities)) {
+            probabilities[key] = Math.round((probabilities[key] / totalProb) * 1000) / 1000;
+        }
+
+        const result: Record<string, unknown> = {
+            category: fallbackCat.label,
+            ispu: fallback.ispu,
+            color: fallbackCat.color,
+            confidence: Math.max(...Object.values(probabilities)),
+            dominant: fallback.dominant,
+            subIspu: fallback.subIspu,
+            probabilities,
+            features: { pm25, pm10, co },
+            method: 'ISPU Breakpoint',
+        };
 
         result.timestamp = row.created_at;
         return NextResponse.json(result);

@@ -1,13 +1,13 @@
 """
 predict_and_save.py
 -------------------
-Pipeline forecasting PM2.5 (XGBoost), PM10 (XGBoost), O3 (Random Forest).
+Pipeline forecasting PM2.5 (Random Forest).
 
 Feature engineering identik dengan minutes_xgb.ipynb / train_pm10_o3.ipynb:
-1. Load 3 PKL model
+1. Load PKL model
 2. Feature engineering identik notebook (6 kolom, lag, rolling, time)
 3. Prediksi hybrid (model 1-5 menit + pola harian 6-30 menit + noise adaptif)
-4. Simpan prediksi ke tb_prediksi_pm25, tb_prediksi_pm10, tb_prediksi_o3
+4. Simpan prediksi ke tb_prediksi_pm25
 
 Jalankan secara berkala dengan Windows Task Scheduler.
 """
@@ -44,18 +44,14 @@ FORECAST_MINUTES = 30
 DATA_WINDOW_MIN  = 1440
 
 PKL_PM25 = Path(__file__).parent / "xgb_pm25.pkl"
-PKL_PM10 = Path(__file__).parent / "xgb_pm10.pkl"
-PKL_O3   = Path(__file__).parent / "rf_o3.pkl"
 
 RAW_COLS_DB = ["pm25_ugm3", "pm10_ugm3", "co_ugm3", "no2_ugm3", "o3_ugm3", "temperature", "humidity"]
-RENAME_MAP  = {"pm25_ugm3": "pm2.5", "pm10_ugm3": "pm10", "o3_ugm3": "o3"}
-RAW_COLS    = ["pm2.5", "pm10", "co_ugm3", "no2_ugm3", "temperature", "humidity"]
+RENAME_MAP  = {"pm25_ugm3": "pm25", "pm10_ugm3": "pm10", "o3_ugm3": "o3"}
+RAW_COLS    = ["pm25", "pm10", "co_ugm3", "no2_ugm3", "temperature", "humidity"]
 
 
 MODEL_CONFIG = {
-    "pm25": {"pkl": PKL_PM25, "table": TABLE_PRED_PM25, "col_pred": "pm25_pred", "raw_col": "pm2.5", "unit": "µg/m³", "max_val": 300},
-    "pm10": {"pkl": PKL_PM10, "table": TABLE_PRED_PM10, "col_pred": "pm10_pred", "raw_col": "pm10", "unit": "µg/m³", "max_val": 600},
-    "o3":   {"pkl": PKL_O3,   "table": TABLE_PRED_O3,   "col_pred": "o3_pred",   "raw_col": "o3",   "unit": "ppb",   "max_val": 200},
+    "pm25": {"pkl": PKL_PM25, "table": TABLE_PRED_PM25, "col_pred": "pm25_pred", "raw_col": "pm25", "unit": "µg/m³", "max_val": 300},
 }
 
 
@@ -228,20 +224,25 @@ def main():
     missing = [k for k, p in pkl_files.items() if not p.exists()]
     if missing:
         log.error(f"PKL tidak ditemukan: {', '.join(f'{k} ({pkl_files[k].name})' for k in missing)}")
-        log.error("Jalankan train_pm10_o3.ipynb (untuk PM10 & O3) dan minutes_xgb.ipynb (untuk PM2.5).")
+        log.error("Jalankan train_forecast_multi.ipynb (untuk PM2.5).")
         sys.exit(1)
 
     models = {}
     feature_cols_map = {}
     for param_name, cfg in MODEL_CONFIG.items():
         m = joblib.load(cfg["pkl"])
-        fc = list(m.feature_names_in_) if hasattr(m, "feature_names_in_") else []
-        models[param_name] = m
+        if isinstance(m, dict):
+            model_obj = m.get("model")
+            fc = [str(f) for f in (model_obj.feature_names_in_ if hasattr(model_obj, "feature_names_in_") else m.get("features", []))]
+        else:
+            model_obj = m
+            fc = [str(f) for f in (m.feature_names_in_ if hasattr(m, "feature_names_in_") else [])]
+        models[param_name] = model_obj
         feature_cols_map[param_name] = fc
         log.info(f"Loaded {cfg['pkl'].name} — {len(fc)} fitur")
 
-    sb_url = os.environ.get("NEXT_PUBLIC_SUPABASE_URL") or os.environ.get("SUPABASE_URL", "")
-    sb_key = os.environ.get("NEXT_PUBLIC_SUPABASE_ANON_KEY") or os.environ.get("SUPABASE_ANON_KEY", "")
+    sb_url = os.environ.get("SUPABASE_URL", "")
+    sb_key = os.environ.get("SUPABASE_ANON_KEY", "") or os.environ.get("SUPABASE_KEY", "")
 
     if not sb_url or not sb_key:
         env_paths = [
@@ -257,15 +258,15 @@ def main():
                         k = k.strip()
                         if not os.environ.get(k):
                             os.environ[k] = v.strip().strip('"')
-        sb_url = os.environ.get("NEXT_PUBLIC_SUPABASE_URL") or os.environ.get("SUPABASE_URL", "")
-        sb_key = os.environ.get("NEXT_PUBLIC_SUPABASE_ANON_KEY") or os.environ.get("SUPABASE_ANON_KEY", "")
+        sb_url = os.environ.get("SUPABASE_URL", "")
+        sb_key = os.environ.get("SUPABASE_ANON_KEY", "") or os.environ.get("SUPABASE_KEY", "")
 
     if not sb_url or not sb_key:
         log.error("SUPABASE_URL atau SUPABASE_ANON_KEY tidak ditemukan.")
         sys.exit(1)
 
     sb_url = sb_url.replace("http://", "https://")
-    log.info(f"Supabase URL: {sb_url}")
+    log.info("Supabase URL: " + sb_url)
 
     supabase: Client = create_client(sb_url, sb_key)
 
