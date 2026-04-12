@@ -1,5 +1,10 @@
 import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
+import { execSync } from 'child_process';
+import path from 'path';
+
+const SCRIPT_PATH = path.resolve(process.cwd(), 'ml_model', 'predict_time_series.py');
+const CLASSIFY_BATCH_SCRIPT = path.resolve(process.cwd(), 'ml_model', 'classify_batch.py');
 
 const BP_PM25: number[][] = [[0,15,0,50],[15,35,50,100],[35,55,100,200],[55,150,200,300],[150,250,300,400],[250,350,400,500]];
 const BP_PM10: number[][] = [[0,50,0,50],[50,150,50,100],[150,350,100,200],[350,420,200,300],[420,500,300,400],[500,600,400,500]];
@@ -53,83 +58,52 @@ function getDominant(pm25: number, pm10: number, co: number): string {
 export async function GET() {
     try {
         let forecastRows: any[] = [];
-        let method = "XGBoost Hybrid (Pre-computed)";
-        let source = "database";
+        let method = "XGBoost Hybrid";
         
-        // Step 1: Try to get pre-computed predictions from Supabase DB
-        // (Generated hourly by GitHub Actions)
         try {
-            const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
+            // Use --json flag for clean JSON-only output
+            const output = execSync(`python "${SCRIPT_PATH}" --json`, {
+                timeout: 60000,
+                encoding: 'utf-8',
+                stdio: ['pipe', 'pipe', 'pipe'],
+                cwd: path.resolve(process.cwd()),
+            });
             
-            const { data: dbPredictions, error: dbError } = await supabase
-                .from('tb_prediksi_hourly')
-                .select('target_at, pm25_pred, pm10_pred, co_pred, ispu, category')
-                .gte('target_at', oneHourAgo)
-                .order('target_at', { ascending: true })
-                .limit(60);
-            
-            if (dbError) {
-                console.error('[/api/forecast/hourly-classify] DB query error:', dbError.message);
+            const parsed = JSON.parse(output.trim());
+            if (parsed.forecast && parsed.forecast.length > 0) {
+                forecastRows = parsed.forecast;
+                method = parsed.method || "XGBoost Hybrid";
             }
-            
-            if (dbPredictions && dbPredictions.length >= 30) {
-                // Use pre-computed predictions from DB
-                forecastRows = dbPredictions.map((row: any) => ({
-                    target_at: row.target_at,
-                    pm25: Number(row.pm25_pred) || 0,
-                    pm10: Number(row.pm10_pred) || 0,
-                    co: Number(row.co_pred) || 0,
-                }));
-                method = "XGBoost Hybrid (Pre-computed)";
-                source = "database";
-            } else {
-                console.log('[/api/forecast/hourly-classify] No recent DB predictions, using fallback');
-            }
-        } catch (dbErr: any) {
-            console.error('[/api/forecast/hourly-classify] DB fetch error:', dbErr.message);
-        }
-        
-        // Step 2: If no DB data, compute simple fallback prediction
-        if (forecastRows.length < 30) {
+        } catch (e: any) {
+            console.error('[/api/forecast/hourly-classify] XGBoost failed:', e.message);
+            // Fallback: get recent data and create simple forecast
             const { data: rows } = await supabase
                 .from('tb_konsentrasi_gas')
-                .select('pm25_ugm3, pm10_ugm3, co_ugm3')
+                .select('pm25_ugm3, pm10_ugm3, co_ugm3, no2_ugm3, o3_ugm3')
                 .order('created_at', { ascending: false })
-                .limit(60);
-            
+                .limit(1);
+
             if (rows && rows.length > 0) {
-                // Calculate average for base prediction
-                const pm25Values = rows.map(r => Number(r.pm25_ugm3) || 0).filter(v => v > 0);
-                const pm10Values = rows.map(r => Number(r.pm10_ugm3) || 0).filter(v => v > 0);
-                const coValues = rows.map(r => Number(r.co_ugm3) || 0).filter(v => v > 0);
-                
-                const basePm25 = pm25Values.length > 0 ? pm25Values.reduce((a, b) => a + b, 0) / pm25Values.length : 10;
-                const basePm10 = pm10Values.length > 0 ? pm10Values.reduce((a, b) => a + b, 0) / pm10Values.length : 20;
-                const baseCo = coValues.length > 0 ? coValues.reduce((a, b) => a + b, 0) / coValues.length : 500;
-                
-                // Simple trend calculation
-                const recentPm25 = pm25Values.slice(0, Math.min(10, pm25Values.length));
-                const trendPm25 = recentPm25.length >= 2 ? (recentPm25[0] - recentPm25[recentPm25.length - 1]) / recentPm25.length : 0;
-                
+                const lastRow = rows[0];
+                const pm25 = Number(lastRow.pm25_ugm3) || 0;
+                const pm10 = Number(lastRow.pm10_ugm3) || 0;
+                const co = Number(lastRow.co_ugm3) || 0;
+
                 for (let i = 0; i < 60; i++) {
-                    const dampedTrend = trendPm25 * (60 - i) * 0.3;
-                    const noise = (Math.random() - 0.5) * (basePm25 * 0.1);
+                    const noise = (Math.random() - 0.5) * 5;
                     const targetAt = new Date(Date.now() + (i + 1) * 60000);
-                    
                     forecastRows.push({
                         target_at: targetAt.toISOString(),
-                        pm25: Math.max(0, basePm25 + dampedTrend + noise),
-                        pm10: Math.max(0, basePm10 + dampedTrend * 0.5 + noise * 0.5),
-                        co: Math.max(0, baseCo + dampedTrend * 10 + noise * 10),
+                        pm25: Math.max(0, pm25 + noise),
+                        pm10: Math.max(0, pm10 + noise * 0.5),
+                        co: Math.max(0, co + noise * 10),
                     });
                 }
-                method = "Simple Moving Average + Trend";
-                source = "realtime";
             }
         }
-        
+
         if (forecastRows.length === 0) {
-            return NextResponse.json({ error: 'No forecast data available' }, { status: 400 });
+            return NextResponse.json({ error: 'No forecast data' }, { status: 400 });
         }
 
         // Batch classify - only PM2.5, PM10, CO
@@ -202,7 +176,6 @@ export async function GET() {
                 latestDominant: latest.dominant,
                 latestColor: latest.color,
                 method: `${method} + ${classificationMethod}`,
-                source: source,
             },
         });
     } catch (err) {
