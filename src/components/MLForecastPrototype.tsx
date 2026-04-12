@@ -137,7 +137,7 @@ export default function ForecastDashboard() {
                         Forecasting & Analitik
                     </h3>
                     <p className="text-sm text-slate-500 mt-1">
-                        Prediksi PM2.5 menggunakan{' '}
+                        Prediksi PM2.5, PM10, dan CO menggunakan{' '}
                         <span className={cn(
                             "font-medium",
                             (metadata as any)?.usingXGBoost ? "text-emerald-600" : "text-indigo-600"
@@ -158,7 +158,7 @@ export default function ForecastDashboard() {
                                 : "text-slate-500 hover:text-slate-800"
                         )}
                     >
-                        Grafik Prediksi 30 Menit
+                        Grafik Prediksi 1 Jam
                     </button>
                     <button
                         onClick={() => setActiveTab('metrics')}
@@ -220,7 +220,7 @@ export default function ForecastDashboard() {
                                         <p className="text-xs text-indigo-400">µg/m³</p>
                                     </div>
                                     <div className="bg-orange-50 p-3 rounded-xl border border-orange-100">
-                                        <h4 className="text-xs font-semibold text-orange-500 uppercase mb-1">Prediksi 30m</h4>
+                                        <h4 className="text-xs font-semibold text-orange-500 uppercase mb-1">Prediksi 1 Jam</h4>
                                         <p className="text-2xl font-black text-orange-700">{metadata?.forecastedIn30min?.toFixed(2) ?? '—'}</p>
                                         <p className="text-xs text-orange-400">µg/m³</p>
                                     </div>
@@ -259,7 +259,7 @@ export default function ForecastDashboard() {
                                         <p className="text-xs text-emerald-400">µg/m³</p>
                                     </div>
                                     <div className="bg-orange-50 p-3 rounded-xl border border-orange-100">
-                                        <h4 className="text-xs font-semibold text-orange-500 uppercase mb-1">Prediksi 30m</h4>
+                                        <h4 className="text-xs font-semibold text-orange-500 uppercase mb-1">Prediksi 1 Jam</h4>
                                         <p className="text-2xl font-black text-orange-700">{metadata?.forecastedIn30minPm10?.toFixed(2) ?? '—'}</p>
                                         <p className="text-xs text-orange-400">µg/m³</p>
                                     </div>
@@ -298,21 +298,11 @@ export default function ForecastDashboard() {
                                         <p className="text-xs text-amber-400">ppb</p>
                                     </div>
                                     <div className="bg-orange-50 p-3 rounded-xl border border-orange-100">
-                                        <h4 className="text-xs font-semibold text-orange-500 uppercase mb-1">Prediksi 30m</h4>
+                                        <h4 className="text-xs font-semibold text-orange-500 uppercase mb-1">Prediksi 1 Jam</h4>
                                         <p className="text-2xl font-black text-orange-700">{metadata?.forecastedIn30minCo?.toFixed(2) ?? '—'}</p>
                                         <p className="text-xs text-orange-400">ppb</p>
                                     </div>
                                 </div>
-                            </div>
-
-                            {/* Tren */}
-                            <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
-                                <h4 className="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-2">Tren PM2.5</h4>
-                                <div className="flex items-center gap-2">
-                                    {trendIcon}
-                                    <span className={cn("font-bold capitalize text-sm", trendColor)}>{metadata?.trendDirection}</span>
-                                </div>
-                                <p className="text-xs text-slate-400 mt-1">Berbasis {metadata?.dataPoints ?? 0} titik data</p>
                             </div>
                         </div>
                     )}

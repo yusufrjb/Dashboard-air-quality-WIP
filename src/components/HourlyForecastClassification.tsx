@@ -38,6 +38,7 @@ interface HourlyData {
         latestDominant: string;
         latestColor: string;
         method: string;
+        source?: string;
     };
 }
 
@@ -162,7 +163,9 @@ export default function HourlyForecastClassification() {
                     </div>
                     <div className="mt-1 text-[10px] text-slate-400">
                         Dominan: <span className="font-semibold">{data.forecast[59]?.dominant || data.metadata.latestDominant}</span> | 
-                        Method: <span className="font-semibold">{data.metadata.method}</span>
+                        <span className="font-semibold">{data.metadata.method}</span>
+                        {data.metadata.source === 'database' && <span className="text-emerald-600 ml-1">✓ Pre-computed</span>}
+                        {data.metadata.source === 'realtime' && <span className="text-amber-600 ml-1">⚡ Realtime</span>}
                     </div>
                 </div>
             </div>
