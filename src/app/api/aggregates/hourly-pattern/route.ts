@@ -32,14 +32,14 @@ export async function GET(request: Request) {
             dateRange: { from: since.toISOString(), to: new Date().toISOString() }
         });
 
-        const dailyData: Record<string, {
-            date: string;
-            dayOfWeek: number;
-            isWeekend: boolean;
-            hours: Set<number>;
-            values: number[];
-            count: number;
+        const hourlyData: Record<number, {
+            weekday: number[];
+            weekend: number[];
         }> = {};
+
+        for (let h = 0; h < 24; h++) {
+            hourlyData[h] = { weekday: [], weekend: [] };
+        }
 
         for (const row of rows) {
             if (!row.time || row.pm25_ugm3 == null) continue;
@@ -47,63 +47,22 @@ export async function GET(request: Request) {
             const date = new Date(row.time);
             const dateInJakarta = new Date(date.toLocaleString('en-US', { timeZone: 'Asia/Jakarta' }));
 
-            const year = dateInJakarta.getFullYear();
-            const month = String(dateInJakarta.getMonth() + 1).padStart(2, '0');
-            const day = String(dateInJakarta.getDate()).padStart(2, '0');
-            const dateStr = `${year}-${month}-${day}`;
-
             const dayOfWeek = dateInJakarta.getDay();
             const hour = dateInJakarta.getHours();
             const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
 
             const ispuValue = pm25ToISPU(row.pm25_ugm3);
 
-            if (!dailyData[dateStr]) {
-                dailyData[dateStr] = {
-                    date: dateStr,
-                    dayOfWeek,
-                    isWeekend,
-                    hours: new Set(),
-                    values: [],
-                    count: 0
-                };
+            if (isWeekend) {
+                hourlyData[hour].weekend.push(ispuValue);
+            } else {
+                hourlyData[hour].weekday.push(ispuValue);
             }
-
-            dailyData[dateStr].hours.add(hour);
-            dailyData[dateStr].values.push(ispuValue);
-            dailyData[dateStr].count++;
         }
 
-        const dailyArray = Object.values(dailyData).sort((a, b) => a.date.localeCompare(b.date));
-
-        const weekdays = dailyArray.filter(d => !d.isWeekend);
-        const weekends = dailyArray.filter(d => d.isWeekend);
-
-        console.log('Daily Data Summary:', {
-            totalDays: dailyArray.length,
-            weekdays: weekdays.length,
-            weekends: weekends.length,
-            weekdaysWithFull24Hours: weekdays.filter(d => d.hours.size === 24).length,
-            weekendsWithFull24Hours: weekends.filter(d => d.hours.size === 24).length
-        });
-
         const hourlyAverages = Array.from({ length: 24 }, (_, hour) => {
-            const weekdayValues: number[] = [];
-            const weekendValues: number[] = [];
-
-            weekdays.forEach(day => {
-                if (day.hours.has(hour)) {
-                    const avg = day.values.reduce((a, b) => a + b, 0) / day.values.length;
-                    weekdayValues.push(avg);
-                }
-            });
-
-            weekends.forEach(day => {
-                if (day.hours.has(hour)) {
-                    const avg = day.values.reduce((a, b) => a + b, 0) / day.values.length;
-                    weekendValues.push(avg);
-                }
-            });
+            const weekdayValues = hourlyData[hour].weekday;
+            const weekendValues = hourlyData[hour].weekend;
 
             const wDayAvg = weekdayValues.length > 0
                 ? weekdayValues.reduce((a, b) => a + b, 0) / weekdayValues.length
@@ -121,19 +80,29 @@ export async function GET(request: Request) {
             };
         });
 
-        const weekendDataPoints = weekends.reduce((sum, d) => sum + d.count, 0);
-        const weekdayDataPoints = weekdays.reduce((sum, d) => sum + d.count, 0);
+        const weekendDataPoints = Object.values(hourlyData).reduce((sum, d) => sum + d.weekend.length, 0);
+        const weekdayDataPoints = Object.values(hourlyData).reduce((sum, d) => sum + d.weekday.length, 0);
         const weekendHoursWithData = hourlyAverages.filter(h => h.weekend_avg > 0).length;
         const weekdayHoursWithData = hourlyAverages.filter(h => h.weekday_avg > 0).length;
 
-        console.log('Hourly Pattern Data Summary:', {
-            totalRows: rows.length,
-            weekendDataPoints,
-            weekdayDataPoints,
-            weekendHoursWithData,
-            weekdayHoursWithData,
-            dateRange: { from: since.toISOString(), to: new Date().toISOString() }
-        });
+        const weekendDaysSet = new Set<string>();
+        const weekdayDaysSet = new Set<string>();
+
+        for (const row of rows) {
+            if (!row.time || row.pm25_ugm3 == null) continue;
+            const date = new Date(row.time);
+            const dateInJakarta = new Date(date.toLocaleString('en-US', { timeZone: 'Asia/Jakarta' }));
+            const dayOfWeek = dateInJakarta.getDay();
+            const year = dateInJakarta.getFullYear();
+            const month = String(dateInJakarta.getMonth() + 1).padStart(2, '0');
+            const day = String(dateInJakarta.getDate()).padStart(2, '0');
+            const dateStr = `${year}-${month}-${day}`;
+            if (dayOfWeek === 0 || dayOfWeek === 6) {
+                weekendDaysSet.add(dateStr);
+            } else {
+                weekdayDaysSet.add(dateStr);
+            }
+        }
 
         return NextResponse.json({
             data: hourlyAverages,
@@ -143,8 +112,8 @@ export async function GET(request: Request) {
                 weekdayDataPoints,
                 weekendHoursWithData,
                 weekdayHoursWithData,
-                totalWeekendDays: weekends.length,
-                totalWeekdayDays: weekdays.length,
+                totalWeekendDays: weekendDaysSet.size,
+                totalWeekdayDays: weekdayDaysSet.size,
                 dateRange: {
                     from: since.toISOString(),
                     to: new Date().toISOString()
