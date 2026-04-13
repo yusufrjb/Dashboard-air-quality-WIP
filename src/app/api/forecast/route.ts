@@ -88,7 +88,7 @@ export async function GET() {
         const trendDirection = avgEnd - avgStart > 1 ? 'naik' : avgEnd - avgStart < -1 ? 'turun' : 'stabil';
 
         const method = predData && predData.length > 0 
-            ? 'XGBoost TimeSeries (Hybrid Model)'
+            ? 'XGBoost dengan Pola Harian'
             : 'Fallback';
 
         return NextResponse.json({

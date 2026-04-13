@@ -6,7 +6,7 @@ Pipeline forecasting PM2.5 (Random Forest).
 Feature engineering identik dengan minutes_xgb.ipynb / train_pm10_o3.ipynb:
 1. Load PKL model
 2. Feature engineering identik notebook (6 kolom, lag, rolling, time)
-3. Prediksi hybrid (model 1-5 menit + pola harian 6-30 menit + noise adaptif)
+3. Enhanced prediction (XGBoost 1-5 menit + pola harian 6-30 menit + noise adaptif)
 4. Simpan prediksi ke tb_prediksi_pm25
 
 Jalankan secara berkala dengan Windows Task Scheduler.

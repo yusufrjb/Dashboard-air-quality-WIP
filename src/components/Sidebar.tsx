@@ -22,7 +22,7 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { label: "Overview", icon: <LayoutDashboard size={18} />, href: "/", active: true },
-  { label: "Statistics", icon: <BarChart2 size={18} />, href: "/statistik" },
+  { label: "Forecast", icon: <BarChart2 size={18} />, href: "/statistik" },
 ];
 
 const bottomItems: NavItem[] = [

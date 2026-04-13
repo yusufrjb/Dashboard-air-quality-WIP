@@ -2659,3 +2659,24 @@ Selesai!
 2026-04-11 22:17:29,123 [INFO]     2026-04-11T15:47:28.971102 -> 18.89
 2026-04-11 22:17:29,123 [INFO] 
 Selesai!
+2026-04-13 16:34:44,555 [INFO] ============================================================
+2026-04-13 16:34:44,555 [INFO] Pipeline Prediksi Multi-Parameter — PM2.5, PM10, O3
+2026-04-13 16:34:44,555 [INFO] ============================================================
+2026-04-13 16:34:47,064 [INFO] Loaded xgb_pm25.pkl — 49 fitur
+2026-04-13 16:34:47,065 [INFO] Supabase URL: https://knpwncirbhcytssrxcqx.supabase.co
+2026-04-13 16:34:48,675 [INFO] HTTP Request: GET https://knpwncirbhcytssrxcqx.supabase.co/rest/v1/tb_konsentrasi_gas?select=pm25_ugm3%2Cpm10_ugm3%2Cco_ugm3%2Cno2_ugm3%2Co3_ugm3%2Ctemperature%2Chumidity%2Ccreated_at&created_at=gte.2026-04-12T09%3A34%3A47.353796&order=created_at.asc&offset=0&limit=1000 "HTTP/2 200 OK"
+2026-04-13 16:34:48,774 [INFO] HTTP Request: GET https://knpwncirbhcytssrxcqx.supabase.co/rest/v1/tb_konsentrasi_gas?select=pm25_ugm3%2Cpm10_ugm3%2Cco_ugm3%2Cno2_ugm3%2Co3_ugm3%2Ctemperature%2Chumidity%2Ccreated_at&created_at=gte.2026-04-12T09%3A34%3A47.353796&order=created_at.asc&offset=1000&limit=1000 "HTTP/2 200 OK"
+2026-04-13 16:34:48,791 [INFO] Data diambil: 1386 baris (sejak 2026-04-12T09:34:47.353796)
+2026-04-13 16:34:48,791 [INFO] 
+--- Prediksi PM25 ---
+2026-04-13 16:34:48,792 [INFO]   Pola harian: 24 jam, range 14.6-17.6
+2026-04-13 16:34:48,813 [INFO]   PM25: current=14.2, model1step=15.7 (delta=+1.57), trend=-0.016/min
+2026-04-13 16:34:48,967 [INFO] HTTP Request: POST https://knpwncirbhcytssrxcqx.supabase.co/rest/v1/tb_prediksi_pm25?columns=%22target_at%22%2C%22forecast_at%22%2C%22is_historical%22%2C%22pm25_pred%22 "HTTP/2 201 Created"
+2026-04-13 16:34:48,968 [INFO]   30 prediksi disimpan ke tb_prediksi_pm25
+2026-04-13 16:34:48,968 [INFO]     2026-04-13T09:35:48.801129 -> 14.55
+2026-04-13 16:34:48,968 [INFO]     2026-04-13T09:36:48.801129 -> 14.63
+2026-04-13 16:34:48,968 [INFO]     2026-04-13T09:37:48.801129 -> 14.66
+2026-04-13 16:34:48,968 [INFO]     ...
+2026-04-13 16:34:48,968 [INFO]     2026-04-13T10:04:48.801129 -> 14.81
+2026-04-13 16:34:48,968 [INFO] 
+Selesai!

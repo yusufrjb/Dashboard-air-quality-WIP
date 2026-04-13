@@ -309,11 +309,6 @@ def hybrid_predict(df: pd.DataFrame, model_data: dict, param: str, steps: int = 
             "target_at": target_time,
             param: round(pred, 2)
         })
-        
-        predictions.append({
-            "target_at": target_time,
-            param: round(pred, 2)
-        })
     
     print(f"  {param.upper()}: {len(predictions)} prediksi, range: {min(p[param] for p in predictions):.1f} - {max(p[param] for p in predictions):.1f}")
     return predictions
@@ -386,7 +381,7 @@ def get_results():
         else:
             print(f"Model tidak ditemukan: {model_path.name}")
     
-    # Generate predictions dengan hybrid approach
+    # Generate predictions dengan pattern blending
     all_forecasts = {}
     for param in ["pm25", "pm10", "co"]:
         if param in models:
@@ -443,7 +438,7 @@ def get_results():
     # Return JSON
     return {
         "forecast_at": now.isoformat(),
-        "method": "XGBoost TimeSeries (Hybrid)",
+        "method": "XGBoost dengan Pola Harian",
         "parameters": list(all_forecasts.keys()),
         "forecast": [
             {
@@ -469,7 +464,7 @@ if __name__ == "__main__":
         sys.stdout = io.StringIO()
     
     print("=" * 60)
-    print("XGBoost TimeSeries Prediction (Hybrid)")
+    print("XGBoost dengan Pola Harian")
     print("=" * 60)
     
     result = get_results()

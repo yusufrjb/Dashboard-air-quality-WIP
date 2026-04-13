@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { Wind, Clock, TrendingUp, Loader2, BarChart3 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { supabase } from '@/lib/supabase';
 
 const BP_PM25 = [[0,15,0,50],[15,35,50,100],[35,55,100,200],[55,150,200,300],[150,250,300,400],[250,350,400,500]];
 const BP_PM10 = [[0,50,0,50],[50,150,50,100],[150,350,100,200],[350,420,200,300],[420,500,300,400],[500,600,400,500]];
@@ -55,16 +56,43 @@ export default function HourlyForecastClassification() {
     const [activeTab, setActiveTab] = useState<'chart' | 'table'>('chart');
 
     useEffect(() => {
+        let isMounted = true;
         const fetchData = () => {
             fetch('/api/forecast/hourly-classify')
                 .then(res => res.json())
-                .then(d => { setData(d); setLoading(false); })
-                .catch(() => setLoading(false));
+                .then(d => { if (isMounted) { setData(d); setLoading(false); } })
+                .catch(() => { if (isMounted) setLoading(false); });
         };
 
         fetchData();
         const interval = setInterval(fetchData, 5 * 60 * 1000);
-        return () => clearInterval(interval);
+
+        let timeoutId: NodeJS.Timeout;
+        const channel = supabase
+            .channel('realtime_forecast_classify')
+            .on(
+                'postgres_changes',
+                {
+                    event: '*',
+                    schema: 'public',
+                    table: 'tb_prediksi_hourly',
+                },
+                () => {
+                    clearTimeout(timeoutId);
+                    timeoutId = setTimeout(() => {
+                        console.log('🔄 Data prediksi klasifikasi baru terdeteksi, memperbarui grafik...');
+                        fetchData();
+                    }, 2000);
+                }
+            )
+            .subscribe();
+
+        return () => {
+            isMounted = false;
+            clearInterval(interval);
+            clearTimeout(timeoutId);
+            supabase.removeChannel(channel);
+        };
     }, []);
 
     if (loading) {

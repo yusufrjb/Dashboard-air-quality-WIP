@@ -3,7 +3,7 @@ predict_hourly_multi.py
 -----------------------
 Multi-parameter forecasting: PM2.5, PM10, CO — 60 menit ke depan.
 - Load model .pkl (PM2.5, PM10, CO)
-- Hybrid forecast: ML (1-5 min) + pola harian (6-60 min) + adaptive noise
+- Enhanced forecast: XGBoost ML (1-5 min) + pola harian (6-60 min) + adaptive noise
 - ISPU classification untuk setiap step
 - Simpan ke tb_prediksi_hourly di Supabase
 - Return dict forecast + classification
@@ -238,11 +238,19 @@ def forecast_one_param(
 
     hourly_pattern = build_hourly_pattern(df, raw_col)
 
+    # Build minute-of-hour pattern for better minute-to-minute variation
+    df_with_minute = df.copy()
+    df_with_minute["minute"] = df_with_minute.index.minute
+    minute_pattern = df_with_minute.groupby("minute")[raw_col].mean().to_dict()
+
     results = []
+    prev_pred = current_val
     for step in range(1, n_steps + 1):
         target_time = now + timedelta(minutes=step)
         target_hour = target_time.hour
+        target_minute = target_time.minute
         target_hourly_avg = hourly_pattern.get(target_hour, current_val)
+        target_minute_avg = minute_pattern.get(target_minute, current_val)
 
         if step <= 5:
             damping = 0.7 ** step
@@ -250,18 +258,30 @@ def forecast_one_param(
             alpha = step / 5
             blended = short_term * (1 - alpha) + target_hourly_avg * alpha
         else:
-            blended = target_hourly_avg
+            # Blend hourly pattern with minute pattern and trend continuation
+            minute_weight = 0.4
+            hourly_weight = 0.3
+            trend_weight = 0.3
+            trend_contribution = slope * step * 0.5 if abs(slope) > 0.01 else 0
+            blended = (target_hourly_avg * hourly_weight + 
+                      target_minute_avg * minute_weight + 
+                      (prev_pred + slope * 0.5) * trend_weight +
+                      trend_contribution)
 
-        transition = min(1.0, step / 5)
+        transition = min(1.0, step / 10)  # Slower transition over 10 steps
         final = current_val * (1 - transition) + blended * transition
 
-        noise = np.random.normal(0, recent_std * 0.15 * (step / 30))
+        # Enhanced noise that scales with horizon and adds more variation
+        noise_scale = recent_std * 0.3 * (0.5 + step / 60)
+        noise = np.random.normal(0, noise_scale)
         final = max(0.0, min(max_val, final + noise))
 
         results.append({
             "target_at": target_time,
             raw_col: round(final, 2),
         })
+        
+        prev_pred = final
 
     log.info(f"  {raw_col.upper()}: cur={current_val:.1f}, model1s={model_pred:.1f}, trend={slope:+.3f}/min")
     return results
@@ -298,8 +318,16 @@ def save_hourly_predictions(supabase: Client, forecast_rows: list, forecast_at: 
             "is_historical": False,
         })
     if rows:
-        supabase.table(TABLE_HOURLY).insert(rows).execute()
-        log.info(f"  {len(rows)} baris disimpan ke {TABLE_HOURLY}")
+        # Upsert instead of insert to avoid duplicates
+        for row in rows:
+            try:
+                supabase.table(TABLE_HOURLY).upsert(
+                    row,
+                    on_conflict='target_at'
+                ).execute()
+            except Exception as e:
+                log.warning(f"  Gagal upsert baris: {e}")
+        log.info(f"  {len(rows)} baris diupsert ke {TABLE_HOURLY}")
     return rows
 
 

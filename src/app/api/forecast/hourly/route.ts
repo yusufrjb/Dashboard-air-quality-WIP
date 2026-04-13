@@ -185,7 +185,7 @@ export async function GET() {
                 latestDominant: historical[historical.length - 1]?.dominant ?? "pm25",
                 totalHistorical: historical.length,
                 totalForecast: forecast.length,
-                method: forecast_result ? "XGBoost Hybrid" : "Holt-Winters (fallback)",
+                method: forecast_result ? "XGBoost dengan Pola Harian" : "Holt-Winters (fallback)",
             },
         });
     } catch (err) {

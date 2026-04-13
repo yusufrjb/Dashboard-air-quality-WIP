@@ -17,38 +17,22 @@ logging.basicConfig(
 log = logging.getLogger("Watcher")
 
 def run_forecast():
-    log.info("Memulai pemicu peramalan & regresi...")
+    log.info("Memulai pipeline peramalan...")
     try:
-        # 1. Jalankan Peramalan (Time-Series, 30 min)
-        log.info("  -> Menjalankan predict_and_save.py")
-        res1 = subprocess.run([sys.executable, "predict_and_save.py"], capture_output=True, text=True, cwd=Path(__file__).parent)
-        if res1.stdout:
-            for line in res1.stdout.splitlines():
-                if "Berhasil" in line or "Saved" in line or "Selesai" in line: log.info(f"     [Predict] {line}")
-
-        # 2. Jalankan Peramalan Multi-Parameter (60 min, untuk ISPU 1 jam)
+        # Jalankan Peramalan Multi-Parameter (60 min, untuk ISPU 1 jam)
         log.info("  -> Menjalankan predict_hourly_multi.py")
         res3 = subprocess.run([sys.executable, "predict_hourly_multi.py"], capture_output=True, text=True, cwd=Path(__file__).parent)
         if res3.stdout:
             for line in res3.stdout.splitlines():
                 if "Selesai" in line or "simpan" in line: log.info(f"     [Hourly] {line}")
 
-        # 3. Jalankan Regresi (Antar-Parameter)
-        log.info("  -> Menjalankan regression_antar_parameter.py")
-        res2 = subprocess.run([sys.executable, "regression_antar_parameter.py"], capture_output=True, text=True, cwd=Path(__file__).parent)
-        if res2.stdout:
-            for line in res2.stdout.splitlines():
-                if "berhasil" in line or "Total data" in line: log.info(f"     [Regress] {line}")
-
-        if res1.returncode == 0 and res2.returncode == 0:
-            log.info("Semua pipa ML berhasil diperbarui.")
+        if res3.returncode == 0:
+            log.info("Pipeline peramalan berhasil.")
         else:
-            log.warning(f"Ada pipa ML yang gagal")
-            if res1.returncode != 0: log.error(f"Predict Error: {res1.stderr[:200]}")
-            if res2.returncode != 0: log.error(f"Regress Error: {res2.stderr[:200]}")
+            log.warning(f"Pipeline gagal")
             
     except Exception as e:
-        log.error(f"Error saat menjalankan ML pipeline: {e}")
+        log.error(f"Error saat menjalankan pipeline: {e}")
 
 def main():
     log.info("="*50)

@@ -58,10 +58,10 @@ function getDominant(pm25: number, pm10: number, co: number): string {
 export async function GET() {
     try {
         let forecastRows: any[] = [];
-        let method = "XGBoost Hybrid";
+        let method = "XGBoost dengan Pola Harian";
         
         try {
-            // Use --json flag for clean JSON-only output
+            // Run script with --json flag
             const output = execSync(`python "${SCRIPT_PATH}" --json`, {
                 timeout: 60000,
                 encoding: 'utf-8',
@@ -72,11 +72,11 @@ export async function GET() {
             const parsed = JSON.parse(output.trim());
             if (parsed.forecast && parsed.forecast.length > 0) {
                 forecastRows = parsed.forecast;
-                method = parsed.method || "XGBoost Hybrid";
+                method = parsed.method || "XGBoost dengan Pola Harian";
             }
         } catch (e: any) {
             console.error('[/api/forecast/hourly-classify] XGBoost failed:', e.message);
-            // Fallback: get recent data and create simple forecast
+            // Fallback: get recent data and create simple forecast (tidak disimpan)
             const { data: rows } = await supabase
                 .from('tb_konsentrasi_gas')
                 .select('pm25_ugm3, pm10_ugm3, co_ugm3, no2_ugm3, o3_ugm3')
